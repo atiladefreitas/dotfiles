@@ -19,6 +19,7 @@ require "lazy_setup"
 require "polish"
 require "set"
 require "remap"
+require "lsp"
 
 -- Highlight configurations
 vim.cmd [[
