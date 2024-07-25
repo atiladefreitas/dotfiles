@@ -13,7 +13,7 @@ return {
 				width = 35,
 				relativenumber = true,
 			},
-			-- change folder arrow iconstree
+			-- change folder arrow icons
 			renderer = {
 				indent_markers = {
 					enable = true,
@@ -27,9 +27,7 @@ return {
 					},
 				},
 			},
-			-- disable window_picker for
-			-- explorer to work well with
-			-- window splits
+			-- disable window_picker for explorer to work well with window splits
 			actions = {
 				open_file = {
 					window_picker = {
@@ -43,6 +41,11 @@ return {
 			git = {
 				ignore = false,
 			},
+			-- Automatically find and focus the file in nvim-tree
+			update_focused_file = {
+				enable = true,
+				update_cwd = true,
+			},
 		})
 
 		-- set keymaps
@@ -50,17 +53,18 @@ return {
 
 		keymap.set("n", "<leader>ee", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle file explorer" }) -- toggle file explorer
 		keymap.set("n", "<leader>o", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle file explorer" }) -- toggle file explorer
-		keymap.set(
-			"n",
-			"<leader>ef",
-			"<cmd>NvimTreeFindFileToggle<CR>",
-			{ desc = "Toggle file explorer on current file" }
-		) -- toggle file explorer on current file
+		keymap.set("n", "<leader>ef", "<cmd>NvimTreeFindFile<CR>", { desc = "Find current file in explorer" }) -- find current file in explorer
 		keymap.set("n", "<leader>ec", "<cmd>NvimTreeCollapse<CR>", { desc = "Collapse file explorer" }) -- collapse file explorer
 		keymap.set("n", "<leader>er", "<cmd>NvimTreeRefresh<CR>", { desc = "Refresh file explorer" }) -- refresh file explorer
 
-		-- key mappings for saving a file and closing a buffer
-		keymap.set("n", "<leader>w", ":w<CR>", { desc = "Save file" })
-		keymap.set("n", "<leader>cc", ":bd<CR>", { desc = "Close buffer" })
+		-- Automatically close nvim-tree if it's the last window
+		vim.api.nvim_create_autocmd("BufEnter", {
+			nested = true,
+			callback = function()
+				if #vim.api.nvim_list_wins() == 1 and vim.bo.filetype == "NvimTree" then
+					vim.cmd("quit")
+				end
+			end,
+		})
 	end,
 }

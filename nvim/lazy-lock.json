@@ -10,6 +10,7 @@
   "conform.nvim": { "branch": "master", "commit": "25d48271e3d4404ba017cb92a37d3a681c1ad149" },
   "dressing.nvim": { "branch": "master", "commit": "6741f1062d3dc6e4755367a7e9b347b553623f04" },
   "friendly-snippets": { "branch": "main", "commit": "00ebcaa159e817150bd83bfe2d51fa3b3377d5c4" },
+  "gitsigns.nvim": { "branch": "main", "commit": "f074844b60f9e151970fbcdbeb8a2cd52b6ef25a" },
   "indent-blankline.nvim": { "branch": "master", "commit": "65e20ab94a26d0e14acac5049b8641336819dfc7" },
   "lazy.nvim": { "branch": "main", "commit": "4496b4cad69a862199bb3ad452d3c4988bb925a1" },
   "lazygit.nvim": { "branch": "main", "commit": "dc56df433bfbf107fee0139e187eb9750878fa84" },
@@ -36,5 +37,6 @@
   "telescope.nvim": { "branch": "0.1.x", "commit": "a0bbec21143c7bc5f8bb02e0005fa0b982edc026" },
   "todo-comments.nvim": { "branch": "main", "commit": "8f45f353dc3649cb9b44cecda96827ea88128584" },
   "trouble.nvim": { "branch": "main", "commit": "6efc446226679fda0547c0fd6a7892fd5f5b15d8" },
-  "which-key.nvim": { "branch": "main", "commit": "058486e5b001f11ef48f180dd57ae3088f5bb6dc" }
+  "vim-fugitive": { "branch": "master", "commit": "0444df68cd1cdabc7453d6bd84099458327e5513" },
+  "which-key.nvim": { "branch": "main", "commit": "f5e0cd5c7712ac63d8e6184785fb7bdac3b7b50d" }
 }
