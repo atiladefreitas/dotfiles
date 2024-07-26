@@ -36,6 +36,10 @@ vim.api.nvim_set_keymap("i", "<A-k>", "<Up>", { noremap = true, silent = true })
 -- Move cursor right with Option + l in insert mode
 vim.api.nvim_set_keymap("i", "<A-l>", "<Right>", { noremap = true, silent = true })
 
+-- key mappings for saving a file and closing a buffer
+vim.keymap.set("n", "<leader>w", ":w<CR>", { desc = "Save file" })
+vim.keymap.set("n", "<leader>cc", ":bd<CR>", { desc = "Close buffer" })
+
 -- Navigate vim panes better
 vim.keymap.set("n", "<c-k>", ":wincmd k<CR>")
 vim.keymap.set("n", "<c-j>", ":wincmd j<CR>")
