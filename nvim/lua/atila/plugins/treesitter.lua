@@ -8,10 +8,8 @@ return {
 	config = function()
 		-- Setup nvim-ts-autotag
 		require("nvim-ts-autotag").setup()
-
 		-- import nvim-treesitter plugin
 		local treesitter = require("nvim-treesitter.configs")
-
 		-- configure treesitter
 		treesitter.setup({
 			-- enable syntax highlighting
@@ -52,7 +50,11 @@ return {
 					node_decremental = "<bs>",
 				},
 			},
-			-- Remove the autotag configuration from here
+			-- Add the missing fields
+			modules = {},
+			sync_install = false,
+			ignore_install = {},
+			auto_install = true,
 		})
 	end,
 }

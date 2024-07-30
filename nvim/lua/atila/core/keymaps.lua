@@ -1,7 +1,7 @@
 vim.g.mapleader = " "
 
 -- calls lazygit
-vim.keymap.set("n", "<leader>g", ":lazygit<cr>")
+vim.keymap.set("n", "<leader>G", ":LazyGit<cr>")
 
 -- moves the cursor 20 lines up with alt (option) + up arrow
 vim.keymap.set("n", "<a-up>", "20k", { noremap = true, silent = true })
