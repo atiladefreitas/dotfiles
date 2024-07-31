@@ -3,6 +3,7 @@ return {
 	branch = "0.1.x",
 	dependencies = {
 		"nvim-lua/plenary.nvim",
+		"nvim-telescope/telescope-file-browser.nvim",
 		{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
 		"nvim-tree/nvim-web-devicons",
 		"folke/todo-comments.nvim",
@@ -34,9 +35,39 @@ return {
 					},
 				},
 			},
+			extensions = {
+				file_browser = {
+					path = "%:p:h",
+					cwd = vim.loop.cwd(),
+					cwd_to_path = false,
+					grouped = false,
+					files = true,
+					add_dirs = true,
+					depth = 1,
+					auto_depth = false,
+					select_buffer = false,
+					hidden = { file_browser = false, folder_browser = false },
+					respect_gitignore = vim.fn.executable("fd") == 1,
+					no_ignore = false,
+					follow_symlinks = false,
+					browse_files = require("telescope._extensions.file_browser.finders").browse_files,
+					browse_folders = require("telescope._extensions.file_browser.finders").browse_folders,
+					hide_parent_dir = false,
+					collapse_dirs = false,
+					prompt_path = false,
+					quiet = false,
+					dir_icon = "",
+					dir_icon_hl = "Default",
+					display_stat = { date = false, size = true, mode = false },
+					hijack_netrw = false,
+					use_fd = true,
+					git_status = true,
+				},
+			},
 		})
 
 		telescope.load_extension("fzf")
+		telescope.load_extension("file_browser")
 
 		-- set keymaps
 		local keymap = vim.keymap -- for conciseness
@@ -61,6 +92,7 @@ return {
 		keymap.set("n", "<leader>fr", "<cmd>Telescope registers<cr>", { desc = "Registers" })
 		keymap.set("n", "<leader>ft", "<cmd>Telescope colorscheme<cr>", { desc = "Colorschemes" })
 		keymap.set("n", "<leader>fw", "<cmd>Telescope live_grep<cr>", { desc = "Live Grep" })
+		keymap.set("n", "<space>fB", ":Telescope file_browser<CR>")
 		keymap.set(
 			"n",
 			"<leader>fW",
