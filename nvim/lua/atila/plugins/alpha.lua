@@ -14,7 +14,7 @@ return {
 			"/_/ \\_\\__|_|_|\\__,_|  \\__,_|\\___| |_|  |_|  \\___|_|\\__\\__,_|___/",
 			"",
 			"",
-			"      Tudo por Jesus, tudo por Maria, tudo à vossa imitaćão,      ",
+			"      Tudo por Jesus, tudo por Maria, tudo à vossa imitação,      ",
 			"   ó Patriarca São José! Este será meu lema na vida e na morte.    ",
 			"",
 			"",

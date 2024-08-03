@@ -9,8 +9,8 @@ return {
 	opts = {
 		sources = {
 			"filesystem",
-			-- "buffers",  -- Disable buffers tab
-			-- "git_status",  -- Disable git tab
+			"buffers", -- Disable buffers tab
+			"git_status", -- Disable git tab
 		},
 		filesystem = {
 			filtered_items = {
