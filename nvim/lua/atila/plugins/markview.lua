@@ -11,4 +11,6 @@ return {
 
 		"nvim-tree/nvim-web-devicons",
 	},
+	modes = { "n", "I" }, -- If you are using it in insert mode
+	hybrid_modes = { "i" },
 }
