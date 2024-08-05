@@ -1,4 +1,8 @@
 export ZSH="$HOME/.oh-my-zsh"
+export ANDROID_HOME=${HOME}/Android/Sdk
+export PATH=${ANDROID_HOME}/tools:${PATH}
+export PATH=${ANDROID_HOME}/emulator:${PATH}
+export PATH=${ANDROID_HOME}/platform-tools:${PATH}
 
 ZSH_THEME="robbyrussell"
 
@@ -14,6 +18,7 @@ alias lta='lt -a'
 alias ff="fzf --preview 'batcat --style=numbers --color=always {}'"
 alias fd='fdfind'
 alias cd='z'
+alias dockercompose='sudo docker-compose'
 
 # Directories
 alias ..='cd ..'
@@ -27,7 +32,8 @@ alias d='docker'
 alias r='rails'
 alias bat='batcat'
 alias lzg='lazygit'
-alias lzd='lazydocker'
+alias lzd='sudo lazydocker'
+alias brilho='xrandr --output HDMI-1-0 --brightness'
 
 eval "$(atuin init zsh)"
 eval "$(zoxide init zsh)"
