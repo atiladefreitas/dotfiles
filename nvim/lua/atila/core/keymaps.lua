@@ -32,6 +32,7 @@ vim.api.nvim_set_keymap("i", "<a-l>", "<right>", { noremap = true, silent = true
 
 -- key mappings for saving a file and closing a buffer
 vim.keymap.set("n", "<leader>w", ":w<cr>", { desc = "save file" })
+vim.keymap.set("n", "<leader>q", ":q<cr>", { desc = "close file" })
 vim.keymap.set("n", "<leader>cc", ":bd<cr>", { desc = "close buffer" })
 
 -- navigate vim panes better
