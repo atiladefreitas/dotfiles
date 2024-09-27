@@ -15,7 +15,6 @@ return {
 				html = { "biome" }, -- Use Biome for HTML
 				json = { "biome" }, -- Use Biome for JSON
 				yaml = { "biome" }, -- Use Biome for YAML
-				markdown = { "biome" }, -- Use Biome for Markdown
 				graphql = { "biome" }, -- Use Biome for GraphQL
 				liquid = { "biome" }, -- Use Biome for Liquid
 				lua = { "stylua" }, -- Use Stylua for Lua

@@ -1,5 +1,5 @@
 return {
-	"atiladefreitas/slimline.nvim",
+	"sschleemilch/slimline.nvim",
 	opts = {
 		bold = true,
 		verbose_mode = false,

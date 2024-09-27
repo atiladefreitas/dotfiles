@@ -3,6 +3,7 @@ return {
 	branch = "0.1.x",
 	dependencies = {
 		"nvim-lua/plenary.nvim",
+		"andrew-george/telescope-themes",
 		"nvim-telescope/telescope-file-browser.nvim",
 		{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
 		"nvim-tree/nvim-web-devicons",
@@ -15,6 +16,8 @@ return {
 
 		local trouble = require("trouble")
 		local trouble_telescope = require("trouble.sources.telescope")
+
+		telescope.load_extension("themes")
 
 		-- or create your custom action
 		local custom_actions = transform_mod({

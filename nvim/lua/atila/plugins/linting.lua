@@ -14,7 +14,6 @@ return {
 			python = { "pylint" },
 			lua = { "luacheck" },
 			css = { "stylelint" },
-			markdown = { "markdownlint" },
 			html = { "htmlhint" },
 		}
 
