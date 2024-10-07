@@ -40,3 +40,16 @@ vim.keymap.set("n", "<c-k>", ":wincmd k<cr>")
 vim.keymap.set("n", "<c-j>", ":wincmd j<cr>")
 vim.keymap.set("n", "<c-h>", ":wincmd h<cr>")
 vim.keymap.set("n", "<c-l>", ":wincmd l<cr>")
+
+-- Keyboard users
+vim.keymap.set("n", "<C-m>", function()
+	require("menu").open("default")
+end, {})
+
+-- mouse users + nvimtree users!
+vim.keymap.set("n", "<RightMouse>", function()
+	vim.cmd.exec('"normal! \\<RightMouse>"')
+
+	local options = vim.bo.ft == "NvimTree" and "nvimtree" or "default"
+	require("menu").open(options, { mouse = true })
+end, {})
