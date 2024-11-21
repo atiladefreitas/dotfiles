@@ -78,6 +78,29 @@ return {
 			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 		end
 
+		lspconfig.ts_ls.setup({
+			on_attach = function(client, bufnr)
+				print(vim.inspect(client.server_capabilities)) -- Debug das capacidades do servidor
+				-- Habilita inlay hints se suportado
+				if client.server_capabilities.inlayHintProvider then
+					vim.lsp.buf.inlay_hint(bufnr, true)
+				else
+					print("Inlay hints não suportados pelo servidor LSP")
+				end
+			end,
+			capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities()),
+		})
+
+		lspconfig.ts_ls.setup({
+			on_attach = function(client, bufnr)
+				-- Verifique se o servidor suporta inlay hints antes de chamar
+				if client.server_capabilities.inlayHintProvider then
+					vim.lsp.buf.inlay_hint(bufnr, true)
+				end
+			end,
+			capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities()),
+		})
+
 		mason_lspconfig.setup_handlers({
 			-- default handler for installed servers
 			function(server_name)
