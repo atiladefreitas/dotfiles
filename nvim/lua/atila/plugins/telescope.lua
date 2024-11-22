@@ -20,11 +20,11 @@ return {
 		telescope.load_extension("themes")
 
 		-- or create your custom action
-		local custom_actions = transform_mod({
-			open_trouble_qflist = function(prompt_bufnr)
-				trouble.toggle("quickfix")
-			end,
-		})
+		-- local custom_actions = transform_mod({
+		-- 	open_trouble_qflist = function(prompt_bufnr)
+		-- 		trouble.toggle("quickfix")
+		-- 	end,
+		-- })
 
 		telescope.setup({
 			defaults = {
@@ -33,7 +33,7 @@ return {
 					i = {
 						["<C-k>"] = actions.move_selection_previous, -- move to prev result
 						["<C-j>"] = actions.move_selection_next, -- move to next result
-						["<C-q>"] = actions.send_selected_to_qflist + custom_actions.open_trouble_qflist,
+						-- ["<C-q>"] = actions.send_selected_to_qflist + custom_actions.open_trouble_qflist,
 						["<C-t>"] = trouble_telescope.open,
 						["<C-s>"] = actions.select_vertical,
 					},
