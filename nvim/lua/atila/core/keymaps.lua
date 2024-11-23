@@ -42,9 +42,9 @@ vim.keymap.set("n", "<c-h>", ":wincmd h<cr>")
 vim.keymap.set("n", "<c-l>", ":wincmd l<cr>")
 
 -- Keyboard users
-vim.keymap.set("n", "<C-m>", function()
-	require("menu").open("default")
-end, {})
+-- vim.keymap.set("n", "<C-m>", function()
+-- 	require("menu").open("default")
+-- end, {})
 
 -- mouse users + nvimtree users!
 vim.keymap.set("n", "<RightMouse>", function()
