@@ -1,3 +1,4 @@
+-- AI integration
 return {
 	"yetone/avante.nvim",
 	event = "VeryLazy",

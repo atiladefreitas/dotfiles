@@ -1,3 +1,4 @@
+-- Smart commenting
 return {
 	"numToStr/Comment.nvim",
 	event = { "BufReadPre", "BufNewFile" },

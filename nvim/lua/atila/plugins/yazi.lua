@@ -1,3 +1,4 @@
+-- File manager
 return {
 	"mikavilpas/yazi.nvim",
 	event = "VeryLazy",

@@ -1,3 +1,4 @@
+-- floating status line
 return {
 	"b0o/incline.nvim",
 	config = function()
