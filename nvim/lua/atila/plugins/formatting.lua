@@ -6,26 +6,23 @@ return {
 
 		conform.setup({
 			formatters_by_ft = {
-				javascript = { "biome", "estlint_d" }, -- Use Biome for JavaScript
-				typescript = { "biome", "estlint_d" }, -- Use Biome for TypeScript
-				javascriptreact = { "biome", "estlint_d" }, -- Use Biome for JSX
-				typescriptreact = { "biome", "estlint_d" }, -- Use Biome for TSX
-				svelte = { "biome" }, -- Use Biome for Svelte
-				css = { "biome" }, -- Use Biome for CSS
-				html = { "biome" }, -- Use Biome for HTML
-				json = { "biome" }, -- Use Biome for JSON
-				yaml = { "biome" }, -- Use Biome for YAML
-				graphql = { "biome" }, -- Use Biome for GraphQL
-				liquid = { "biome" }, -- Use Biome for Liquid
-				lua = { "stylua" }, -- Use Stylua for Lua
-				python = { "isort", "black" }, -- Use Isort and Black for Python
-				-- Additional filetypes can be added here
+				javascript = { "biome", "prettier" }, -- Add Prettier here
+				typescript = { "biome", "prettier" },
+				javascriptreact = { "biome", "prettier" },
+				typescriptreact = { "biome", "prettier" },
+				svelte = { "biome", "prettier" },
+				css = { "prettier" }, -- Use Prettier for CSS
+				html = { "prettier" }, -- Use Prettier for HTML
+				json = { "biome" }, -- Biome handles JSON
+				yaml = { "prettier" }, -- Add Prettier if needed
+				lua = { "stylua" }, -- Stylua for Lua
+				python = { "isort", "black" }, -- Python formatters
 			},
 			format_after_save = {
-				enable = true, -- Enable format on save
-				lsp_fallback = true, -- Use LSP as fallback formatter
-				async = true, -- Format asynchronously
-				timeout_ms = 1000, -- Timeout for formatting
+				enable = true,
+				lsp_fallback = true,
+				async = true,
+				timeout_ms = 1000,
 			},
 		})
 

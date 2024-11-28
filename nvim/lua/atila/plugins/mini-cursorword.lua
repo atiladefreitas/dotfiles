@@ -8,7 +8,7 @@ return {
 
 		vim.api.nvim_set_keymap(
 			"n",
-			"<leader>ce",
+			"<leader>cE",
 			":lua require('mini.cursorword').toggle()<CR>",
 			{ noremap = true, silent = true, desc = "Toggle cursorword highlight" }
 		)

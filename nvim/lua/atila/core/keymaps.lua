@@ -35,6 +35,8 @@ vim.keymap.set("n", "<leader>w", ":w<cr>", { desc = "save file" })
 vim.keymap.set("n", "<leader>q", ":q<cr>", { desc = "close file" })
 vim.keymap.set("n", "<leader>cc", ":bd<cr>", { desc = "close buffer" })
 
+vim.api.nvim_set_keymap("n", "<leader>/", "gcc", { desc = "comment line" })
+
 -- navigate vim panes better
 vim.keymap.set("n", "<c-k>", ":wincmd k<cr>")
 vim.keymap.set("n", "<c-j>", ":wincmd j<cr>")

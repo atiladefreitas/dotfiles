@@ -14,6 +14,8 @@ return {
 					separator = true,
 				},
 			},
+
+			separator_style = "slant",
 		},
 	},
 }

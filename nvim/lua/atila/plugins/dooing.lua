@@ -1,12 +1,11 @@
 return {
 	{
-		"atiladefreitas/dooing",
-		-- dir = "~/Documents/dooing",
+		-- "atiladefreitas/dooing",
+		-- version = "v1.6.0-alpha",
+		dir = "~/Documents/dooing-prio/dooing",
 		config = function()
 			require("dooing").setup({
-				-- keymaps = {
-				-- toggle_window = "<leader>zt",
-				-- },
+				prioritization = true,
 			})
 		end,
 	},
