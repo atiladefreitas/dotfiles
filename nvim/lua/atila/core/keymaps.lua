@@ -3,6 +3,8 @@ vim.g.mapleader = " "
 -- calls lazygit
 vim.keymap.set("n", "<leader>G", ":LazyGit<cr>")
 
+vim.keymap.set("n", "<a-,>", "@a", { noremap = true, silent = true })
+
 -- moves the cursor 20 lines up with alt (option) + up arrow
 vim.keymap.set("n", "<a-up>", "20k", { noremap = true, silent = true })
 
@@ -35,7 +37,7 @@ vim.keymap.set("n", "<leader>w", ":w<cr>", { desc = "save file" })
 vim.keymap.set("n", "<leader>q", ":q<cr>", { desc = "close file" })
 vim.keymap.set("n", "<leader>cc", ":bd<cr>", { desc = "close buffer" })
 
-vim.api.nvim_set_keymap("n", "<leader>/", "gcc", { desc = "comment line" })
+-- vim.api.nvim_set_keymap("n", "<leader>/", "gcc", { desc = "comment line" })
 
 -- navigate vim panes better
 vim.keymap.set("n", "<c-k>", ":wincmd k<cr>")

@@ -1,8 +1,8 @@
 return {
 	{
-		"atiladefreitas/dooing",
+		-- "atiladefreitas/dooing",
 		-- version = "*",
-		-- dir = "~/Documents/dooing",
+		dir = "~/Documents/plugins/dooing",
 		config = function()
 			require("dooing").setup({
 				prioritization = true,
