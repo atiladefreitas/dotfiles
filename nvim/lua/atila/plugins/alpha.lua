@@ -3,7 +3,12 @@ return {
 	"goolord/alpha-nvim",
 	event = "VimEnter",
 	config = function()
-		local alpha = require("alpha")
+		local status_ok, alpha = pcall(require, "alpha")
+		if not status_ok then
+			vim.notify("Failed to load alpha", vim.log.levels.ERROR)
+			return
+		end
+
 		local dashboard = require("alpha.themes.dashboard")
 
 		-- Set header
@@ -22,7 +27,12 @@ return {
 		}
 
 		-- Set menu
-		dashboard.section.buttons.val = {}
+		dashboard.section.buttons.val = {
+			dashboard.button("f", "  Find file", ":Telescope find_files<CR>"),
+			dashboard.button("e", "  New file", ":ene <BAR> startinsert<CR>"),
+			dashboard.button("r", "  Recent files", ":Telescope oldfiles<CR>"),
+			dashboard.button("q", "  Quit Neovim", ":qa<CR>"),
+		}
 
 		-- Send config to alpha
 		alpha.setup(dashboard.opts)
