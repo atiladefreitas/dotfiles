@@ -1,3 +1,4 @@
+-- smart clipboard manager
 return {
 	"atiladefreitas/lazyclip",
 	-- dir = "~/Documents/lazyclip",

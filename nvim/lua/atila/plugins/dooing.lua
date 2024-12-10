@@ -1,3 +1,4 @@
+-- beautiful to-do item manager
 return {
 	{
 		-- "atiladefreitas/dooing",

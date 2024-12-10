@@ -1,3 +1,4 @@
+-- git signs
 return {
 	{
 		"tpope/vim-fugitive",

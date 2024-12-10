@@ -1,3 +1,4 @@
+-- smart and quick jumping
 return {
 	"folke/flash.nvim",
 	event = "VeryLazy",

@@ -1,3 +1,4 @@
+-- formatter and linter
 return {
 	"stevearc/conform.nvim",
 	event = { "BufReadPre", "BufNewFile" },
