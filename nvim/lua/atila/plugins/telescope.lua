@@ -103,10 +103,6 @@ return {
 			"<cmd>Telescope live_grep hidden=true<cr>",
 			{ desc = "Live Grep (include hidden files)" }
 		)
-		keymap.set("n", "<leader>gb", "<cmd>Telescope git_branches<cr>", { desc = "Git Branches" })
-		keymap.set("n", "<leader>gc", "<cmd>Telescope git_commits<cr>", { desc = "Git Commits (repository)" })
-		keymap.set("n", "<leader>gC", "<cmd>Telescope git_bcommits<cr>", { desc = "Git Commits (current file)" })
-		keymap.set("n", "<leader>gt", "<cmd>Telescope git_status<cr>", { desc = "Git Status" })
 		keymap.set("n", "<leader>ls", "<cmd>Telescope lsp_document_symbols<cr>", { desc = "LSP Symbols" })
 		keymap.set("n", "<leader>lG", "<cmd>Telescope lsp_workspace_symbols<cr>", { desc = "LSP Workspace Symbols" })
 	end,
