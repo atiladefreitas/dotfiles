@@ -48,3 +48,6 @@ vim.api.nvim_set_keymap("n", "<leader>mP", ":PeekOpen<CR>", { noremap = true, si
 vim.api.nvim_set_keymap("i", "´c", "ç", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("i", "'c", "ç", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("i", "ć", "ç", { noremap = true, silent = true })
+
+-- step spell check
+vim.api.nvim_set_keymap("n", "<leader>ss", ":set spell!<CR>", { noremap = true, silent = true })
