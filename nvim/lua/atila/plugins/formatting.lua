@@ -9,7 +9,13 @@ return {
 			formatters_by_ft = {
 				javascript = { "biome", "prettier" }, -- Add Prettier here
 				typescript = { "biome", "prettier" },
-				markdown = { "prettier", "markdownlint-cli2" },
+				markdown = {
+					{
+						command = "prettier",
+						args = { "--print-width", "80", "--prose-wrap", "always" },
+					},
+					"markdownlint-cli2",
+				},
 				javascriptreact = { "biome", "prettier" },
 				typescriptreact = { "biome", "prettier" },
 				svelte = { "biome", "prettier" },
