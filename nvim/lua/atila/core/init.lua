@@ -9,5 +9,11 @@ vim.api.nvim_create_autocmd("FileType", {
 	callback = function()
 		vim.opt_local.spell = true
 		vim.opt_local.spelllang = { "pt_br", "en_us" }
+		-- Set text width to 80 for Markdown files
+		vim.bo.textwidth = 80
+		-- Enable soft wrapping without inserting new lines
+		vim.wo.wrap = true
+		-- Indent lines properly when wrapped
+		vim.bo.formatoptions = vim.bo.formatoptions .. "t"
 	end,
 })

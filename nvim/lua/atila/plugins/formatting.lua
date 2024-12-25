@@ -1,30 +1,27 @@
 -- formatter and linter
 return {
 	"stevearc/conform.nvim",
-	event = { "BufReadPre", "BufNewFile" },
+	event = { "bufreadpre", "bufnewfile" },
 	config = function()
 		local conform = require("conform")
 
 		conform.setup({
 			formatters_by_ft = {
-				javascript = { "biome", "prettier" }, -- Add Prettier here
+				javascript = { "biome", "prettier" },
 				typescript = { "biome", "prettier" },
 				markdown = {
-					{
-						command = "prettier",
-						args = { "--print-width", "80", "--prose-wrap", "always" },
-					},
+					"prettier",
 					"markdownlint-cli2",
 				},
 				javascriptreact = { "biome", "prettier" },
 				typescriptreact = { "biome", "prettier" },
 				svelte = { "biome", "prettier" },
-				css = { "prettier" }, -- Use Prettier for CSS
-				html = { "prettier" }, -- Use Prettier for HTML
-				json = { "biome" }, -- Biome handles JSON
-				yaml = { "prettier" }, -- Add Prettier if needed
-				lua = { "stylua" }, -- Stylua for Lua
-				python = { "isort", "black" }, -- Python formatters
+				css = { "prettier" }, -- use prettier for css
+				html = { "prettier" }, -- use prettier for html
+				json = { "biome" }, -- biome handles json
+				yaml = { "prettier" }, -- add prettier if needed
+				lua = { "stylua" }, -- stylua for lua
+				python = { "isort", "black" }, -- python formatters
 			},
 			format_after_save = {
 				enable = true,
@@ -34,15 +31,15 @@ return {
 			},
 		})
 
-		-- Custom keybindings for formatting
+		-- custom keybindings for formatting
 		vim.keymap.set({ "n", "v" }, "<leader>mp", function()
 			conform.format({
 				lsp_fallback = true,
 				async = true,
 				timeout_ms = 1000,
 			})
-		end, { desc = "Format file or range (in visual mode)" })
+		end, { desc = "format file or range (in visual mode)" })
 
-		-- Add additional keymaps or configurations as needed
+		-- add additional keymaps or configurations as needed
 	end,
 }

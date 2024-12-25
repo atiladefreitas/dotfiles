@@ -1,6 +1,3 @@
-import = [
-    "~/Dotfiles/alacritty/catppuccin-mocha.toml"
-]
 
 [env]
 TERM = "xterm-256color"
@@ -8,17 +5,16 @@ TERM = "xterm-256color"
 [window]
 padding.x = 10
 padding.y = 10
-
-# [colors]
-# transparent_background_colors = true
-
-decorations = "None"
-
-option_as_alt = "Both"
+decorations = "none"
+opacity = 0.8  # Adjust transparency (0.0 is fully transparent, 1.0 is fully opaque)
 
 [font]
 normal.family = "MesloLGS Nerd Font Mono"
-offset.x = 0  # For letter spacing (default: 0)
-offset.y = 1  # For line spacing (default: 0)
-
+offset.x = 0
+offset.y = 1
 size = 9
+
+[general]
+import = [
+    "~/Dotfiles/alacritty/tokyonight_night.toml"
+]
