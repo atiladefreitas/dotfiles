@@ -12,7 +12,7 @@ return {
 	},
 	init = function()
 		vim.g.neominimap = {
-			auto_enable = true,
+			auto_enable = false,
 
 			layout = "float",
 

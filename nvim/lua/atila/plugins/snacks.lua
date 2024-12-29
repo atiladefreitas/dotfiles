@@ -43,8 +43,11 @@ return {
 			},
 		},
 		indent = { enabled = true },
-		input = { enabled = false },
-		notifier = { enabled = true },
+		input = { enabled = true },
+		notifier = {
+			enabled = true,
+			style = "compact",
+		},
 		quickfile = { enabled = true },
 		statuscolumn = { enabled = true },
 		lazygit = {
@@ -86,6 +89,7 @@ return {
 			},
 		},
 		words = { enabled = true },
+		git = { enabled = true },
 		terminal = { enabled = true },
 	},
 
