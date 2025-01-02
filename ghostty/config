@@ -1,0 +1,22 @@
+theme = tokyonight-storm
+font-size = 9
+font-family = Cascadia Code Mono Nerd
+
+font-style = SemiBold
+
+clipboard-read = allow
+clipboard-write = allow
+window-colorspace = srgb
+shell-integration = zsh
+
+mouse-hide-while-typing = true
+cursor-invert-fg-bg = true
+
+window-decoration = false
+
+cursor-color = white
+
+background-opacity = 0.70
+
+
+
