@@ -367,5 +367,19 @@
   "theme.bar.menus.menu.bluetooth.scroller.color": "#7dcfff",
   "theme.bar.location": "bottom",
   "bar.autoHide": "never",
-  "theme.bar.outer_spacing": "0.2rem"
+  "theme.bar.outer_spacing": "0.2rem",
+  "menus.dashboard.powermenu.avatar.image": "/home/atiladefreitas/Downloads/notion-avatar.png",
+  "menus.dashboard.stats.enable_gpu": true,
+  "menus.dashboard.shortcuts.enabled": true,
+  "menus.dashboard.shortcuts.left.shortcut2.icon": "",
+  "menus.dashboard.shortcuts.left.shortcut1.tooltip": "",
+  "menus.dashboard.shortcuts.left.shortcut1.command": "",
+  "menus.dashboard.shortcuts.left.shortcut1.icon": "",
+  "menus.dashboard.shortcuts.left.shortcut2.tooltip": "",
+  "menus.dashboard.shortcuts.left.shortcut2.command": "",
+  "menus.dashboard.shortcuts.left.shortcut3.icon": "",
+  "menus.dashboard.shortcuts.left.shortcut3.tooltip": "",
+  "menus.dashboard.shortcuts.left.shortcut3.command": "",
+  "menus.dashboard.shortcuts.left.shortcut4.icon": "",
+  "menus.dashboard.shortcuts.left.shortcut4.command": "rofi -show drun"
 }
