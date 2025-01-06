@@ -91,9 +91,17 @@ return {
 		words = { enabled = true },
 		git = { enabled = true },
 		terminal = { enabled = true },
+		zen = { enabled = true },
 	},
 
 	keys = {
+		{
+			"<leader>z",
+			function()
+				Snacks.zen()
+			end,
+			desc = "Toggle Zen Mode",
+		},
 		{
 			"<leader>cR",
 			function()
