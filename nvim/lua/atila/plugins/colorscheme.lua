@@ -22,7 +22,7 @@ return {
 		priority = 999,
 		config = function()
 			require("kanagawa").setup({
-				transparent = false,
+				transparent = true,
 				theme = "wave",
 				colors = {},
 				overrides = function(colors)
@@ -41,7 +41,7 @@ return {
 		config = function()
 			require("gruvbox").setup({
 				contrast = "medium", -- Options: "hard", "medium", "soft"
-				transparent_mode = false,
+				transparent_mode = true,
 			})
 			-- vim.cmd("colorscheme gruvbox")
 		end,
