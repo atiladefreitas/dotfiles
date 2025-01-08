@@ -1,5 +1,5 @@
--- beautiful to-do item manager
 return {
+	-- beautiful to-do item manager
 	{
 		-- "atiladefreitas/dooing",
 		-- version = "*",
@@ -7,6 +7,9 @@ return {
 		config = function()
 			require("dooing").setup({
 				prioritization = true,
+				window = {
+					width = 80,
+				},
 				calendar = {
 					icon = "",
 				},

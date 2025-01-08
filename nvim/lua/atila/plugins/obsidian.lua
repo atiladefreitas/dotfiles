@@ -37,10 +37,10 @@ return {
 		log_level = vim.log.levels.INFO,
 
 		daily_notes = {
-			-- Optional, if you keep daily notes in a separate directory.
-			folder = "journal",
+			-- Keep this as a static base folder
+			folder = "journal/01-Jan",
 			-- Optional, if you want to change the date format for the ID of daily notes.
-			date_format = "%Y-%m-%d",
+			date_format = "%d-%m-%Y",
 			-- Optional, if you want to change the date format of the default alias of daily notes.
 			alias_format = "%B %-d, %Y",
 			-- Optional, default tags to add to each new daily note created.
@@ -112,7 +112,34 @@ return {
 		---@param spec { id: string, dir: obsidian.Path, title: string|? }
 		---@return string|obsidian.Path The full path to the new note.
 		note_path_func = function(spec)
-			-- This is equivalent to the default behavior.
+			-- Check if this is a daily note by looking at the title format (dd-mm-yyyy)
+			local is_daily = string.match(spec.title or "", "%d%d%-%d%d%-%d%d%d%d")
+
+			if is_daily then
+				-- Get current month folder name
+				local month_names = {
+					"01-Jan",
+					"02-Feb",
+					"03-Mar",
+					"04-Apr",
+					"05-May",
+					"06-Jun",
+					"07-Jul",
+					"08-Aug",
+					"09-Sep",
+					"10-Oct",
+					"11-Nov",
+					"12-Dec",
+				}
+				local current_month = tonumber(os.date("%m"))
+				local month_folder = month_names[current_month]
+
+				-- Create path with current month folder
+				local path = spec.dir / "journal" / month_folder / spec.id
+				return path:with_suffix(".md")
+			end
+
+			-- For non-daily notes, use the default behavior
 			local path = spec.dir / tostring(spec.id)
 			return path:with_suffix(".md")
 		end,
