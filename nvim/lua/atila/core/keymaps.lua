@@ -20,10 +20,10 @@ vim.keymap.set("n", "<a-[>", "15j", { noremap = true, silent = true })
 vim.keymap.set("n", "<a-]>", "15k", { noremap = true, silent = true })
 
 -- navigate vim panes better
-vim.keymap.set("n", "<c-k>", ":wincmd k<cr>")
-vim.keymap.set("n", "<c-j>", ":wincmd j<cr>")
-vim.keymap.set("n", "<c-h>", ":wincmd h<cr>")
-vim.keymap.set("n", "<c-l>", ":wincmd l<cr>")
+vim.keymap.set("n", "<c-k>", ":wincmd k<CR>")
+vim.keymap.set("n", "<c-j>", ":wincmd j<CR>")
+vim.keymap.set("n", "<c-h>", ":wincmd h<CR>")
+vim.keymap.set("n", "<c-l>", ":wincmd l<CR>")
 
 -- map 'c' to 'ç' in insert mode
 vim.api.nvim_set_keymap("i", "´c", "ç", { noremap = true, silent = true })
@@ -35,6 +35,6 @@ vim.api.nvim_set_keymap("n", "<leader>ss", ":set spell!<CR>", { noremap = true, 
 
 -- insert current time in 24h format
 vim.keymap.set("n", "<leader>st", function()
-    local current_time = "> [" .. os.date("%H:%M") .. "]"
-    vim.api.nvim_put({ current_time }, 'c', true, true)
+	local current_time = "> [ " .. os.date("%H:%M") .. "]"
+	vim.api.nvim_put({ current_time }, "c", true, true)
 end, { desc = "paste current time" })
