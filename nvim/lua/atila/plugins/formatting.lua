@@ -5,6 +5,8 @@ return {
 	config = function()
 		local conform = require("conform")
 
+		local markdown_folder = vim.fn.expand("~/Documents/notes")
+
 		conform.setup({
 			formatters_by_ft = {
 				javascript = { "biome", "prettier" },
@@ -12,22 +14,29 @@ return {
 				javascriptreact = { "biome", "prettier" },
 				typescriptreact = { "biome", "prettier" },
 				svelte = { "biome", "prettier" },
-				css = { "prettier" }, -- use prettier for css
-				html = { "prettier" }, -- use prettier for html
-				json = { "biome" }, -- biome handles json
-				yaml = { "prettier" }, -- add prettier if needed
-				lua = { "stylua" }, -- stylua for lua
-				python = { "isort", "black" }, -- python formatters
+				markdown = function()
+					local current_file = vim.fn.expand("%:p")
+					if current_file:find(markdown_folder, 1, true) then
+						return { "prettier" }
+					else
+						return {}
+					end
+				end,
+				css = { "prettier" },
+				html = { "prettier" },
+				json = { "biome" },
+				yaml = { "prettier" },
+				lua = { "stylua" },
+				python = { "isort", "black" },
 			},
 			format_after_save = {
-				enable = true,
+				enable = false,
 				lsp_fallback = true,
 				async = true,
 				timeout_ms = 1000,
 			},
 		})
 
-		-- custom keybindings for formatting
 		vim.keymap.set({ "n", "v" }, "<leader>mp", function()
 			conform.format({
 				lsp_fallback = true,
@@ -35,7 +44,5 @@ return {
 				timeout_ms = 1000,
 			})
 		end, { desc = "format file or range (in visual mode)" })
-
-		-- add additional keymaps or configurations as needed
 	end,
 }

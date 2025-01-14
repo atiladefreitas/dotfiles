@@ -6,7 +6,7 @@ return {
 		priority = 1000,
 		config = function()
 			require("tokyonight").setup({
-				style = "storm",
+				style = "moon",
 				transparent = true,
 				on_colors = function(colors) end,
 				on_highlights = function(highlights, colors) end,
