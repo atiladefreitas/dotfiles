@@ -3,15 +3,13 @@
 TERM = "xterm-256color"
 
 [window]
-padding.x = 10
-padding.y = 10
 decorations = "none"
-opacity = 0.8  # Adjust transparency (0.0 is fully transparent, 1.0 is fully opaque)
+opacity = 0.6  # Adjust transparency (0.0 is fully transparent, 1.0 is fully opaque)
 
 [font]
-normal.family = "MesloLGS Nerd Font Mono"
+normal.family = "JetBrainsMono Nerd Font"
 offset.x = 0
-offset.y = 1
+offset.y = 2
 size = 9
 
 [general]
