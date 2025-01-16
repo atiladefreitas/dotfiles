@@ -19,6 +19,9 @@ vim.keymap.set("n", "<leader>cc", ":bd<cr>", { desc = "close buffer" })
 vim.keymap.set("n", "<a-[>", "15j", { noremap = true, silent = true })
 vim.keymap.set("n", "<a-]>", "15k", { noremap = true, silent = true })
 
+vim.keymap.set("n", "<a-d>", "15j", { noremap = true, silent = true })
+vim.keymap.set("n", "<a-w>", "15k", { noremap = true, silent = true })
+
 -- navigate vim panes better
 vim.keymap.set("n", "<c-k>", ":wincmd k<CR>")
 vim.keymap.set("n", "<c-j>", ":wincmd j<CR>")
