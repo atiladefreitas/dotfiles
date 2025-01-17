@@ -40,6 +40,7 @@ vim.api.nvim_set_keymap("n", "<leader>ss", ":set spell!<CR>", { noremap = true, 
 vim.keymap.set("n", "<leader>st", function()
 	local current_time = "[ " .. os.date("%H:%M") .. "]  "
 	vim.api.nvim_put({ current_time, "" }, "c", true, true)
+	vim.api.nvim_command("startinsert")
 end, { desc = "paste current time" })
 
 -- Obsidian Today command
