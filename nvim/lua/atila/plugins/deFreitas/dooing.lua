@@ -1,12 +1,12 @@
 return {
 	-- beautiful to-do item manager
 	{
-		-- "atiladefreitas/dooing",
-		-- version = "*",
-		dir = "~/Documents/plugins/dooing",
+		"atiladefreitas/dooing",
+		version = "*",
 		config = function()
 			require("dooing").setup({
 				prioritization = true,
+				show_entered_date = true,
 				window = {
 					width = 80,
 				},

@@ -90,8 +90,12 @@ return {
 		},
 		words = { enabled = true },
 		git = { enabled = true },
-		terminal = { enabled = true },
-		zen = { enabled = true },
+		dim = {
+			enabled = false,
+		},
+		zen = {
+			enabled = true,
+		},
 	},
 
 	keys = {

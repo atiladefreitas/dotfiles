@@ -6,6 +6,7 @@ return {
 		local conform = require("conform")
 
 		local markdown_folder = vim.fn.expand("~/Documents/notes")
+		local excluded_subfolder = vim.fn.expand("~/Documents/notes/articles")
 
 		conform.setup({
 			formatters_by_ft = {
@@ -16,10 +17,12 @@ return {
 				svelte = { "biome", "prettier" },
 				markdown = function()
 					local current_file = vim.fn.expand("%:p")
-					if current_file:find(markdown_folder, 1, true) then
-						return { "prettier" }
+					if current_file:find(excluded_subfolder, 1, true) then
+						return {} -- Disable formatting for files in excluded folder
+					elseif current_file:find(markdown_folder, 1, true) then
+						return { "prettier" } -- Enable formatting for other files in notes
 					else
-						return {}
+						return {} -- Default to no formatter
 					end
 				end,
 				css = { "prettier" },

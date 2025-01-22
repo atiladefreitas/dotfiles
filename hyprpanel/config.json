@@ -451,7 +451,7 @@
   "theme.bar.buttons.modules.cpuTemp.background": "#000000",
   "theme.bar.buttons.modules.cpuTemp.icon_background": "#ffffff",
   "theme.bar.buttons.modules.cpuTemp.border": "#ffffff",
-  "bar.customModules.cpuTemp.sensor": "/sys/devices/platform/coretemp.0/hwmon/hwmon6/temp1_input",
+  "bar.customModules.cpuTemp.sensor": "/sys/devices/platform/coretemp.0/hwmon/hwmon5/temp1_input",
   "theme.bar.menus.popover.scaling": 80,
   "theme.tooltip.scaling": 80,
   "theme.bar.menus.menu.power.scaling": 80,
@@ -465,5 +465,8 @@
   "theme.bar.menus.menu.dashboard.confirmation_scaling": 80,
   "theme.bar.menus.menu.dashboard.scaling": 80,
   "theme.osd.scaling": 80,
-  "theme.notification.scaling": 80
+  "theme.notification.scaling": 80,
+  "theme.bar.buttons.modules.submap.enableBorder": false,
+  "theme.bar.buttons.modules.weather.enableBorder": false,
+  "theme.bar.buttons.modules.cpuTemp.enableBorder": false
 }
