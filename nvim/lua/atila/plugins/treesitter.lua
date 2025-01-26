@@ -18,6 +18,10 @@ return {
 			},
 			-- enable indentation
 			indent = { enable = true },
+			context_commentstring = {
+				enable = true,
+				enable_autocmd = false,
+			},
 			-- ensure these language parsers are installed
 			ensure_installed = {
 				"json",
