@@ -1,0 +1,21 @@
+{
+	"players": [
+		"org.mpris.MediaPlayer2.mpv",
+		"firefox.instance_1_7180",
+		"io.bassi.Amberol"
+	],
+	"use_active_player": false,
+	"keybinds": {
+		"esc;q": "quit()",
+		"h": "prev()",
+		"l": "next()",
+		" ": "play_pause()"
+	},
+	"align": "center",
+	"flex": "start",
+	"width": 20,
+	"height": 18,
+	"bg": "reset",
+	"fg": "reset",
+	"layout": []
+}
