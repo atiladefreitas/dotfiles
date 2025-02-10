@@ -40,10 +40,7 @@ return {
 				["<C-e>"] = cmp.mapping.abort(), -- close completion window
 				["<CR>"] = cmp.mapping.confirm({ select = false }), -- confirm selection
 				["<Tab>"] = cmp.mapping(function(fallback)
-					local copilot = vim.fn["copilot#Accept"]()
-					if copilot ~= "" then
-						vim.api.nvim_feedkeys(copilot, "i", true)
-					elseif cmp.visible() then
+					if cmp.visible() then
 						cmp.select_next_item()
 					elseif luasnip.expand_or_jumpable() then
 						luasnip.expand_or_jump()
