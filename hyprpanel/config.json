@@ -391,9 +391,26 @@
   "menus.clock.weather.unit": "metric",
   "bar.layouts": {
     "0": {
-      "left": [],
-      "middle": [],
-      "right": []
+      "left": [
+        "dashboard",
+        "workspaces",
+        "windowtitle"
+      ],
+      "middle": [
+        "ram",
+        "cpu",
+        "cputemp",
+        "media"
+      ],
+      "right": [
+        "volume",
+        "network",
+        "bluetooth",
+        "battery",
+        "systray",
+        "clock",
+        "notifications"
+      ]
     },
     "1": {
       "left": [

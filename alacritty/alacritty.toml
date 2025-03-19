@@ -4,15 +4,16 @@ TERM = "xterm-256color"
 
 [window]
 decorations = "none"
-opacity = 0.6  # Adjust transparency (0.0 is fully transparent, 1.0 is fully opaque)
+opacity = 1  # Adjust transparency (0.0 is fully transparent, 1.0 is fully opaque)
 
 [font]
 normal.family = "JetBrainsMono Nerd Font"
 offset.x = 0
 offset.y = 2
-size = 9
+size = 10
 
 [general]
 import = [
-    "~/Dotfiles/alacritty/tokyonight_night.toml"
+    "~/Dotfiles/alacritty/tokyonight_storm.toml"
 ]
+

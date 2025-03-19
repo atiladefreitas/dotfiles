@@ -41,7 +41,7 @@ return {
 			log_level = vim.log.levels.INFO,
 
 			daily_notes = {
-				folder = "journal/02-Feb",
+				folder = "journal/03-Mar",
 				date_format = "%d-%m-%Y",
 				alias_format = "%B %-d, %Y",
 				default_tags = { "daily-notes" },
