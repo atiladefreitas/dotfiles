@@ -24,20 +24,13 @@ return {
 			},
 			-- ensure these language parsers are installed
 			ensure_installed = {
-				"json",
 				"javascript",
 				"typescript",
-				"reactjavascript",
-				"reacttypescript",
 				"tsx",
 				"html",
 				"css",
-				"bash",
 				"lua",
-				"vim",
-				"dockerfile",
-				"gitignore",
-				"vimdoc",
+				"json",
 			},
 			incremental_selection = {
 				enable = true,
