@@ -13,7 +13,8 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
 	{ import = "atila.plugins" },
-	{ import = "atila.plugins.mini" },
+	{ import = "atila.plugins.lsp" },
+  { import = "atila.plugins.mini" },
 	{ import = "atila.plugins.deFreitas" },
 }, {
 	checker = {
