@@ -485,5 +485,6 @@
   "theme.notification.scaling": 80,
   "theme.bar.buttons.modules.submap.enableBorder": false,
   "theme.bar.buttons.modules.weather.enableBorder": false,
-  "theme.bar.buttons.modules.cpuTemp.enableBorder": false
+  "theme.bar.buttons.modules.cpuTemp.enableBorder": false,
+  "bar.customModules.ram.labelType": "used"
 }
