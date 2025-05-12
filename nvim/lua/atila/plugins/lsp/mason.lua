@@ -1,10 +1,12 @@
 return {
 	{
 		"williamboman/mason.nvim",
+		version = "^1.0.0",
 		config = true, -- Mason setup directly here
 	},
 	{
 		"williamboman/mason-lspconfig.nvim",
+		version = "^1.0.0",
 		dependencies = { "mason.nvim" },
 		config = function()
 			require("mason-lspconfig").setup({
@@ -20,6 +22,7 @@ return {
 	},
 	{
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
+		version = "^1.0.0",
 		dependencies = { "mason.nvim" },
 		config = function()
 			require("mason-tool-installer").setup({
