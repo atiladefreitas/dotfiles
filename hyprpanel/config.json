@@ -491,5 +491,9 @@
   "theme.bar.buttons.modules.ram.enableBorder": false,
   "bar.customModules.ram.round": false,
   "bar.customModules.cpu.label": true,
-  "bar.customModules.cpuTemp.unit": "metric"
+  "bar.customModules.cpuTemp.unit": "metric",
+  "bar.customModules.storage.paths": [
+    "/"
+  ],
+  "theme.bar.buttons.modules.cpu.enableBorder": false
 }
