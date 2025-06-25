@@ -38,10 +38,19 @@ vim.api.nvim_set_keymap("n", "<leader>ss", ":set spell!<CR>", { noremap = true, 
 
 -- insert current time in 24h format
 vim.keymap.set("n", "<leader>st", function()
-	local current_time = "[ " .. os.date("%H:%M") .. "]  "
-	vim.api.nvim_put({ current_time, "" }, "c", true, true)
-	vim.api.nvim_command("startinsert")
+  local current_time = "[ " .. os.date("%H:%M") .. "]  "
+  vim.api.nvim_put({ current_time, "" }, "c", true, true)
+  vim.api.nvim_command("startinsert")
 end, { desc = "paste current time" })
 
 -- Obsidian Today command
 vim.keymap.set("n", "<leader>ot", ":ObsidianToday<CR>", { desc = "open today's note", silent = true })
+
+vim.keymap.set("i", "<a-i>", function()
+  vim.ui.input({ prompt = " Calculator: " }, function(input)
+    local calc = load("return " .. (input or ""))()
+    if (calc) then
+      vim.api.nvim_feedkeys(tostring(calc), "i", true)
+    end
+  end)
+end)
