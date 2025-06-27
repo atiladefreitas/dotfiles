@@ -50,7 +50,17 @@ vim.keymap.set("i", "<a-i>", function()
   vim.ui.input({ prompt = " Calculator: " }, function(input)
     local calc = load("return " .. (input or ""))()
     if (calc) then
-      vim.api.nvim_feedkeys(tostring(calc), "i", true)
+      vim.api.nvim_feedkeys(tostring(calc) .. "rem", "i", true)
     end
+  end)
+end)
+
+vim.keymap.set("i", "<a-p>", function()
+  vim.ui.input({ prompt = "Tag: " }, function(tag)
+    if not tag then return end
+    vim.ui.input({ prompt = "Propertie: " }, function(propertie)
+      if not propertie then return end
+      vim.api.nvim_feedkeys("prose-" .. tag .. ":" .. propertie, "i", true)
+    end)
   end)
 end)
