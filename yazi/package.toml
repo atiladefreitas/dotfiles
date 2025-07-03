@@ -1,0 +1,24 @@
+[[plugin.deps]]
+use = "ndtoan96/ouch"
+rev = "1ee69a5"
+hash = "63679f3daf8551ff8755be38b5ced0f"
+
+[[plugin.deps]]
+use = "michaelrommel/svg-preview"
+rev = "29549c2"
+hash = "dd6ec7253e3a09ea967ac3b047a64ea0"
+
+[[plugin.deps]]
+use = "ahkohd/eza-preview"
+rev = "b114b01"
+hash = "7676d7da18953f4351048004ab45f0f4"
+
+[[flavor.deps]]
+use = "dangooddd/kanagawa"
+rev = "31167ed"
+hash = "a04e157148549bacbb2831aab0e6e8cb"
+
+[[flavor.deps]]
+use = "BennyOe/tokyo-night"
+rev = "5f56364"
+hash = "c0bf69ad2c44005892d586e9693993c6"
