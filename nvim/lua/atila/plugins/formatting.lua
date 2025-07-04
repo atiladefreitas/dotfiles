@@ -10,11 +10,11 @@ return {
 
     conform.setup({
       formatters_by_ft = {
-        javascript = { "biome", "prettier" },
-        typescript = { "biome", "prettier" },
-        javascriptreact = { "biome", "prettier" },
-        typescriptreact = { "biome", "prettier" },
-        svelte = { "biome", "prettier" },
+        javascript = { "biome", "prettier", "rustywind" },
+        typescript = { "biome", "prettier", "rustywind" },
+        javascriptreact = { "biome", "prettier", "rustywind" },
+        typescriptreact = { "biome", "prettier", "rustywind" },
+        svelte = { "biome", "prettier", "rustywind" },
         markdown = function()
           local current_file = vim.fn.expand("%:p")
           if current_file:find(excluded_subfolder, 1, true) then
@@ -25,8 +25,8 @@ return {
             return {}             -- Default to no formatter
           end
         end,
-        css = { "prettier" },
-        html = { "prettier" },
+        css = { "prettier", "rustywind" },
+        html = { "prettier", "rustywind" },
         json = { "biome" },
         yaml = { "prettier" },
         lua = { "stylua" },
@@ -37,6 +37,13 @@ return {
         lsp_fallback = true,
         async = true,
         timeout_ms = 1000,
+      },
+      formatters = {
+        rustywind = {
+          command = "rustywind",
+          args = { "--stdin" },
+          stdin = true,
+        },
       },
     })
 

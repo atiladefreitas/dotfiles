@@ -29,6 +29,7 @@ return {
         ensure_installed = {
           "prettier",
           "eslint_d",
+          "rustywind",
         },
       })
     end,
