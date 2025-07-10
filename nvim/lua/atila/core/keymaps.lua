@@ -47,12 +47,42 @@ end, { desc = "paste current time" })
 vim.keymap.set("n", "<leader>ot", ":ObsidianToday<CR>", { desc = "open today's note", silent = true })
 
 vim.keymap.set("i", "<a-i>", function()
-  vim.ui.input({ prompt = " Calculator: " }, function(input)
-    local calc = load("return " .. (input or ""))()
-    if (calc) then
-      vim.api.nvim_feedkeys(tostring(calc) .. "rem", "i", true)
+  local buf = vim.api.nvim_create_buf(false, true)
+  local width, height = 40, 1
+  local row = math.floor((vim.o.lines - height) / 2)
+  local col = math.floor((vim.o.columns - width) / 2)
+
+  local win = vim.api.nvim_open_win(buf, true, {
+    relative = "editor",
+    width = width,
+    height = height,
+    row = row,
+    col = col,
+    style = "minimal",
+    border = "single",
+  })
+
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, { "" })
+  vim.cmd("startinsert")
+
+  vim.keymap.set("i", "<CR>", function()
+    local input = vim.api.nvim_buf_get_lines(buf, 0, 1, false)[1]
+    local ok, result = pcall(function() return load("return " .. input)() end)
+    if ok and result then
+      vim.api.nvim_win_close(win, true)
+      vim.api.nvim_feedkeys(tostring(result) .. "rem", "i", true)
+    else
+      vim.api.nvim_win_close(win, true)
     end
-  end)
+  end, { buffer = buf })
+
+  vim.keymap.set("i", "<C-CR>", function()
+    local input = vim.api.nvim_buf_get_lines(buf, 0, 1, false)[1]
+    local ok, result = pcall(function() return load("return " .. input)() end)
+    if ok and result then
+      vim.api.nvim_buf_set_lines(buf, 0, -1, false, { tostring(result) })
+    end
+  end, { buffer = buf })
 end)
 
 vim.keymap.set("i", "<a-p>", function()
