@@ -1,3 +1,4 @@
+-- colorscheme
 return {
   -- Tokyo Night Colorscheme
   {
