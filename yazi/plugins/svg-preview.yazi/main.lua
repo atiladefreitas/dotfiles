@@ -53,7 +53,7 @@ function M:preload(job)
 	local width
 
 	local ostype = Command("uname")
-		:args({ "-o" })
+		:arg("-o")
 		:stdout(Command.PIPED)
 		:stderr(Command.PIPED)
 		:output()
@@ -66,7 +66,8 @@ function M:preload(job)
 
 	if string.find(ostype.stdout, "Darwin") then
 		local output = Command("exiftool")
-			:args({ "-ImageSize", tostring(job.file.url) })
+			:arg("-ImageSize")
+			:arg(tostring(job.file.url))
 			:stdout(Command.PIPED)
 			:stderr(Command.PIPED)
 			:output()
@@ -81,7 +82,7 @@ function M:preload(job)
 		_, _, width, height = string.find(output.stdout, ".* (%d+)x(%d+).*")
 	elseif string.find(ostype.stdout, "Linux") then
 		local output = Command("identify")
-			:args({ tostring(job.file.url) })
+			:arg(tostring(job.file.url))
 			:stdout(Command.PIPED)
 			:stderr(Command.PIPED)
 			:output()
@@ -105,13 +106,15 @@ function M:preload(job)
 
 	local max_width = (width / height) >= (PREVIEW.max_width / PREVIEW.max_height)
 
-	local args = {
-		"-f", "png", "-a",
-		max_width and "--width" or "--height",
-		max_width and tostring(PREVIEW.max_width) or tostring(PREVIEW.max_height),
-		tostring(job.file.url),
-	}
-	local child, code = Command("rsvg-convert"):args(args):stdout(Command.PIPED):spawn()
+	local child, code = Command("rsvg-convert")
+		:arg("-f")
+		:arg("png")
+		:arg("-a")
+		:arg(max_width and "--width" or "--height")
+		:arg(max_width and tostring(PREVIEW.max_width) or tostring(PREVIEW.max_height))
+		:arg(tostring(job.file.url))
+		:stdout(Command.PIPED)
+		:spawn()
 
 	if not child then
 		ya.err("spawn `rsvg-convert` command returns " .. tostring(code))

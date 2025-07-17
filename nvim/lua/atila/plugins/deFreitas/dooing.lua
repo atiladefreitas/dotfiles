@@ -1,8 +1,8 @@
 return {
   -- beautiful to-do item manager
   {
-    -- "atiladefreitas/dooing",
-    dir = "~/Documents/plugin/dooing",
+    "atiladefreitas/dooing",
+    -- dir = "~/Documents/plugin/dooing",
     config = function()
       require("dooing").setup({
         prioritization = true,

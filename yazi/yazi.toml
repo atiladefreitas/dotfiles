@@ -1,8 +1,15 @@
 [preview]
-image = { cmd = "kitty +kitten icat {path}", priority = 50 }
+image_quality = 90
+max_width = 600
+max_height = 600
 
 [plugin]
+prepend_preloaders = [
+	{ mime = "image/svg+xml", run = "svg-simple" },
+]
 prepend_previewers = [
+	# SVG previewer
+	{ mime = "image/svg+xml", run = "svg-simple" },
 	# Archive previewer
 	{ mime = "application/*zip",            run = "ouch" },
 	{ mime = "application/x-tar",           run = "ouch" },

@@ -495,5 +495,6 @@
   "bar.customModules.storage.paths": [
     "/"
   ],
-  "theme.bar.buttons.modules.cpu.enableBorder": false
+  "theme.bar.buttons.modules.cpu.enableBorder": false,
+  "theme.bar.buttons.enableBorders": false
 }
