@@ -1,7 +1,6 @@
--- formatter and linter
 return {
   "stevearc/conform.nvim",
-  event = { "bufreadpre", "bufnewfile" },
+  event = { "BufReadPre", "BufNewFile" },
   config = function()
     local conform = require("conform")
 
@@ -10,39 +9,68 @@ return {
 
     conform.setup({
       formatters_by_ft = {
-        javascript = { "biome", "prettier", "rustywind" },
-        typescript = { "biome", "prettier", "rustywind" },
-        javascriptreact = { "biome", "prettier", "rustywind" },
-        typescriptreact = { "biome", "prettier", "rustywind" },
-        svelte = { "biome", "prettier", "rustywind" },
+        javascript = { "rustywind", "biome", "prettier" },
+        typescript = { "rustywind", "biome", "prettier" },
+        javascriptreact = { "rustywind", "biome", "prettier" },
+        typescriptreact = { "rustywind", "biome", "prettier" },
+        svelte = { "rustywind", "prettier" },
+        vue = { "rustywind", "prettier" },
         markdown = function()
           local current_file = vim.fn.expand("%:p")
           if current_file:find(excluded_subfolder, 1, true) then
-            return {}             -- Disable formatting for files in excluded folder
+            return {}
           elseif current_file:find(markdown_folder, 1, true) then
-            return { "prettier" } -- Enable formatting for other files in notes
+            return { "prettier" }
           else
-            return {}             -- Default to no formatter
+            return {}
           end
         end,
-        css = { "prettier", "rustywind" },
-        html = { "prettier", "rustywind" },
-        json = { "biome" },
+        css = { "prettier" },
+        scss = { "prettier" },
+        html = { "rustywind", "prettier" },
+        json = { "biome", "prettier" },
+        jsonc = { "biome", "prettier" },
         yaml = { "prettier" },
+        yml = { "prettier" },
         lua = { "stylua" },
         python = { "isort", "black" },
       },
-      format_after_save = {
-        enable = false,
+      format_on_save = {
         lsp_fallback = true,
-        async = true,
+        async = false,
         timeout_ms = 1000,
       },
       formatters = {
         rustywind = {
-          command = "rustywind",
-          args = { "--stdin" },
-          stdin = true,
+          condition = function(self, ctx)
+            return vim.fn.executable("rustywind") == 1
+          end,
+        },
+        biome = {
+          -- Use biome if available (don't require config file)
+          condition = function(self, ctx)
+            -- Check if biome is available in PATH
+            return vim.fn.executable("biome") == 1
+          end,
+        },
+        prettier = {
+          condition = function(self, ctx)
+            -- Use prettier if biome is not available or if prettier config exists
+            local has_prettier_config = vim.fs.find({
+              ".prettierrc",
+              ".prettierrc.json",
+              ".prettierrc.yml",
+              ".prettierrc.yaml",
+              ".prettierrc.json5",
+              ".prettierrc.js",
+              ".prettierrc.cjs",
+              ".prettierrc.toml",
+              "prettier.config.js",
+              "prettier.config.cjs",
+            }, { path = ctx.filename, upward = true })[1]
+            
+            return has_prettier_config or vim.fn.executable("biome") ~= 1
+          end,
         },
       },
     })
@@ -50,9 +78,11 @@ return {
     vim.keymap.set({ "n", "v" }, "<leader>mp", function()
       conform.format({
         lsp_fallback = true,
-        async = true,
+        async = false,
         timeout_ms = 1000,
       })
-    end, { desc = "format file or range (in visual mode)" })
+    end, { desc = "Format file or range (in visual mode)" })
+
+
   end,
-}
+} 

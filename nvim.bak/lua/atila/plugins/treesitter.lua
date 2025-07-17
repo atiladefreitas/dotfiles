@@ -29,12 +29,8 @@ return {
 				"tsx",
 				"html",
 				"css",
-				"scss",
 				"lua",
 				"json",
-				"markdown",
-				"markdown_inline",
-				"vimdoc",
 			},
 			incremental_selection = {
 				enable = true,
