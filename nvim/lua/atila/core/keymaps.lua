@@ -60,26 +60,40 @@ vim.keymap.set("i", "<a-i>", function()
     col = col,
     style = "minimal",
     border = "single",
+    title = " Calculator ",
+    title_pos = "center",
   })
 
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, { "" })
-  vim.cmd("startinsert")
+  vim.bo[buf].filetype = "calculator"
+  vim.bo[buf].buftype = "nofile"
+  vim.bo[buf].bufhidden = "wipe"
+  vim.cmd("startinsert!")
+
+  -- Disable diagnostics/LSP
+  vim.diagnostic.disable(buf)
+  vim.lsp.stop_client(vim.lsp.get_clients({ bufnr = buf }))
+
+  local function close()
+    pcall(vim.api.nvim_win_close, win, true)
+  end
+
+  vim.keymap.set({ "i", "n" }, "<Esc>", close, { buffer = buf })
+  vim.keymap.set("n", "q", close, { buffer = buf })
 
   vim.keymap.set("i", "<CR>", function()
     local input = vim.api.nvim_buf_get_lines(buf, 0, 1, false)[1]
     local ok, result = pcall(function() return load("return " .. input)() end)
-    if ok and result then
-      vim.api.nvim_win_close(win, true)
+    close()
+    if ok and result ~= nil then
       vim.api.nvim_feedkeys(tostring(result) .. "rem", "i", true)
-    else
-      vim.api.nvim_win_close(win, true)
     end
   end, { buffer = buf })
 
   vim.keymap.set("i", "<C-CR>", function()
     local input = vim.api.nvim_buf_get_lines(buf, 0, 1, false)[1]
     local ok, result = pcall(function() return load("return " .. input)() end)
-    if ok and result then
+    if ok and result ~= nil then
       vim.api.nvim_buf_set_lines(buf, 0, -1, false, { tostring(result) })
     end
   end, { buffer = buf })
@@ -94,3 +108,5 @@ vim.keymap.set("i", "<a-p>", function()
     end)
   end)
 end)
+
+
