@@ -1,3 +1,10 @@
+---
+**⚠️ DISCLAIMER: AI-Generated Content**
+
+This document is fully AI-generated and was created for Neovim + AI workflow testing and proof-of-concept purposes. Use at your own discretion and verify configurations before implementation.
+
+---
+
 # LSP Server Installation Guide
 
 Since we've moved to a native LSP setup without Mason, you'll need to install the language servers manually. Here's how to install each one:

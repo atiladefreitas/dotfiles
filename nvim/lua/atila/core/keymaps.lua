@@ -16,6 +16,9 @@ vim.keymap.set("n", "<leader>w", ":w<cr>", { desc = "save file" })
 vim.keymap.set("n", "<leader>q", ":q<cr>", { desc = "close file" })
 vim.keymap.set("n", "<leader>cc", ":bd<cr>", { desc = "close buffer" })
 
+-- manual reload buffer
+vim.keymap.set("n", "<c-r>", ":e<cr>", { desc = "reload buffer" })
+
 vim.keymap.set("n", "<a-[>", "15j", { noremap = true, silent = true })
 vim.keymap.set("n", "<a-]>", "15k", { noremap = true, silent = true })
 

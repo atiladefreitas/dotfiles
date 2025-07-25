@@ -1,3 +1,10 @@
+---
+**⚠️ DISCLAIMER: AI-Generated Content**
+
+This document is fully AI-generated and was created for Neovim + AI workflow testing and proof-of-concept purposes. Use at your own discretion and verify configurations before implementation.
+
+---
+
 # LSP and Autocompletion Setup Report
 
 ## Overview
