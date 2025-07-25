@@ -16,6 +16,7 @@ require("lazy").setup({
 	{ import = "atila.plugins.lsp" },
   { import = "atila.plugins.mini" },
 	{ import = "atila.plugins.deFreitas" },
+{ 'vuciv/golf' },
 }, {
 	checker = {
 		enabled = true,
