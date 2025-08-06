@@ -29,6 +29,10 @@ return {
 		telescope.setup({
 			defaults = {
 				path_display = { "smart" },
+				file_sorter = require("telescope.sorters").get_fuzzy_file,
+				generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
+				sorting_strategy = "descending",
+
 				mappings = {
 					i = {
 						["<C-k>"] = actions.move_selection_previous, -- move to prev result
@@ -37,6 +41,11 @@ return {
 						["<C-t>"] = trouble_telescope.open,
 						["<C-s>"] = actions.select_vertical,
 					},
+				},
+			},
+			pickers = {
+				find_files = {
+					file_sorter = require("telescope.sorters").get_fuzzy_file,
 				},
 			},
 			extensions = {
