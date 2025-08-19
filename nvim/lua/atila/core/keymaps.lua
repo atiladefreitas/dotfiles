@@ -19,9 +19,6 @@ vim.keymap.set("n", "<leader>cc", ":bd<cr>", { desc = "close buffer" })
 -- manual reload buffer
 vim.keymap.set("n", "<c-r>", ":e<cr>", { desc = "reload buffer" })
 
-vim.keymap.set("n", "<a-[>", "15j", { noremap = true, silent = true })
-vim.keymap.set("n", "<a-]>", "15k", { noremap = true, silent = true })
-
 vim.keymap.set("n", "<a-d>", "15j", { noremap = true, silent = true })
 vim.keymap.set("n", "<a-w>", "15k", { noremap = true, silent = true })
 
@@ -128,9 +125,9 @@ vim.keymap.set("n", "<tab>a", "<Cmd>BufferLineGoToBuffer 4<CR>", { desc = "go to
 vim.keymap.set("n", "<tab>s", "<Cmd>BufferLineGoToBuffer 5<CR>", { desc = "go to buffer 5" })
 vim.keymap.set("n", "<tab>d", "<Cmd>BufferLineGoToBuffer 6<CR>", { desc = "go to buffer 6" })
 
-vim.keymap.set("n", "<a-q>", "<Cmd>BufferLineGoToBuffer 1<CR>", { desc = "go to buffer 1" })
-vim.keymap.set("n", "<a-w>", "<Cmd>BufferLineGoToBuffer 2<CR>", { desc = "go to buffer 2" })
-vim.keymap.set("n", "<a-e>", "<Cmd>BufferLineGoToBuffer 3<CR>", { desc = "go to buffer 3" })
-vim.keymap.set("n", "<a-a>", "<Cmd>BufferLineGoToBuffer 4<CR>", { desc = "go to buffer 4" })
-vim.keymap.set("n", "<a-s>", "<Cmd>BufferLineGoToBuffer 5<CR>", { desc = "go to buffer 5" })
-vim.keymap.set("n", "<a-d>", "<Cmd>BufferLineGoToBuffer 6<CR>", { desc = "go to buffer 6" })
+-- vim.keymap.set("n", "<a-q>", "<Cmd>BufferLineGoToBuffer 1<CR>", { desc = "go to buffer 1" })
+-- vim.keymap.set("n", "<a-w>", "<Cmd>BufferLineGoToBuffer 2<CR>", { desc = "go to buffer 2" })
+-- vim.keymap.set("n", "<a-e>", "<Cmd>BufferLineGoToBuffer 3<CR>", { desc = "go to buffer 3" })
+-- vim.keymap.set("n", "<a-a>", "<Cmd>BufferLineGoToBuffer 4<CR>", { desc = "go to buffer 4" })
+-- vim.keymap.set("n", "<a-s>", "<Cmd>BufferLineGoToBuffer 5<CR>", { desc = "go to buffer 5" })
+-- vim.keymap.set("n", "<a-d>", "<Cmd>BufferLineGoToBuffer 6<CR>", { desc = "go to buffer 6" })
