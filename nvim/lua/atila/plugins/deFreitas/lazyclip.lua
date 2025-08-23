@@ -1,7 +1,7 @@
 -- smart clipboard manager
 return {
 	-- "atiladefreitas/lazyclip",
-	dir = "~/Documents/lazyclip",
+	dir = "~/Documents/plugins/lazyclip",
 	event = "VeryLazy",
 	version = "*",
 	config = function()
