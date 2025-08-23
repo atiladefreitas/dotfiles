@@ -487,7 +487,7 @@
   "theme.bar.buttons.modules.submap.enableBorder": false,
   "theme.bar.buttons.modules.weather.enableBorder": false,
   "theme.bar.buttons.modules.cpuTemp.enableBorder": false,
-  "bar.customModules.ram.labelType": "used",
+  "bar.customModules.ram.labelType": "used/total",
   "bar.customModules.ram.pollingInterval": 3000,
   "theme.bar.buttons.modules.ram.enableBorder": false,
   "bar.customModules.ram.round": false,

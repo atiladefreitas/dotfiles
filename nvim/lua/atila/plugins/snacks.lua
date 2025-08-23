@@ -45,10 +45,7 @@ return {
 		},
 		indent = { enabled = true },
 		input = { enabled = true },
-		notifier = {
-			enabled = true,
-			style = "compact",
-		},
+		notifier = { enabled = false },
 		quickfile = { enabled = true },
 		statuscolumn = { enabled = true },
 		lazygit = {
@@ -156,5 +153,58 @@ return {
 			end,
 			desc = "Toggle Terminal",
 		},
+		-- Trouble-equivalent diagnostics keymaps
+		{
+			"<leader>xw",
+			function()
+				Snacks.picker.diagnostics()
+			end,
+			desc = "Workspace Diagnostics",
+		},
+		{
+			"<leader>xd",
+			function()
+				Snacks.picker.diagnostics_buffer()
+			end,
+			desc = "Document Diagnostics",
+		},
+		{
+			"<leader>xq",
+			function()
+				Snacks.picker.qflist()
+			end,
+			desc = "Quickfix List",
+		},
+		{
+			"<leader>xl",
+			function()
+				Snacks.picker.loclist()
+			end,
+			desc = "Location List",
+		},
 	},
+
+	init = function()
+		vim.api.nvim_create_autocmd("User", {
+			pattern = "VeryLazy",
+			callback = function()
+				-- Set timeout settings (from which-key)
+				vim.o.timeout = true
+				vim.o.timeoutlen = 500
+
+				-- Create toggle mappings (which-key equivalent functionality)
+				Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")
+				Snacks.toggle.option("wrap", { name = "Wrap" }):map("<leader>uw")
+				Snacks.toggle.option("relativenumber", { name = "Relative Number" }):map("<leader>uL")
+				Snacks.toggle.diagnostics():map("<leader>ud")
+				Snacks.toggle.line_number():map("<leader>ul")
+				Snacks.toggle.option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 }):map("<leader>uc")
+				Snacks.toggle.treesitter():map("<leader>uT")
+				Snacks.toggle.option("background", { off = "light", on = "dark", name = "Dark Background" }):map("<leader>ub")
+				Snacks.toggle.inlay_hints():map("<leader>uh")
+				Snacks.toggle.indent():map("<leader>ug")
+				Snacks.toggle.dim():map("<leader>uD")
+			end,
+		})
+	end,
 }
