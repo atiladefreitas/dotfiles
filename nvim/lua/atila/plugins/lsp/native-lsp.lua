@@ -22,6 +22,11 @@ return {
       vim.lsp.buf.format({ async = true })
     end, opts)
 
+    -- Enable inlay hints by default if client supports them
+    if client.server_capabilities.inlayHintProvider then
+      vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+    end
+
     if client.name == "biome" then
       vim.api.nvim_create_autocmd("BufWritePre", {
         buffer = bufnr,

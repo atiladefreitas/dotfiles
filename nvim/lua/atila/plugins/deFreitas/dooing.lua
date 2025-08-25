@@ -15,6 +15,7 @@ return {
 					default_filename = "dooing.json", -- Default filename for project todos
 					auto_gitignore = true, -- Auto-add to .gitignore (true/false/"prompt")
 					on_missing = "prompt", -- What to do when file missing ("prompt"/"auto_create")
+					auto_open_project_todos = true,
 				},
 				calendar = {
 					icon = "",
