@@ -14,9 +14,8 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
 	{ import = "atila.plugins" },
 	{ import = "atila.plugins.lsp" },
-  { import = "atila.plugins.mini" },
+	{ import = "atila.plugins.mini" },
 	{ import = "atila.plugins.deFreitas" },
-{ 'vuciv/golf' },
 }, {
 	checker = {
 		enabled = true,
