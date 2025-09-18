@@ -46,4 +46,10 @@ return {
 			-- :set background=light
 		end,
 	},
+
+	{
+		"wadackel/vim-dogrun",
+		priority = 990,
+		config = function() end,
+	},
 }

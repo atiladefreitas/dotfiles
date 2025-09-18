@@ -131,3 +131,23 @@ vim.keymap.set("n", "<tab>d", "<Cmd>BufferLineGoToBuffer 6<CR>", { desc = "go to
 -- vim.keymap.set("n", "<a-a>", "<Cmd>BufferLineGoToBuffer 4<CR>", { desc = "go to buffer 4" })
 -- vim.keymap.set("n", "<a-s>", "<Cmd>BufferLineGoToBuffer 5<CR>", { desc = "go to buffer 5" })
 -- vim.keymap.set("n", "<a-d>", "<Cmd>BufferLineGoToBuffer 6<CR>", { desc = "go to buffer 6" })
+
+-- Toggle diagnostics (linting)
+vim.keymap.set("n", "<leader>tF", function()
+	vim.diagnostic.enable(not vim.diagnostic.is_enabled())
+	if vim.diagnostic.is_enabled() then
+		vim.notify("Diagnostics enabled")
+	else
+		vim.notify("Diagnostics disabled")
+	end
+end, { desc = "Toggle diagnostics" })
+
+-- Toggle format on save
+vim.keymap.set("n", "<leader>tf", function()
+	vim.g.disable_autoformat = not vim.g.disable_autoformat
+	if vim.g.disable_autoformat then
+		vim.notify("Format on save disabled")
+	else
+		vim.notify("Format on save enabled")
+	end
+end, { desc = "Toggle format on save" })
