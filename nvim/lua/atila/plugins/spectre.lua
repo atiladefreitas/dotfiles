@@ -1,6 +1,12 @@
 -- search and change
 return {
   "nvim-pack/nvim-spectre",
+  cmd = "Spectre",
+  keys = {
+    { "<leader>Sr", desc = "Open Spectre" },
+    { "<leader>Sw", desc = "Search current word", mode = { "n", "v" } },
+    { "<leader>Sp", desc = "Search in current file" },
+  },
   config = function()
     require("spectre").setup({
       -- Add any desired configuration options here

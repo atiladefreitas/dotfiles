@@ -44,3 +44,26 @@ opt.splitbelow = true -- split horizontal window to the bottom
 
 -- turn off swapfile
 opt.swapfile = false
+
+-- fold persistence
+opt.viewoptions = "folds,cursor"
+opt.sessionoptions:append("folds")
+
+-- auto save and restore folds
+vim.api.nvim_create_autocmd({ "BufWinLeave", "BufWritePost", "WinLeave" }, {
+  pattern = "*",
+  callback = function()
+    if vim.bo.buftype == "" and vim.fn.expand("%") ~= "" then
+      vim.cmd("silent! mkview")
+    end
+  end,
+})
+
+vim.api.nvim_create_autocmd("BufWinEnter", {
+  pattern = "*",
+  callback = function()
+    if vim.bo.buftype == "" and vim.fn.expand("%") ~= "" then
+      vim.cmd("silent! loadview")
+    end
+  end,
+})

@@ -47,6 +47,10 @@ return {
 	{
 		"nvim-neo-tree/neo-tree.nvim",
 		branch = "v3.x",
+		cmd = "Neotree",
+		keys = {
+			{ "<leader>e", desc = "Toggle Neotree" },
+		},
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"nvim-tree/nvim-web-devicons",
@@ -85,6 +89,7 @@ return {
 		"luckasRanarison/tailwind-tools.nvim",
 		name = "tailwind-tools",
 		build = ":UpdateRemotePlugins",
+		ft = { "html", "css", "scss", "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte" },
 		dependencies = {
 			"nvim-treesitter/nvim-treesitter",
 			"nvim-telescope/telescope.nvim", -- optional

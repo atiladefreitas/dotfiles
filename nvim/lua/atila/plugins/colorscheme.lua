@@ -1,11 +1,12 @@
 -- colorscheme
 return {
+	{ "bluz71/vim-nightfly-colors", name = "nightfly", lazy = false, priority = 1000 },
 	-- Tokyo Night Colorscheme
 	{
 		"folke/tokyonight.nvim",
 		-- dir = "~/Documents/tokyonight.nvim/",
 		lazy = false,
-		priority = 1000,
+		priority = 900,
 		config = function()
 			require("tokyonight").setup({
 				style = "night",
@@ -32,7 +33,6 @@ return {
 			vim.cmd("colorscheme tokyonight")
 		end,
 	},
-
 	{
 		"alexxGmZ/e-ink.nvim",
 		priority = 994,
@@ -46,10 +46,9 @@ return {
 			-- :set background=light
 		end,
 	},
-
 	{
 		"wadackel/vim-dogrun",
-		priority = 990,
+		priority = 992,
 		config = function() end,
 	},
 }

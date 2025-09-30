@@ -2,6 +2,7 @@ return {
   {
     "echasnovski/mini.cursorword",
     version = false,
+    event = { "BufReadPost", "BufNewFile" },
     config = function()
       require("mini.cursorword").setup({
         delay = 100,
@@ -18,6 +19,7 @@ return {
   {
     "echasnovski/mini.nvim",
     version = false,
+    event = { "BufReadPost", "BufNewFile" },
     config = function()
       require("mini.move").setup({
         mappings = {
@@ -38,6 +40,7 @@ return {
   {
     "echasnovski/mini.pairs",
     version = false,
+    event = "InsertEnter",
     config = function()
       require("mini.pairs").setup({
         modes = { insert = true, command = false, terminal = false },
@@ -84,6 +87,15 @@ return {
   {
     "echasnovski/mini.surround",
     version = false,
+    keys = {
+      { "<leader>sa", mode = { "n", "x" }, desc = "Add surround" },
+      { "<leader>sd", desc = "Delete surround" },
+      { "<leader>sr", desc = "Replace surround" },
+      { "<leader>sf", desc = "Find surround" },
+      { "<leader>sF", desc = "Find surround left" },
+      { "<leader>sh", desc = "Highlight surround" },
+      { "<leader>sn", desc = "Update n lines" },
+    },
     config = function()
       require("mini.surround").setup({
         mappings = {
