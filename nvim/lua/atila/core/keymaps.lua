@@ -43,9 +43,6 @@ vim.keymap.set("n", "<leader>st", function()
 	vim.api.nvim_command("startinsert")
 end, { desc = "paste current time" })
 
--- Obsidian Today command
-vim.keymap.set("n", "<leader>ot", ":ObsidianToday<CR>", { desc = "open today's note", silent = true })
-
 vim.keymap.set("i", "<a-i>", function()
 	local buf = vim.api.nvim_create_buf(false, true)
 	local width, height = 40, 1
@@ -108,17 +105,22 @@ vim.keymap.set("i", "<a-p>", function()
 		if not tag then
 			return
 		end
-		
+
 		local prefix = "prose-" .. tag .. ":"
 		local pos = vim.api.nvim_win_get_cursor(0)
 		vim.api.nvim_buf_set_text(0, pos[1] - 1, pos[2], pos[1] - 1, pos[2], { prefix })
 		vim.api.nvim_win_set_cursor(0, { pos[1], pos[2] + #prefix })
-		
+
 		vim.schedule(function()
-			require('blink.cmp').show()
+			require("blink.cmp").show()
 		end)
 	end)
 end)
+
+vim.keymap.set("n", "<a-e>", ":Widgy<CR>", { desc = "create widgy widget" })
+
+-- Obsidian Today command
+vim.keymap.set("n", "<leader>ot", ":ObsidianToday<CR>", { desc = "open today's note", silent = true })
 
 -- Bufferline navigation keymaps
 vim.keymap.set("n", "<tab>q", "<Cmd>BufferLineGoToBuffer 1<CR>", { desc = "go to buffer 1" })
