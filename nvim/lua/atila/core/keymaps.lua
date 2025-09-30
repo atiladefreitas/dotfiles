@@ -112,7 +112,10 @@ vim.keymap.set("i", "<a-p>", function()
 			if not propertie then
 				return
 			end
-			vim.api.nvim_feedkeys("prose-" .. tag .. ":" .. propertie, "i", true)
+			local text = "prose-" .. tag .. ":" .. propertie
+			local pos = vim.api.nvim_win_get_cursor(0)
+			vim.api.nvim_buf_set_text(0, pos[1] - 1, pos[2], pos[1] - 1, pos[2], { text })
+			vim.api.nvim_win_set_cursor(0, { pos[1], pos[2] + #text })
 		end)
 	end)
 end)
