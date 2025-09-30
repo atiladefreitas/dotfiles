@@ -108,14 +108,14 @@ vim.keymap.set("i", "<a-p>", function()
 		if not tag then
 			return
 		end
-		vim.ui.input({ prompt = "Propertie: " }, function(propertie)
-			if not propertie then
-				return
-			end
-			local text = "prose-" .. tag .. ":" .. propertie
-			local pos = vim.api.nvim_win_get_cursor(0)
-			vim.api.nvim_buf_set_text(0, pos[1] - 1, pos[2], pos[1] - 1, pos[2], { text })
-			vim.api.nvim_win_set_cursor(0, { pos[1], pos[2] + #text })
+		
+		local prefix = "prose-" .. tag .. ":"
+		local pos = vim.api.nvim_win_get_cursor(0)
+		vim.api.nvim_buf_set_text(0, pos[1] - 1, pos[2], pos[1] - 1, pos[2], { prefix })
+		vim.api.nvim_win_set_cursor(0, { pos[1], pos[2] + #prefix })
+		
+		vim.schedule(function()
+			require('blink.cmp').show()
 		end)
 	end)
 end)
