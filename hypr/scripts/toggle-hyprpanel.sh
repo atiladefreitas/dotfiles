@@ -1,11 +1,9 @@
 #!/bin/bash
+# ~/.config/hypr/scripts/toggle-panel.sh
 
-if pgrep -x "hyprpanel" > /dev/null; then
-    echo "Killing hyprpanel"
-    pkill -f hyprpanel
-    sleep 0.5  
+if hyprctl activewindow | grep -q "workspace: special"; then
+    hyprctl keyword layerrule "animation slide top, hyprpanel"
+    hyprctl keyword layerrule "noanim, hyprpanel"
 else
-    echo "Starting hyprpanel"
-    hyprpanel &
-    disown
+    hyprctl keyword layerrule "animation slide, hyprpanel"
 fi
