@@ -492,7 +492,7 @@
   "menus.dashboard.directories.right.directory3.command": "nautilus",
   "bar.customModules.cpuTemp.sensor": "/sys/devices/platform/coretemp.0/hwmon/hwmon6/temp1_input",
   "bar.customModules.cpuTemp.unit": "metric",
-  "bar.customModules.ram.labelType": "free",
+  "bar.customModules.ram.labelType": "used",
   "bar.customModules.ram.pollingInterval": 3000,
   "bar.customModules.ram.round": false,
   "bar.customModules.cpu.label": true,
