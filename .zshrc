@@ -3,7 +3,7 @@
 # ─────────────────────────────────────────────────────────────
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="robbyrussell"
-plugins=(git zsh-syntax-highlighting zsh-autosuggestions)
+plugins=(git zsh-syntax-highlighting fzf-tab zsh-autosuggestions)
 
 if [[ ":$FPATH:" != *":$HOME/.zsh/completions:"* ]]; then
   export FPATH="$HOME/.zsh/completions:$FPATH"
@@ -14,13 +14,6 @@ fi
 # ─────────────────────────────────────────────────────────────
 export ANDROID_HOME="$HOME/Android/Sdk"
 export PATH="$ANDROID_HOME/tools:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools:$PATH"
-
-# ─────────────────────────────────────────────────────────────
-# Starship, Atuin, Zoxide
-# ─────────────────────────────────────────────────────────────
-eval "$(atuin init zsh)"
-eval "$(zoxide init zsh)"
-eval "$(starship init zsh)"
 
 # ─────────────────────────────────────────────────────────────
 # Node/NVM
@@ -66,9 +59,14 @@ fi
 # fi
 
 # ─────────────────────────────────────────────────────────────
+# Oh My Zsh
+# ─────────────────────────────────────────────────────────────
+source $ZSH/oh-my-zsh.sh
+
+# ─────────────────────────────────────────────────────────────
 # Aliases: Filesystem
 # ─────────────────────────────────────────────────────────────
-alias ls='eza -lha --group-directories-first --icons'
+alias ls="eza -lha --group-directories-first --icons"
 alias lsa='ls -a'
 alias lt='eza --tree --level=2 --long --icons --git'
 alias lta='lt -a'
@@ -114,7 +112,12 @@ function _tmux_session() {
 
 alias notes='cd $HOME/Documents/notes/ && tmux new -As notes "nvim"'
 
+alias systempane="tmux new-session -d -s workspace \; split-window -h -p 50 \; select-pane -t 0 \; split-window -v -p 25 \; select-pane -t 2 \; split-window -v -p 55 \; select-pane -t 0 \; send-keys 'mocp -T darkdot_theme' C-m \; select-pane -t 1 \; send-keys 'cava' C-m \; select-pane -t 2 \; send-keys 'yazi' C-m \; select-pane -t 3 \; send-keys 'btop' C-m \; select-pane -t 0 \; attach -t workspace"
+
 # ─────────────────────────────────────────────────────────────
-# Oh My Zsh
+# Starship, Atuin, Zoxide
 # ─────────────────────────────────────────────────────────────
-source $ZSH/oh-my-zsh.sh
+eval "$(atuin init zsh)"
+eval "$(zoxide init zsh)"
+eval "$(starship init zsh)"
+
