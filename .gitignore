@@ -1,3 +1,6 @@
 ./btop/btop.log
 btop/btop.log
 btop.log
+
+.gitignore
+AGENTS.md
