@@ -5,9 +5,15 @@
   "spacing": 0,
   "height": 30,
   "modules-left": ["custom/omarchy", "hyprland/workspaces"],
-  "modules-center": ["clock", "custom/update", "custom/screenrecording-indicator", "temperature", "memory" ],
+  "modules-center": [
+    "clock",
+    "custom/update",
+    "custom/screenrecording-indicator",
+    "temperature",
+    "memory"
+  ],
   "modules-right": [
-    "group/tray-expander",
+    // "group/tray-expander",
     "bluetooth",
     "network",
     "pulseaudio",
