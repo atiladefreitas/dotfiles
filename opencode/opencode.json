@@ -5,6 +5,11 @@
       "type": "local",
       "command": ["npx", "shadcn@latest", "mcp"],
       "enabled": true
+    },
+    "motion-studio": {
+      "type": "local",
+      "command": ["npx", "-y", "motion-ai"],
+      "enabled": true
     }
   },
   "permission": {
@@ -13,5 +18,5 @@
     "webfetch": "allow",
     "doom_loop": "ask",
     "external_directory": "ask"
-  },
+  }
 }

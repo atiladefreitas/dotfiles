@@ -1,14 +1,18 @@
 return {
 	-- beautiful to-do item manager
 	{
-		"atiladefreitas/dooing",
-		-- dir = "~/Documents/plugins/dooing",
+		-- "atiladefreitas/dooing",
+		dir = "~/Documents/plugins/dooing",
 		config = function()
 			require("dooing").setup({
 				prioritization = true,
 				show_entered_date = true,
+				keymaps = {
+					show_due_notification = "<leader>tM",
+				},
 				window = {
 					width = 80,
+					border = "single", -- Border style: 'single', 'double', 'rounded', 'solid', 'shadow', or custom array
 				},
 				per_project = {
 					enabled = true, -- Enable per-project todos
