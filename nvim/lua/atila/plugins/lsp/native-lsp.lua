@@ -90,6 +90,13 @@ return {
 		lspconfig.tailwindcss.setup({
 			capabilities = capabilities,
 			on_attach = on_attach,
+			settings = {
+				tailwindCSS = {
+					lint = {
+						suggestCanonicalClasses = "ignore",
+					},
+				},
+			},
 		})
 
 		-- Lua
