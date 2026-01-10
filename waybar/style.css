@@ -63,16 +63,25 @@ tooltip {
   font-size: 14px;  
 }
 #clock {
-  margin-left: 8.75px;
+  margin-left: 5px;
 }
 .hidden {
   opacity: 0;
 }
 #custom-screenrecording-indicator {
   min-width: 12px;
-  margin-left: 8.75px;
+  margin-left: 5px;
   font-size: 14px;  
 }
 #custom-screenrecording-indicator.active {
+  color: #a55555;
+}
+
+#custom-voxtype {
+  min-width: 12px;
+  margin: 0 0 0 7.5px;
+}
+
+#custom-voxtype.recording {
   color: #a55555;
 }
