@@ -124,19 +124,19 @@ return {
         highlight = "RenderMarkdownQuote",
       },
 
-      -- Pipe tables
+      -- Pipe tables - heavy borders
       pipe_table = {
         enabled = true,
-        preset = "round",
+        preset = "heavy",
         style = "full",
         cell = "padded",
         padding = 1,
         min_width = 0,
         border = {
-          "╭", "─", "╮", "┬",
-          "├", "─", "┤", "┼",
-          "╰", "─", "╯", "┴",
-          "│", "│",
+          "┏", "━", "┓", "┳",
+          "┣", "━", "┗", "┻",
+          "┛", "┃", "━", "1",
+          "┃", "┃",
         },
         alignment_indicator = "━",
         head = "RenderMarkdownTableHead",
@@ -230,12 +230,12 @@ return {
 
       -- Custom highlight groups for a cohesive look
       local colors = {
-        h1 = "#f38ba8",  -- Pink/Red
-        h2 = "#fab387",  -- Peach/Orange
-        h3 = "#f9e2af",  -- Yellow
-        h4 = "#a6e3a1",  -- Green
-        h5 = "#89dceb",  -- Teal
-        h6 = "#b4befe",  -- Lavender
+        h1 = "#f38ba8", -- Pink/Red
+        h2 = "#fab387", -- Peach/Orange
+        h3 = "#f9e2af", -- Yellow
+        h4 = "#a6e3a1", -- Green
+        h5 = "#89dceb", -- Teal
+        h6 = "#b4befe", -- Lavender
         code_bg = "#1e1e2e",
         quote = "#6c7086",
       }
@@ -277,10 +277,10 @@ return {
       vim.api.nvim_set_hl(0, "RenderMarkdownLink", { fg = "#89b4fa", underline = true })
       vim.api.nvim_set_hl(0, "RenderMarkdownWikiLink", { fg = "#cba6f7", underline = true })
 
-      -- Tables
+      -- Tables - visible with good contrast
       vim.api.nvim_set_hl(0, "RenderMarkdownTableHead", { fg = "#cba6f7", bold = true })
-      vim.api.nvim_set_hl(0, "RenderMarkdownTableRow", { fg = "#cdd6f4" })
-      vim.api.nvim_set_hl(0, "RenderMarkdownTableFill", { fg = "#45475a" })
+      vim.api.nvim_set_hl(0, "RenderMarkdownTableRow", { fg = "#bac2de" })
+      vim.api.nvim_set_hl(0, "RenderMarkdownTableFill", { fg = "#585b70" })
 
       -- Misc
       vim.api.nvim_set_hl(0, "RenderMarkdownBullet", { fg = "#89dceb" })
