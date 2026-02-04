@@ -50,6 +50,7 @@ return {
 					condition = function(self, ctx)
 						return vim.fn.executable("rustywind") == 1
 					end,
+					prepend_args = { "--write-multi-line", "120" },
 				},
 				biome = {
 					-- Use biome if available (don't require config file)
