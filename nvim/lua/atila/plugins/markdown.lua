@@ -1,28 +1,291 @@
 return {
   {
     "MeanderingProgrammer/render-markdown.nvim",
-    ft = { "markdown", "md" },
-    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" }, -- if you prefer nvim-web-devicons
+    ft = { "markdown", "md", "Avante" },
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-tree/nvim-web-devicons",
+    },
     ---@module 'render-markdown'
     ---@type render.md.UserConfig
     opts = {
+      render_modes = { "n", "c", "t" },
+      anti_conceal = { enabled = true },
+      max_file_size = 10.0,
+      debounce = 100,
+
+      -- Headings with gradient colors and icons
+      heading = {
+        enabled = true,
+        sign = true,
+        position = "overlay",
+        icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
+        signs = { "󰫎 " },
+        width = "full",
+        left_margin = 0,
+        left_pad = 0,
+        right_pad = 0,
+        min_width = 0,
+        border = false,
+        border_virtual = false,
+        border_prefix = false,
+        above = "▄",
+        below = "▀",
+        backgrounds = {
+          "RenderMarkdownH1Bg",
+          "RenderMarkdownH2Bg",
+          "RenderMarkdownH3Bg",
+          "RenderMarkdownH4Bg",
+          "RenderMarkdownH5Bg",
+          "RenderMarkdownH6Bg",
+        },
+        foregrounds = {
+          "RenderMarkdownH1",
+          "RenderMarkdownH2",
+          "RenderMarkdownH3",
+          "RenderMarkdownH4",
+          "RenderMarkdownH5",
+          "RenderMarkdownH6",
+        },
+      },
+
+      -- Beautiful code blocks
+      code = {
+        enabled = true,
+        sign = true,
+        style = "full",
+        position = "left",
+        language_pad = 0,
+        language_name = true,
+        disable_background = { "diff" },
+        width = "full",
+        left_margin = 0,
+        left_pad = 2,
+        right_pad = 2,
+        min_width = 45,
+        border = "thin",
+        above = "▄",
+        below = "▀",
+        highlight = "RenderMarkdownCode",
+        highlight_inline = "RenderMarkdownCodeInline",
+        highlight_language = nil,
+      },
+
+      -- Dash/horizontal rule
+      dash = {
+        enabled = true,
+        icon = "─",
+        width = "full",
+        highlight = "RenderMarkdownDash",
+      },
+
+      -- Bullet points with nice icons
       bullet = {
         enabled = true,
-        render_modes = false,
         icons = { "●", "○", "◆", "◇" },
         ordered_icons = function(ctx)
-          local level = ctx.level
-          local index = ctx.index
           local value = vim.trim(ctx.value or "")
           local num = tonumber(value:sub(1, #value - 1))
-          local value_index = num and num > 1 and num or index
+          local value_index = num and num > 1 and num or ctx.index
           return string.format("%d.", value_index)
         end,
         left_pad = 0,
         right_pad = 1,
         highlight = "RenderMarkdownBullet",
       },
+
+      -- Checkboxes with multiple states
+      checkbox = {
+        enabled = true,
+        position = "inline",
+        unchecked = {
+          icon = "󰄱 ",
+          highlight = "RenderMarkdownUnchecked",
+          scope_highlight = nil,
+        },
+        checked = {
+          icon = "󰄵 ",
+          highlight = "RenderMarkdownChecked",
+          scope_highlight = "@markup.strikethrough",
+        },
+        custom = {
+          todo = { raw = "[-]", rendered = "󰥔 ", highlight = "RenderMarkdownTodo" },
+          important = { raw = "[!]", rendered = " ", highlight = "DiagnosticError" },
+          question = { raw = "[?]", rendered = " ", highlight = "DiagnosticWarn" },
+          star = { raw = "[*]", rendered = "󰓎 ", highlight = "DiagnosticHint" },
+        },
+      },
+
+      -- Quote/blockquote styling
+      quote = {
+        enabled = true,
+        icon = "▋",
+        repeat_linebreak = false,
+        highlight = "RenderMarkdownQuote",
+      },
+
+      -- Pipe tables
+      pipe_table = {
+        enabled = true,
+        preset = "round",
+        style = "full",
+        cell = "padded",
+        padding = 1,
+        min_width = 0,
+        border = {
+          "╭", "─", "╮", "┬",
+          "├", "─", "┤", "┼",
+          "╰", "─", "╯", "┴",
+          "│", "│",
+        },
+        alignment_indicator = "━",
+        head = "RenderMarkdownTableHead",
+        row = "RenderMarkdownTableRow",
+        filler = "RenderMarkdownTableFill",
+      },
+
+      -- Callouts (GitHub-style alerts)
+      callout = {
+        note = { raw = "[!NOTE]", rendered = "󰋽 Note", highlight = "RenderMarkdownInfo" },
+        tip = { raw = "[!TIP]", rendered = "󰌶 Tip", highlight = "RenderMarkdownSuccess" },
+        important = { raw = "[!IMPORTANT]", rendered = "󰅾 Important", highlight = "RenderMarkdownHint" },
+        warning = { raw = "[!WARNING]", rendered = "󰀪 Warning", highlight = "RenderMarkdownWarn" },
+        caution = { raw = "[!CAUTION]", rendered = "󰳦 Caution", highlight = "RenderMarkdownError" },
+        abstract = { raw = "[!ABSTRACT]", rendered = "󰨸 Abstract", highlight = "RenderMarkdownInfo" },
+        summary = { raw = "[!SUMMARY]", rendered = "󰨸 Summary", highlight = "RenderMarkdownInfo" },
+        tldr = { raw = "[!TLDR]", rendered = "󰨸 TL;DR", highlight = "RenderMarkdownInfo" },
+        info = { raw = "[!INFO]", rendered = "󰋽 Info", highlight = "RenderMarkdownInfo" },
+        todo = { raw = "[!TODO]", rendered = "󰗡 Todo", highlight = "RenderMarkdownInfo" },
+        hint = { raw = "[!HINT]", rendered = "󰌶 Hint", highlight = "RenderMarkdownSuccess" },
+        success = { raw = "[!SUCCESS]", rendered = "󰄬 Success", highlight = "RenderMarkdownSuccess" },
+        check = { raw = "[!CHECK]", rendered = "󰄬 Check", highlight = "RenderMarkdownSuccess" },
+        done = { raw = "[!DONE]", rendered = "󰄬 Done", highlight = "RenderMarkdownSuccess" },
+        question = { raw = "[!QUESTION]", rendered = "󰘥 Question", highlight = "RenderMarkdownWarn" },
+        help = { raw = "[!HELP]", rendered = "󰘥 Help", highlight = "RenderMarkdownWarn" },
+        faq = { raw = "[!FAQ]", rendered = "󰘥 FAQ", highlight = "RenderMarkdownWarn" },
+        attention = { raw = "[!ATTENTION]", rendered = "󰀪 Attention", highlight = "RenderMarkdownWarn" },
+        failure = { raw = "[!FAILURE]", rendered = "󰅖 Failure", highlight = "RenderMarkdownError" },
+        fail = { raw = "[!FAIL]", rendered = "󰅖 Fail", highlight = "RenderMarkdownError" },
+        missing = { raw = "[!MISSING]", rendered = "󰅖 Missing", highlight = "RenderMarkdownError" },
+        danger = { raw = "[!DANGER]", rendered = "󱐌 Danger", highlight = "RenderMarkdownError" },
+        error = { raw = "[!ERROR]", rendered = "󱐌 Error", highlight = "RenderMarkdownError" },
+        bug = { raw = "[!BUG]", rendered = "󰨰 Bug", highlight = "RenderMarkdownError" },
+        example = { raw = "[!EXAMPLE]", rendered = "󰉹 Example", highlight = "RenderMarkdownHint" },
+        quote = { raw = "[!QUOTE]", rendered = "󱆨 Quote", highlight = "RenderMarkdownQuote" },
+        cite = { raw = "[!CITE]", rendered = "󱆨 Cite", highlight = "RenderMarkdownQuote" },
+      },
+
+      -- Links
+      link = {
+        enabled = true,
+        footnote = {
+          superscript = true,
+          prefix = "",
+          suffix = "",
+        },
+        image = "󰥶 ",
+        email = "󰀓 ",
+        hyperlink = "󰌹 ",
+        highlight = "RenderMarkdownLink",
+        wiki = { icon = "󱗖 ", highlight = "RenderMarkdownWikiLink" },
+        custom = {
+          web = { pattern = "^http", icon = "󰖟 " },
+          github = { pattern = "github%.com", icon = " " },
+          youtube = { pattern = "youtube%.com", icon = "󰗃 " },
+          discord = { pattern = "discord%.com", icon = "󰙯 " },
+          reddit = { pattern = "reddit%.com", icon = " " },
+          stackoverflow = { pattern = "stackoverflow%.com", icon = " " },
+        },
+      },
+
+      -- Sign column
+      sign = {
+        enabled = true,
+        highlight = "RenderMarkdownSign",
+      },
+
+      -- Indent guide
+      indent = {
+        enabled = false,
+        per_level = 2,
+        skip_level = 1,
+        skip_heading = false,
+      },
+
+      -- Window options when rendering
+      win_options = {
+        conceallevel = { default = vim.o.conceallevel, rendered = 3 },
+        concealcursor = { default = vim.o.concealcursor, rendered = "" },
+      },
+
+      -- Overrides for specific filetypes
+      overrides = {
+        buftype = {
+          nofile = { render_modes = { "n", "c", "t", "i" } },
+        },
+      },
     },
+    config = function(_, opts)
+      require("render-markdown").setup(opts)
+
+      -- Custom highlight groups for a cohesive look
+      local colors = {
+        h1 = "#f38ba8",  -- Pink/Red
+        h2 = "#fab387",  -- Peach/Orange
+        h3 = "#f9e2af",  -- Yellow
+        h4 = "#a6e3a1",  -- Green
+        h5 = "#89dceb",  -- Teal
+        h6 = "#b4befe",  -- Lavender
+        code_bg = "#1e1e2e",
+        quote = "#6c7086",
+      }
+
+      -- Heading colors (gradient effect)
+      vim.api.nvim_set_hl(0, "RenderMarkdownH1", { fg = colors.h1, bold = true })
+      vim.api.nvim_set_hl(0, "RenderMarkdownH2", { fg = colors.h2, bold = true })
+      vim.api.nvim_set_hl(0, "RenderMarkdownH3", { fg = colors.h3, bold = true })
+      vim.api.nvim_set_hl(0, "RenderMarkdownH4", { fg = colors.h4, bold = true })
+      vim.api.nvim_set_hl(0, "RenderMarkdownH5", { fg = colors.h5, bold = true })
+      vim.api.nvim_set_hl(0, "RenderMarkdownH6", { fg = colors.h6, bold = true })
+
+      -- Heading backgrounds (subtle)
+      vim.api.nvim_set_hl(0, "RenderMarkdownH1Bg", { bg = "#2a2030" })
+      vim.api.nvim_set_hl(0, "RenderMarkdownH2Bg", { bg = "#2a2520" })
+      vim.api.nvim_set_hl(0, "RenderMarkdownH3Bg", { bg = "#2a2820" })
+      vim.api.nvim_set_hl(0, "RenderMarkdownH4Bg", { bg = "#202a20" })
+      vim.api.nvim_set_hl(0, "RenderMarkdownH5Bg", { bg = "#202a2a" })
+      vim.api.nvim_set_hl(0, "RenderMarkdownH6Bg", { bg = "#25202a" })
+
+      -- Code blocks
+      vim.api.nvim_set_hl(0, "RenderMarkdownCode", { bg = "#181825" })
+      vim.api.nvim_set_hl(0, "RenderMarkdownCodeInline", { bg = "#313244", fg = "#f5c2e7" })
+
+      -- Checkboxes
+      vim.api.nvim_set_hl(0, "RenderMarkdownUnchecked", { fg = "#6c7086" })
+      vim.api.nvim_set_hl(0, "RenderMarkdownChecked", { fg = "#a6e3a1" })
+      vim.api.nvim_set_hl(0, "RenderMarkdownTodo", { fg = "#f9e2af" })
+
+      -- Callouts
+      vim.api.nvim_set_hl(0, "RenderMarkdownInfo", { fg = "#89b4fa" })
+      vim.api.nvim_set_hl(0, "RenderMarkdownSuccess", { fg = "#a6e3a1" })
+      vim.api.nvim_set_hl(0, "RenderMarkdownHint", { fg = "#cba6f7" })
+      vim.api.nvim_set_hl(0, "RenderMarkdownWarn", { fg = "#f9e2af" })
+      vim.api.nvim_set_hl(0, "RenderMarkdownError", { fg = "#f38ba8" })
+      vim.api.nvim_set_hl(0, "RenderMarkdownQuote", { fg = colors.quote, italic = true })
+
+      -- Links
+      vim.api.nvim_set_hl(0, "RenderMarkdownLink", { fg = "#89b4fa", underline = true })
+      vim.api.nvim_set_hl(0, "RenderMarkdownWikiLink", { fg = "#cba6f7", underline = true })
+
+      -- Tables
+      vim.api.nvim_set_hl(0, "RenderMarkdownTableHead", { fg = "#cba6f7", bold = true })
+      vim.api.nvim_set_hl(0, "RenderMarkdownTableRow", { fg = "#cdd6f4" })
+      vim.api.nvim_set_hl(0, "RenderMarkdownTableFill", { fg = "#45475a" })
+
+      -- Misc
+      vim.api.nvim_set_hl(0, "RenderMarkdownBullet", { fg = "#89dceb" })
+      vim.api.nvim_set_hl(0, "RenderMarkdownDash", { fg = "#45475a" })
+    end,
   },
 
   {

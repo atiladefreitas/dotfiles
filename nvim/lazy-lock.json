@@ -50,5 +50,6 @@
   "ts-comments.nvim": { "branch": "main", "commit": "123a9fb12e7229342f807ec9e6de478b1102b041" },
   "vim-dogrun": { "branch": "main", "commit": "203afe32971e2231db0d44e5543ee62b9f529618" },
   "vim-fugitive": { "branch": "master", "commit": "61b51c09b7c9ce04e821f6cf76ea4f6f903e3cf4" },
-  "which-key.nvim": { "branch": "main", "commit": "3aab2147e74890957785941f0c1ad87d0a44c15a" }
+  "which-key.nvim": { "branch": "main", "commit": "3aab2147e74890957785941f0c1ad87d0a44c15a" },
+  "wrapping.nvim": { "branch": "master", "commit": "d67a7c9d1c4673fa678a68f5da222e995b91f876" }
 }

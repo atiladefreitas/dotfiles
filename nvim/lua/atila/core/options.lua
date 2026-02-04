@@ -9,19 +9,22 @@ opt.number = true
 
 -- tabs & indentation
 opt.tabstop = 2
-opt.shiftwidth = 2 -- 2 spaces for indent width
-opt.expandtab = true -- expand tab to spaces
-opt.autoindent = true -- copy indent from current line when starting new one
-opt.smartindent = true -- smart indentation
+opt.shiftwidth = 2      -- 2 spaces for indent width
+opt.expandtab = true    -- expand tab to spaces
+opt.autoindent = true   -- copy indent from current line when starting new one
+opt.smartindent = true  -- smart indentation
 
--- opt.wrap = true
--- opt.textwidth = 80
+opt.wrap = true         -- enable soft wrap (visual only, no actual line breaks)
+opt.textwidth = 0       -- disable auto hard-wrap (don't insert actual line breaks)
+opt.linebreak = true    -- wrap at word boundaries, not mid-word
+opt.colorcolumn = "120" -- show visual indicator at 120 characters
+opt.columns = 120       -- set window width to 120 columns
 
 opt.conceallevel = 1
 
 -- search settings
 opt.ignorecase = true -- ignore case when searching
-opt.smartcase = true -- if you include mixed case in your search, assumes you want case-sensitive
+opt.smartcase = true  -- if you include mixed case in your search, assumes you want case-sensitive
 
 opt.cursorline = true
 
@@ -31,7 +34,7 @@ opt.linespace = 4
 -- (have to use iterm2 or any other true color terminal)
 opt.termguicolors = true
 opt.background = "dark" -- colorschemes that can be light or dark will be made dark
-opt.signcolumn = "yes" -- show sign column so that text doesn't shift
+opt.signcolumn = "yes"  -- show sign column so that text doesn't shift
 
 -- backspace
 opt.backspace = "indent,eol,start" -- allow backspace on indent, end of line or insert mode start position
