@@ -170,14 +170,14 @@ return {
       })
     end
   },
-  {
-    "sphamba/smear-cursor.nvim",
-    opts = {
-      enabled = true,
-      smear_between_buffers = false,
-      stiffness = 0.6,
-      trailing_stiffness = 0.5,
-      distanc_stop_animation = 0.5
-    }
-  }
+  -- {
+  --   "sphamba/smear-cursor.nvim",
+  --   opts = {
+  --     enabled = true,
+  --     smear_between_buffers = false,
+  --     stiffness = 0.6,
+  --     trailing_stiffness = 0.5,
+  --     distanc_stop_animation = 0.5
+  --   }
+  -- }
 }
