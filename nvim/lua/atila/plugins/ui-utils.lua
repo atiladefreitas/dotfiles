@@ -21,35 +21,37 @@ return {
     },
   },
 
-  {
-    "akinsho/bufferline.nvim",
-    version = "*",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    opts = {
-      options = {
-        mode = "buffers",
-        numbers = function(opts)
-          local letters = { "Q", "W", "E", "A", "S", "D" }
-          return string.format("[%s]", letters[opts.ordinal] or opts.ordinal)
-        end,
-        offsets = {
-          {
-            filetype = "neo-tree",
-            text = "File Explorer",
-            highlight = "Directory",
-            separator = true,
-          },
-        },
-      },
-    },
-  },
+  -- {
+  --   "akinsho/bufferline.nvim",
+  --   version = "*",
+  --   dependencies = { "nvim-tree/nvim-web-devicons" },
+  --   opts = {
+  --     options = {
+  --       mode = "buffers",
+  --       numbers = function(opts)
+  --         local letters = { "Q", "W", "E", "A", "S", "D" }
+  --         return string.format("[%s]", letters[opts.ordinal] or opts.ordinal)
+  --       end,
+  --       offsets = {
+  --         {
+  --           filetype = "neo-tree",
+  --           text = "File Explorer",
+  --           highlight = "Directory",
+  --           separator = true,
+  --         },
+  --       },
+  --     },
+  --   },
+  -- },
 
   {
     "nvim-neo-tree/neo-tree.nvim",
     branch = "v3.x",
     cmd = "Neotree",
     keys = {
-      { "<leader>e", desc = "Toggle Neotree" },
+      { "<leader>e",     desc = "Toggle Neotree" },
+      { "<leader><Tab>", desc = "Neotree Buffers" },
+      { "<leader>gg",    desc = "Neotree Git Status" },
     },
     dependencies = {
       "nvim-lua/plenary.nvim",
@@ -58,6 +60,35 @@ return {
     },
     opts = {
       close_if_last_window = true,
+      popup_border_style = "rounded",
+      default_component_configs = {
+        git_status = {
+          symbols = {
+            added     = "+",
+            modified  = "~",
+            deleted   = "-",
+            renamed   = "→",
+            untracked = "",
+            ignored   = "/",
+            unstaged  = "✗",
+            staged    = "✓",
+            conflict  = "",
+          },
+        },
+      },
+      window = {
+        position = "float",
+        popup = {
+          size = {
+            height = "80%",
+            width = "40%",
+          },
+          position = "50%",
+        },
+        mappings = {
+          ["<Esc>"] = "close_window",
+        },
+      },
       filesystem = {
         follow_current_file = true,
         filtered_items = {
@@ -79,8 +110,20 @@ return {
       vim.keymap.set(
         "n",
         "<leader>e",
-        ":Neotree toggle<CR>",
+        ":Neotree toggle reveal<CR>",
         { noremap = true, silent = true, desc = "Toggle Neotree" }
+      )
+      vim.keymap.set(
+        "n",
+        "<leader><Tab>",
+        ":Neotree toggle source=buffers reveal<CR>",
+        { noremap = true, silent = true, desc = "Neotree Buffers" }
+      )
+      vim.keymap.set(
+        "n",
+        "<leader>gg",
+        ":Neotree toggle source=git_status<CR>",
+        { noremap = true, silent = true, desc = "Neotree Git Status" }
       )
     end,
   },
