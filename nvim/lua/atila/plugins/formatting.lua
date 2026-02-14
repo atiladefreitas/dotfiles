@@ -46,36 +46,23 @@ return {
 				}
 			end,
 			formatters = {
-				rustywind = {
-					condition = function(self, ctx)
-						return vim.fn.executable("rustywind") == 1
-					end,
-					prepend_args = { "--write-multi-line", "120" },
-				},
+				rustywind = {},
 				biome = {
-					-- Use biome if available (don't require config file)
 					condition = function(self, ctx)
-						-- Check if biome is available in PATH
-						return vim.fn.executable("biome") == 1
+						-- Only use biome when the project has a biome config
+						return vim.fs.find({
+							"biome.json",
+							"biome.jsonc",
+						}, { path = ctx.filename, upward = true })[1] ~= nil
 					end,
 				},
 				prettier = {
 					condition = function(self, ctx)
-						-- Use prettier if biome is not available or if prettier config exists
-						local has_prettier_config = vim.fs.find({
-							".prettierrc",
-							".prettierrc.json",
-							".prettierrc.yml",
-							".prettierrc.yaml",
-							".prettierrc.json5",
-							".prettierrc.js",
-							".prettierrc.cjs",
-							".prettierrc.toml",
-							"prettier.config.js",
-							"prettier.config.cjs",
-						}, { path = ctx.filename, upward = true })[1]
-
-						return has_prettier_config or vim.fn.executable("biome") ~= 1
+						-- Use prettier as fallback when project has no biome config
+						return vim.fs.find({
+							"biome.json",
+							"biome.jsonc",
+						}, { path = ctx.filename, upward = true })[1] == nil
 					end,
 				},
 			},
