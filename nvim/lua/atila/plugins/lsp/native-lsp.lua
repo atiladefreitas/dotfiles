@@ -12,6 +12,15 @@ return {
 				},
 			},
 		},
+		{
+			"SmiteshP/nvim-navic",
+			opts = {
+				lsp = { auto_attach = true },
+				highlight = true,
+				separator = " > ",
+				depth_limit = 5,
+			},
+		},
 	},
 	config = function()
 		local capabilities = require("blink.cmp").get_lsp_capabilities()
@@ -24,12 +33,12 @@ return {
 				local opts = { noremap = true, silent = true, buffer = bufnr }
 				local keymap = vim.keymap.set
 
-				keymap("n", "gd", vim.lsp.buf.definition, opts)
+				keymap("n", "gd", "<cmd>Telescope lsp_definitions<cr>", opts)
 				keymap("n", "K", vim.lsp.buf.hover, opts)
-				keymap("n", "gi", vim.lsp.buf.implementation, opts)
+				keymap("n", "gi", "<cmd>Telescope lsp_implementations<cr>", opts)
 				keymap("n", "<leader>rn", vim.lsp.buf.rename, opts)
 				keymap("n", "<leader>ca", vim.lsp.buf.code_action, opts)
-				keymap("n", "gr", vim.lsp.buf.references, opts)
+				keymap("n", "gr", "<cmd>Telescope lsp_references<cr>", opts)
 				keymap("n", "<leader>f", function()
 					vim.lsp.buf.format({ async = true })
 				end, opts)

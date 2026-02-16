@@ -123,12 +123,12 @@ vim.keymap.set("n", "<a-e>", ":Widgy<CR>", { desc = "create widgy widget" })
 vim.keymap.set("n", "<leader>ot", ":ObsidianToday<CR>", { desc = "open today's note", silent = true })
 
 -- Bufferline navigation keymaps
-vim.keymap.set("n", "<tab>q", "<Cmd>BufferLineGoToBuffer 1<CR>", { desc = "go to buffer 1" })
-vim.keymap.set("n", "<tab>w", "<Cmd>BufferLineGoToBuffer 2<CR>", { desc = "go to buffer 2" })
-vim.keymap.set("n", "<tab>e", "<Cmd>BufferLineGoToBuffer 3<CR>", { desc = "go to buffer 3" })
-vim.keymap.set("n", "<tab>a", "<Cmd>BufferLineGoToBuffer 4<CR>", { desc = "go to buffer 4" })
-vim.keymap.set("n", "<tab>s", "<Cmd>BufferLineGoToBuffer 5<CR>", { desc = "go to buffer 5" })
-vim.keymap.set("n", "<tab>d", "<Cmd>BufferLineGoToBuffer 6<CR>", { desc = "go to buffer 6" })
+-- vim.keymap.set("n", "<tab>q", "<Cmd>BufferLineGoToBuffer 1<CR>", { desc = "go to buffer 1" })
+-- vim.keymap.set("n", "<tab>w", "<Cmd>BufferLineGoToBuffer 2<CR>", { desc = "go to buffer 2" })
+-- vim.keymap.set("n", "<tab>e", "<Cmd>BufferLineGoToBuffer 3<CR>", { desc = "go to buffer 3" })
+-- vim.keymap.set("n", "<tab>a", "<Cmd>BufferLineGoToBuffer 4<CR>", { desc = "go to buffer 4" })
+-- vim.keymap.set("n", "<tab>s", "<Cmd>BufferLineGoToBuffer 5<CR>", { desc = "go to buffer 5" })
+-- vim.keymap.set("n", "<tab>d", "<Cmd>BufferLineGoToBuffer 6<CR>", { desc = "go to buffer 6" })
 
 -- vim.keymap.set("n", "<a-q>", "<Cmd>BufferLineGoToBuffer 1<CR>", { desc = "go to buffer 1" })
 -- vim.keymap.set("n", "<a-w>", "<Cmd>BufferLineGoToBuffer 2<CR>", { desc = "go to buffer 2" })

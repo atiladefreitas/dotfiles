@@ -20,28 +20,28 @@ return {
 		},
 	},
 
-	{
-		"akinsho/bufferline.nvim",
-		version = "*",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
-		opts = {
-			options = {
-				mode = "buffers",
-				numbers = function(opts)
-					local letters = { "Q", "W", "E", "A", "S", "D" }
-					return string.format("[%s]", letters[opts.ordinal] or opts.ordinal)
-				end,
-				offsets = {
-					{
-						filetype = "neo-tree",
-						text = "File Explorer",
-						highlight = "Directory",
-						separator = true,
-					},
-				},
-			},
-		},
-	},
+	-- {
+	-- 	"akinsho/bufferline.nvim",
+	-- 	version = "*",
+	-- 	dependencies = { "nvim-tree/nvim-web-devicons" },
+	-- 	opts = {
+	-- 		options = {
+	-- 			mode = "buffers",
+	-- 			numbers = function(opts)
+	-- 				local letters = { "Q", "W", "E", "A", "S", "D" }
+	-- 				return string.format("[%s]", letters[opts.ordinal] or opts.ordinal)
+	-- 			end,
+	-- 			offsets = {
+	-- 				{
+	-- 					filetype = "neo-tree",
+	-- 					text = "File Explorer",
+	-- 					highlight = "Directory",
+	-- 					separator = true,
+	-- 				},
+	-- 			},
+	-- 		},
+	-- 	},
+	-- },
 
 	{
 		"nvim-neo-tree/neo-tree.nvim",
@@ -79,15 +79,18 @@ return {
 				position = "float",
 				popup = {
 					size = {
-						height = "80%",
+						height = "98%",
 						width = "40%",
 					},
-					position = "50%",
+					position = "3%",
 				},
 				mappings = {
 					["<Esc>"] = "close_window",
+					["h"] = "navigate_up",
+					["l"] = "open",
 				},
 			},
+			enable_relative_numbers = true,
 			filesystem = {
 				follow_current_file = true,
 				filtered_items = {
@@ -99,6 +102,13 @@ return {
 					event = "file_open_requested",
 					handler = function()
 						require("neo-tree.command").execute({ action = "close" })
+					end,
+				},
+				{
+					event = "neo_tree_window_after_open",
+					handler = function(args)
+						vim.wo[args.winid].number = true
+						vim.wo[args.winid].relativenumber = true
 					end,
 				},
 			},
@@ -128,10 +138,70 @@ return {
 	},
 
 	{
+		"b0o/incline.nvim",
+		enabled = true,
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+		config = function()
+			local devicons = require("nvim-web-devicons")
+
+			require("incline").setup({
+				window = {
+					placement = {
+						horizontal = "right",
+						vertical = "top",
+					},
+				},
+				highlight = {
+					groups = {
+						InclineNormal = { guibg = "#0f1019" },
+						InclineNormalNC = { guibg = "#0f1019" },
+					},
+				},
+				hide = {
+					only_win = false,
+				},
+				render = function(props)
+					local bufname = vim.api.nvim_buf_get_name(props.buf)
+					local filename = vim.fn.fnamemodify(bufname, ":t")
+					if filename == "" then
+						filename = "[No Name]"
+					end
+
+					local ext = vim.fn.fnamemodify(bufname, ":e")
+					local icon, icon_color = devicons.get_icon(filename, ext, { default = true })
+
+					local modified = vim.bo[props.buf].modified
+
+					return {
+						{ " ", icon, " ", guifg = icon_color },
+						{ filename, gui = modified and "bold" or "none" },
+						modified and { " [+]", guifg = "#ff9e64" } or "",
+						" ",
+					}
+				end,
+			})
+		end,
+	},
+
+	{
 		"nvim-lualine/lualine.nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		config = function()
-			require("lualine").setup({})
+			require("lualine").setup({
+				sections = {
+					lualine_c = {
+						"filename",
+						{
+							function()
+								return require("nvim-navic").get_location()
+							end,
+							cond = function()
+								return package.loaded["nvim-navic"] and require("nvim-navic").is_available()
+							end,
+						},
+					},
+				},
+			})
 		end,
 	},
 
