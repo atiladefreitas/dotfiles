@@ -4,6 +4,29 @@ return {
 	build = ":TSUpdate",
 	dependencies = {
 		"windwp/nvim-ts-autotag",
+		{
+			"HiPhish/jinja.vim",
+			init = function()
+				-- Auto-detect Jinja syntax inside .html files and set filetype to html.jinja
+				vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+					pattern = "*.html",
+					callback = function()
+						if vim.fn.exists("*jinja#AdjustFiletype") == 1 then
+							vim.fn["jinja#AdjustFiletype"]()
+						end
+					end,
+				})
+
+				-- Enable vim syntax alongside treesitter for jinja filetypes
+				-- so that jinja.vim highlighting works with treesitter HTML
+				vim.api.nvim_create_autocmd("FileType", {
+					pattern = "*.jinja",
+					callback = function()
+						vim.opt_local.syntax = "on"
+					end,
+				})
+			end,
+		},
 	},
 	config = function()
 		-- Setup nvim-ts-autotag
@@ -35,6 +58,8 @@ return {
 				"markdown",
 				"markdown_inline",
 				"vimdoc",
+				"jinja",
+				"jinja_inline",
 			},
 			incremental_selection = {
 				enable = true,

@@ -26,6 +26,7 @@ return {
 				"tailwindcss",
 				"lua_ls",
 				"marksman",
+				"jinja_lsp",
 			},
 			automatic_installation = true,
 		},

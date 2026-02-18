@@ -27,7 +27,9 @@ return {
 				end,
 				css = { "prettier" },
 				scss = { "prettier" },
-				html = { "rustywind", "prettier" },
+				html = { "djlint", "rustywind", "prettier" },
+				jinja = { "djlint" },
+				jinja2 = { "djlint" },
 				json = { "biome", "prettier" },
 				jsonc = { "biome", "prettier" },
 				yaml = { "prettier" },
@@ -46,6 +48,14 @@ return {
 				}
 			end,
 			formatters = {
+				djlint = {
+					prepend_args = {
+						"--profile=jinja",
+						"--indent=2",
+						"--max-line-length=120",
+						"--max-attribute-length=120",
+					},
+				},
 				rustywind = {},
 				biome = {
 					condition = function(self, ctx)
@@ -77,4 +87,3 @@ return {
 		end, { desc = "Format file or range (in visual mode)" })
 	end,
 }
-

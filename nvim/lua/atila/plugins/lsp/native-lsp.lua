@@ -131,6 +131,15 @@ return {
 			capabilities = capabilities,
 		})
 
+		-- Jinja2 (via jinja-lsp) -- diagnostics disabled to avoid false "undefined variable" errors
+		vim.lsp.config("jinja_lsp", {
+			capabilities = capabilities,
+			filetypes = { "html", "jinja", "jinja2" },
+			handlers = {
+				["textDocument/publishDiagnostics"] = function() end,
+			},
+		})
+
 		-- Enable all configured servers
 		vim.lsp.enable({
 			"vtsls",
@@ -140,6 +149,7 @@ return {
 			"tailwindcss",
 			"lua_ls",
 			"marksman",
+			"jinja_lsp",
 		})
 	end,
 }

@@ -18,6 +18,9 @@ return {
 					vertical = 1,
 				},
 				zindex = 50,
+				options = {
+					winblend = 0,
+				},
 			},
 			hide = {
 				only_win = false,
@@ -32,23 +35,23 @@ return {
 				local ext = vim.fn.fnamemodify(bufname, ":e")
 				local icon, icon_color = devicons.get_icon_color(filename, ext, { default = true })
 
-				local modified = vim.bo[props.buf].modified
-				local is_active = props.focused
+			local modified = vim.bo[props.buf].modified
+			local is_active = props.focused
 
-				local bg = is_active and "#1a1d29" or "#11131c"
-				local fg = is_active and "#c0caf5" or "#565f89"
+			local bg = modified and "#2a1f1a" or (is_active and "#1a1d29" or "#11131c")
+			local fg = is_active and "#c0caf5" or "#565f89"
 
-				local result = {
-					{ " ", guibg = bg },
-					{ icon .. " ", guifg = icon_color, guibg = bg },
-					{ filename, guifg = fg, guibg = bg, gui = modified and "bold,italic" or "bold" },
-				}
+			local result = {
+				{ " ", guibg = bg },
+			}
 
-				if modified then
-					table.insert(result, { "  ", guifg = "#ff9e64", guibg = bg })
-				end
+			if modified then
+				table.insert(result, { " ", guifg = "#ff9e64", guibg = bg })
+			end
 
-				table.insert(result, { " ", guibg = bg })
+			table.insert(result, { icon .. " ", guifg = icon_color, guibg = bg })
+			table.insert(result, { filename, guifg = fg, guibg = bg, gui = modified and "bold,italic" or "bold" })
+			table.insert(result, { " ", guibg = bg })
 
 				return result
 			end,
