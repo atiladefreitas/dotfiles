@@ -50,6 +50,9 @@ return {
 			follow_current_file = true,
 			filtered_items = {
 				visible = true,
+				never_show = {
+					"node_modules",
+				},
 			},
 		},
 		event_handlers = {

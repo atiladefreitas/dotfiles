@@ -37,6 +37,39 @@ return {
 
 		telescope.load_extension("themes")
 
+		-- tokyonight-inspired highlight overrides for telescope
+		local bg_dark = "#0a0b11"
+		local bg = "#0f1019"
+		local bg_highlight = "#1a1d29"
+		local blue = "#7aa2f7"
+		local cyan = "#7dcfff"
+		local green = "#9ece6a"
+		local fg = "#c0caf5"
+		local fg_dark = "#565f89"
+
+		local TelescopeColor = {
+			TelescopeMatching = { fg = cyan },
+			TelescopeSelection = { fg = fg, bg = bg_highlight, bold = true },
+			TelescopeSelectionCaret = { fg = blue, bg = bg_highlight },
+
+			TelescopePromptPrefix = { fg = blue, bg = bg_dark },
+			TelescopePromptNormal = { bg = bg_dark },
+			TelescopePromptBorder = { bg = bg_dark, fg = bg_dark },
+			TelescopePromptTitle = { bg = blue, fg = bg_dark, bold = true },
+			TelescopePromptCounter = { fg = fg_dark },
+
+			TelescopeResultsNormal = { bg = bg },
+			TelescopeResultsBorder = { bg = bg, fg = bg },
+			TelescopeResultsTitle = { fg = bg },
+
+			TelescopePreviewNormal = { bg = bg },
+			TelescopePreviewBorder = { bg = bg, fg = bg },
+			TelescopePreviewTitle = { bg = green, fg = bg_dark, bold = true },
+		}
+		for hl, col in pairs(TelescopeColor) do
+			vim.api.nvim_set_hl(0, hl, col)
+		end
+
 		telescope.setup({
 			defaults = {
 				file_ignore_patterns = {
@@ -46,6 +79,31 @@ return {
 				file_sorter = require("telescope.sorters").get_fuzzy_file,
 				generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
 				sorting_strategy = "descending",
+
+				-- visual polish
+				prompt_prefix = "   ",
+				selection_caret = "  ",
+				entry_prefix = "  ",
+				multi_icon = "  ",
+				results_title = false,
+				borderchars = { " ", " ", " ", " ", " ", " ", " ", " " },
+
+				layout_strategy = "horizontal",
+				layout_config = {
+					horizontal = {
+						prompt_position = "bottom",
+						preview_width = 0.55,
+						results_width = 0.8,
+					},
+					vertical = {
+						mirror = false,
+					},
+					width = 0.85,
+					height = 0.80,
+					preview_cutoff = 120,
+				},
+
+				winblend = 0,
 
 				mappings = {
 					i = {

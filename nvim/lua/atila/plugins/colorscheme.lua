@@ -97,19 +97,20 @@ return {
 				color_overrides = {},
 				custom_highlights = {},
 				default_integrations = true,
-				integrations = {
-					cmp = true,
-					gitsigns = true,
-					nvimtree = true,
-					neotree = true,
-					treesitter = true,
-					notify = false,
-					mini = {
-						enabled = true,
-						indentscope_color = "",
-					},
-					-- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
+			integrations = {
+				cmp = true,
+				gitsigns = true,
+				nvimtree = true,
+				neotree = true,
+				treesitter = true,
+				notify = false,
+				telescope = { enabled = true },
+				mini = {
+					enabled = true,
+					indentscope_color = "",
 				},
+				-- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
+			},
 			})
 			vim.cmd.colorscheme("catppuccin")
 		end,
