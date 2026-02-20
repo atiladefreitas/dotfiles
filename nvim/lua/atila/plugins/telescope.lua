@@ -62,8 +62,8 @@ return {
 			TelescopeResultsBorder = { bg = bg, fg = bg },
 			TelescopeResultsTitle = { fg = bg },
 
-			TelescopePreviewNormal = { bg = bg },
-			TelescopePreviewBorder = { bg = bg, fg = bg },
+			TelescopePreviewNormal = { bg = bg_highlight },
+			TelescopePreviewBorder = { bg = bg_highlight, fg = bg_highlight },
 			TelescopePreviewTitle = { bg = green, fg = bg_dark, bold = true },
 		}
 		for hl, col in pairs(TelescopeColor) do
