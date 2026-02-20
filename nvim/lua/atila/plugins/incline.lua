@@ -4,6 +4,7 @@ return {
 	dependencies = { "nvim-tree/nvim-web-devicons" },
 	event = "BufReadPre",
 	config = function()
+		local helpers = require("incline.helpers")
 		local devicons = require("nvim-web-devicons")
 
 		require("incline").setup({
@@ -12,48 +13,65 @@ return {
 					horizontal = "center",
 					vertical = "top",
 				},
-				padding = 0,
-				margin = {
-					horizontal = 1,
-					vertical = 1,
-				},
-				zindex = 50,
-				options = {
-					winblend = 0,
-				},
-			},
-			hide = {
-				only_win = false,
 			},
 			render = function(props)
-				local bufname = vim.api.nvim_buf_get_name(props.buf)
-				local filename = vim.fn.fnamemodify(bufname, ":t")
+				local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
 				if filename == "" then
 					filename = "[No Name]"
 				end
+				local ft_icon, ft_color = devicons.get_icon_color(filename)
+				local modified = vim.bo[props.buf].modified
 
-				local ext = vim.fn.fnamemodify(bufname, ":e")
-				local icon, icon_color = devicons.get_icon_color(filename, ext, { default = true })
+				local function get_git_diff()
+					local icons = { removed = "[-] ", changed = "[●] ", added = "[+] " }
+					local signs = vim.b[props.buf].gitsigns_status_dict
+					local labels = {}
+					if signs == nil then
+						return labels
+					end
+					for name, icon in pairs(icons) do
+						if tonumber(signs[name]) and signs[name] > 0 then
+							table.insert(labels, { icon .. signs[name] .. " ", group = "Diff" .. name })
+						end
+					end
+					if #labels > 0 then
+						table.insert(labels, { "┊ " })
+					end
+					return labels
+				end
 
-			local modified = vim.bo[props.buf].modified
-			local is_active = props.focused
+				local function get_diagnostic_label()
+					local icons = { error = "x", warn = "!", info = "i", hint = "?" }
+					local label = {}
 
-			local bg = modified and "#2a1f1a" or (is_active and "#1a1d29" or "#11131c")
-			local fg = is_active and "#c0caf5" or "#565f89"
+					for severity, icon in pairs(icons) do
+						local n = #vim.diagnostic.get(
+							props.buf,
+							{ severity = vim.diagnostic.severity[string.upper(severity)] }
+						)
+						if n > 0 then
+							table.insert(label, { icon .. n .. " ", group = "DiagnosticSign" .. severity })
+						end
+					end
+					if #label > 0 then
+						table.insert(label, { "┊ " })
+					end
+					return label
+				end
 
-			local result = {
-				{ " ", guibg = bg },
-			}
-
-			if modified then
-				table.insert(result, { " ", guifg = "#ff9e64", guibg = bg })
-			end
-
-			table.insert(result, { icon .. " ", guifg = icon_color, guibg = bg })
-			table.insert(result, { filename, guifg = fg, guibg = bg, gui = modified and "bold,italic" or "bold" })
-			table.insert(result, { " ", guibg = bg })
-
-				return result
+				return {
+					{ get_diagnostic_label() },
+					{ get_git_diff() },
+					{
+						ft_icon and { " ", ft_icon, " ", guibg = ft_color, guifg = helpers.contrast_color(ft_color) }
+							or "",
+						" ",
+						{ filename, gui = modified and "bold,italic" or "bold" },
+						" ",
+					},
+					-- { filename .. " ", gui = vim.bo[props.buf].modified and "bold,italic" or "bold" },
+					{ "┊ #" .. vim.api.nvim_win_get_number(props.win), group = "DevIconWindows" },
+				}
 			end,
 		})
 	end,
