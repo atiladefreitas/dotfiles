@@ -15,9 +15,12 @@ return {
 				},
 			},
 			render = function(props)
-				local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
+				local bufname = vim.api.nvim_buf_get_name(props.buf)
+				local filename = vim.fn.fnamemodify(bufname, ":t")
+				local parent = vim.fn.fnamemodify(bufname, ":h:t")
 				if filename == "" then
 					filename = "[No Name]"
+					parent = ""
 				end
 				local ft_icon, ft_color = devicons.get_icon_color(filename)
 				local modified = vim.bo[props.buf].modified
@@ -66,6 +69,7 @@ return {
 						ft_icon and { " ", ft_icon, " ", guibg = ft_color, guifg = helpers.contrast_color(ft_color) }
 							or "",
 						" ",
+						{ parent .. "/", group = "Comment" },
 						{ filename, gui = modified and "bold,italic" or "bold" },
 						" ",
 					},
