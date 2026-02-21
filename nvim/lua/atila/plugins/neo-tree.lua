@@ -81,10 +81,13 @@ return {
 			position = "float",
 			popup = {
 				size = {
-					height = "98%",
-					width = "35%",
+					height = "90%",
+					width = "30%",
 				},
-				position = "2%",
+				position = {
+					row = "50%",
+					col = "2%",
+				},
 			},
 			mappings = {
 				["<Esc>"] = "close_window",
@@ -191,7 +194,7 @@ return {
 		vim.keymap.set(
 			"n",
 			"<leader><Tab>",
-			":Neotree toggle source=buffers reveal<CR>",
+			":Neotree focus source=buffers reveal<CR>",
 			{ noremap = true, silent = true, desc = "Neotree Buffers" }
 		)
 		vim.keymap.set(

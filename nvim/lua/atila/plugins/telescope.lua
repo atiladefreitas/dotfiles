@@ -34,6 +34,74 @@ return {
 	config = function()
 		local telescope = require("telescope")
 		local actions = require("telescope.actions")
+		local previewers = require("telescope.previewers")
+
+		-- image preview support via image.nvim
+		local image_exts = { png = true, jpg = true, jpeg = true, gif = true, webp = true, avif = true, ico = true, bmp = true, svg = true }
+		local is_image = function(filepath)
+			local ext = (filepath:match("%.(%w+)$") or ""):lower()
+			return image_exts[ext] or false
+		end
+
+		local original_maker = previewers.buffer_previewer_maker
+		local last_image = nil
+		local debounce_timer = nil
+
+		local custom_maker = function(filepath, bufnr, opts)
+			-- clear previous image immediately
+			if last_image then
+				pcall(function() last_image:clear() end)
+				last_image = nil
+			end
+
+			if not is_image(filepath) then
+				return original_maker(filepath, bufnr, opts)
+			end
+
+			-- debounce rapid scrolling
+			if debounce_timer then
+				debounce_timer:stop()
+				debounce_timer:close()
+			end
+
+			debounce_timer = vim.uv.new_timer()
+			debounce_timer:start(100, 0, vim.schedule_wrap(function()
+				debounce_timer:stop()
+				debounce_timer:close()
+				debounce_timer = nil
+
+				-- bail if buffer was wiped during debounce
+				if not vim.api.nvim_buf_is_valid(bufnr) then
+					return
+				end
+
+				-- downscale for faster preview
+				local tmp = vim.fn.tempname() .. ".png"
+				vim.fn.system({
+					"magick", filepath,
+					"-resize", "400x400>",
+					"-quality", "50",
+					tmp,
+				})
+
+				local ok, image = pcall(require, "image")
+				if not ok then
+					vim.fn.delete(tmp)
+					return original_maker(filepath, bufnr, opts)
+				end
+
+				local img = image.from_file(tmp, {
+					window = opts.winid,
+					buffer = bufnr,
+					with_virtual_padding = true,
+				})
+				if img then
+					img:render()
+					last_image = img
+				end
+				vim.fn.delete(tmp)
+			end))
+		end
 
 		telescope.load_extension("themes")
 
@@ -72,6 +140,7 @@ return {
 
 		telescope.setup({
 			defaults = {
+				buffer_previewer_maker = custom_maker,
 				file_ignore_patterns = {
 					"%.md",
 				},

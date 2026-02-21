@@ -40,11 +40,61 @@ return {
 		init = function()
 			vim.o.timeout = true
 			vim.o.timeoutlen = 100
+
+			-- tokyonight-inspired which-key highlights
+			local bg = "#0f1019"
+			local bg_dark = "#0a0b11"
+			local bg_highlight = "#1a1d29"
+			local blue = "#7aa2f7"
+			local cyan = "#7dcfff"
+			local purple = "#bb9af7"
+			local green = "#9ece6a"
+			local orange = "#ff9e64"
+			local fg = "#c0caf5"
+			local fg_dark = "#565f89"
+
+			vim.api.nvim_set_hl(0, "WhichKeyNormal", { bg = bg, fg = fg })
+			vim.api.nvim_set_hl(0, "WhichKeyBorder", { bg = bg, fg = bg })
+			vim.api.nvim_set_hl(0, "WhichKeyTitle", { bg = blue, fg = bg_dark, bold = true })
+			vim.api.nvim_set_hl(0, "WhichKey", { fg = cyan, bold = true })
+			vim.api.nvim_set_hl(0, "WhichKeyGroup", { fg = purple })
+			vim.api.nvim_set_hl(0, "WhichKeyDesc", { fg = fg })
+			vim.api.nvim_set_hl(0, "WhichKeySeparator", { fg = fg_dark })
+			vim.api.nvim_set_hl(0, "WhichKeyValue", { fg = fg_dark })
 		end,
 		opts = {
-			-- your configuration comes here
-			-- or leave it empty to use the default settings
-			-- refer to the configuration section below
+			preset = "modern",
+			win = {
+				border = "rounded",
+				padding = { 1, 2 },
+				title = true,
+				title_pos = "center",
+				wo = {
+					winblend = 0,
+				},
+			},
+			layout = {
+				spacing = 3,
+				align = "center",
+			},
+			icons = {
+				breadcrumb = " ",
+				separator = " ",
+				group = " ",
+				mappings = true,
+				rules = {},
+				colors = true,
+			},
+			-- spec = {
+			-- 	{ "<leader>f", group = "Find", icon = " " },
+			-- 	{ "<leader>l", group = "LSP", icon = " " },
+			-- 	{ "<leader>g", group = "Git", icon = " " },
+			-- 	{ "<leader>x", group = "Diagnostics", icon = " " },
+			-- 	{ "<leader>u", group = "Toggle", icon = " " },
+			-- 	{ "<leader>c", group = "Code", icon = " " },
+			-- 	{ "<leader>a", group = "AI", icon = " " },
+			-- 	{ "<leader>t", group = "Terminal", icon = " " },
+			-- },
 		},
 	},
 
@@ -88,6 +138,7 @@ return {
 
 	{
 		"folke/sidekick.nvim",
+		event = "VeryLazy",
 		opts = {
 			-- add any options here
 			cli = {
@@ -101,6 +152,10 @@ return {
 			{
 				"<tab>",
 				function()
+					-- skip sidekick handling inside neo-tree
+					if vim.bo.filetype == "neo-tree" then
+						return "<Tab>"
+					end
 					-- if there is a next edit, jump to it, otherwise apply it if any
 					if not require("sidekick").nes_jump_or_apply() then
 						return "<Tab>" -- fallback to normal tab
