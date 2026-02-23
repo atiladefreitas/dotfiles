@@ -78,17 +78,8 @@ return {
 			},
 		},
 		window = {
-			position = "float",
-			popup = {
-				size = {
-					height = "90%",
-					width = "30%",
-				},
-				position = {
-					row = "50%",
-					col = "2%",
-				},
-			},
+			position = "left",
+			width = "30%",
 			mappings = {
 				["<Esc>"] = "close_window",
 				["h"] = "navigate_up",
@@ -120,11 +111,7 @@ return {
 			group_empty_dirs = true,
 			show_unloaded = true,
 		},
-		git_status = {
-			window = {
-				position = "float",
-			},
-		},
+		git_status = {},
 		event_handlers = {
 			{
 				event = "file_open_requested",
