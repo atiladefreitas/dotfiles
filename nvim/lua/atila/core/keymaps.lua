@@ -120,7 +120,7 @@ end)
 vim.keymap.set("n", "<a-e>", ":Widgy<CR>", { desc = "create widgy widget" })
 
 -- Obsidian Today command
-vim.keymap.set("n", "<leader>ot", ":ObsidianToday<CR>", { desc = "open today's note", silent = true })
+vim.keymap.set("n", "<leader>oT", ":ObsidianToday<CR>", { desc = "open today's note", silent = true })
 
 -- Bufferline navigation keymaps
 -- vim.keymap.set("n", "<tab>q", "<Cmd>BufferLineGoToBuffer 1<CR>", { desc = "go to buffer 1" })

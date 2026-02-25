@@ -291,8 +291,7 @@ return {
   {
     "epwalsh/obsidian.nvim",
     version = "*", -- recommended, use latest release instead of latest commit
-    lazy = true,
-    ft = { "markdown", "md" },
+    lazy = false,
     dependencies = {
       "nvim-lua/plenary.nvim",
     },
@@ -307,7 +306,7 @@ return {
       log_level = vim.log.levels.INFO,
 
       daily_notes = {
-        folder = "journal/03-Mar",
+        folder = "journal/" .. os.date("%m") .. "-" .. os.date("%b"),
         date_format = "%d-%m-%Y",
         alias_format = "%B %-d, %Y",
         default_tags = { "daily-notes" },
