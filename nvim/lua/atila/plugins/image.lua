@@ -1,6 +1,6 @@
 return {
   "3rd/image.nvim",
-  lazy = false,
+  ft = { "markdown", "vimwiki", "norg" },
   build = false,
   opts = {
     backend = "kitty",

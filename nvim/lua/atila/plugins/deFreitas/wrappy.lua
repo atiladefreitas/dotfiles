@@ -3,6 +3,10 @@ return {
 	enabled = true,
 	dir = vim.fn.stdpath("config"),
 	name = "wrappy",
+	cmd = "WrappyToggle",
+	keys = {
+		{ "<leader>uw", "<cmd>WrappyToggle<CR>", desc = "Toggle soft-wrap (Wrappy)" },
+	},
 	config = function()
 		-- change this value to your preferred wrap column (80, 100, 120, etc.)
 		local default_wrap_column = 80
@@ -171,6 +175,5 @@ return {
 			end,
 		})
 
-		vim.keymap.set("n", "<leader>uw", "<cmd>WrappyToggle<CR>", { desc = "Toggle soft-wrap (Wrappy)" })
 	end,
 }

@@ -1,6 +1,7 @@
 return {
 	{
 		"williamboman/mason.nvim",
+		cmd = "Mason",
 		opts = {
 			ui = {
 				icons = {
@@ -13,6 +14,7 @@ return {
 	},
 	{
 		"williamboman/mason-lspconfig.nvim",
+		event = { "BufReadPre", "BufNewFile" },
 		dependencies = {
 			"williamboman/mason.nvim",
 			"neovim/nvim-lspconfig",

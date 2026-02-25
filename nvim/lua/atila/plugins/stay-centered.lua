@@ -1,5 +1,6 @@
 return {
 	"arnamak/stay-centered.nvim",
+	event = { "BufReadPost", "BufNewFile" },
 	config = function()
 		require("stay-centered").setup({
 			-- The filetype is determined by the vim filetype, not the file extension. In order to get the filetype, open a file and run the command:

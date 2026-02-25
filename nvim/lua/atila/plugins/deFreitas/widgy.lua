@@ -2,6 +2,7 @@ return {
 	enabled = true,
 	dir = vim.fn.stdpath("config"),
 	name = "widgy",
+	cmd = "Widgy",
 	config = function()
 		local function create_widgy_command()
 			vim.api.nvim_create_user_command("Widgy", function(opts)

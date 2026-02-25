@@ -3,6 +3,10 @@ return {
 	{
 		-- "atiladefreitas/dooing",
 		dir = "~/Documents/plugins/dooing",
+		cmd = "Dooing",
+		keys = {
+			{ "<leader>td", "<cmd>Dooing<CR>", desc = "Open Dooing" },
+		},
 		config = function()
 			require("dooing").setup({
 				prioritization = true,
