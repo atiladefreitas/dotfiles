@@ -2,3 +2,8 @@
 on = ["C"]
 run = "plugin ouch"
 desc = "Compress with ouch"
+
+[[mgr.prepend_keymap]]
+on = ["F"]
+run = "plugin fullscreen-img"
+desc = "Fullscreen image preview"
