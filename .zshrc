@@ -25,9 +25,9 @@ export NVM_DIR="$HOME/.nvm"
 # ─────────────────────────────────────────────────────────────
 # Bun
 # ─────────────────────────────────────────────────────────────
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+# export BUN_INSTALL="$HOME/.bun"
+# export PATH="$BUN_INSTALL/bin:$PATH"
+# [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # ─────────────────────────────────────────────────────────────
 # Misc Paths
@@ -39,8 +39,8 @@ export PATH="/home/atiladefreitas/.opencode/bin:$PATH"
 # ─────────────────────────────────────────────────────────────
 # NVIDIA / Video
 # ─────────────────────────────────────────────────────────────
-export LIBVA_DRIVER_NAME=vidia
-export __GLX_VENDOR_LIBRARY_NAME=nvidia
+# export LIBVA_DRIVER_NAME=vidia
+# export __GLX_VENDOR_LIBRARY_NAME=nvidia
 
 # ─────────────────────────────────────────────────────────────
 # Locale
@@ -81,6 +81,7 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 alias :q='exit'
+alias q='exit'
 alias open="nautilus"
 alias wifi="nmtui"
 
@@ -96,6 +97,8 @@ alias lzg='lazygit'
 alias lzd='sudo lazydocker'
 alias brilho='xrandr --output HDMI-1-0 --brightness'
 alias c='clear'
+# alias b='cd ~/.config/helium/open.sh && ./open.sh &'
+alias b='(cd config/helium && ./open.sh && :q)'
 
 # ─────────────────────────────────────────────────────────────
 # Aliases: Tmux Workflows
@@ -112,7 +115,19 @@ function _tmux_session() {
 
 alias notes='cd $HOME/Documents/notes/ && tmux new -As notes "nvim"'
 
-alias systempane="tmux new-session -d -s workspace \; split-window -h -p 50 \; select-pane -t 0 \; split-window -v -p 25 \; select-pane -t 2 \; split-window -v -p 55 \; select-pane -t 0 \; send-keys 'mocp -T darkdot_theme' C-m \; select-pane -t 1 \; send-keys 'cava' C-m \; select-pane -t 2 \; send-keys 'yazi' C-m \; select-pane -t 3 \; send-keys 'btop' C-m \; select-pane -t 0 \; attach -t workspace"
+alias systempane="tmux new-session -d -s workspace \; split-window -h -p 70 \; select-pane -t 0 \; split-window -v -p 33 \; select-pane -t 2 \; split-window -v -p 50 \; select-pane -t 0 \; send-keys 'mocp' C-m \; select-pane -t 1 \; send-keys 'cava' C-m \; select-pane -t 2 \; send-keys 'yazi' C-m \; select-pane -t 3 \; send-keys 'btop' C-m \; select-pane -t 0 \; attach -t workspace"
+
+
+alias workstation='\
+hyprctl dispatch exec "ghostty --class mocp -e mocp"; \
+sleep 0.2; hyprctl dispatch splitratio 0.25; \
+hyprctl dispatch exec "ghostty --class cava -e cava"; \
+hyprctl dispatch focus right; \
+hyprctl dispatch exec "ghostty --class yazi -e yazi"; \
+sleep 0.2; hyprctl dispatch splitratio 0.5; \
+hyprctl dispatch exec "ghostty --class btop -e btop"'
+
+alias wakeup="cd waybar && ./reload.sh && b && :q"
 
 # ─────────────────────────────────────────────────────────────
 # Starship, Atuin, Zoxide
@@ -121,3 +136,21 @@ eval "$(atuin init zsh)"
 eval "$(zoxide init zsh)"
 eval "$(starship init zsh)"
 
+
+# bun completions
+# [ -s "/home/atiladefreitas/.bun/_bun" ] && source "/home/atiladefreitas/.bun/_bun"
+ANTHROPIC_API_KEY=
+
+export GDK_BACKEND=wayland
+export GTK_USE_PORTAL=1
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+export FRANKMD_BROWSER=helium-browser        # or google-chrome, microsoft-edge, firefox
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
+. "$HOME/.local/share/../bin/env"

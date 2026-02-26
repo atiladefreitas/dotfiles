@@ -44,3 +44,6 @@ background-opacity = 0.1
 # keybind = ctrl+j=goto_split:bottom
 # keybind = ctrl+k=goto_split:top
 # keybind = ctrl+l=goto_split:right
+
+# Fix general slowness on hyprland (https://github.com/ghostty-org/ghostty/discussions/3224)
+async-backend = epoll
