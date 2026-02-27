@@ -3,17 +3,24 @@
 return {
 	{ "bluz71/vim-nightfly-colors", name = "nightfly", lazy = true },
 
+	-- {
+	-- 	"scottmckendry/cyberdream.nvim",
+	-- 	lazy = true,
+	-- 	priority = 1000,
+	-- },
+
 	{
 		"folke/tokyonight.nvim",
 		-- dir = "~/Documents/tokyonight.nvim/",
 		lazy = false,
-		priority = 1000,
+		priority = 999,
 		config = function()
 			require("tokyonight").setup({
 				style = "night",
 				transparent = false,
 				on_colors = function(colors)
-					colors.bg = "#0f1019"
+					-- colors.bg = "#0f1019"
+					colors.bg = "#090a12"
 					colors.bg_dark = "#0a0b11"
 					colors.bg_dark1 = "#05060a"
 					colors.bg_highlight = "#1a1d29"
