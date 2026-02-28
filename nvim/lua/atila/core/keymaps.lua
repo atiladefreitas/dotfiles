@@ -43,33 +43,40 @@ vim.keymap.set("n", "<leader>st", function()
 	vim.api.nvim_command("startinsert")
 end, { desc = "paste current time" })
 
-vim.keymap.set("i", "<a-i>", function()
-	local buf = vim.api.nvim_create_buf(false, true)
-	local width, height = 40, 1
-	local row = math.floor((vim.o.lines - height) / 2)
-	local col = math.floor((vim.o.columns - width) / 2)
+-- highlight groups for floating inputs
+vim.api.nvim_set_hl(0, "FloatCalcBorder", { fg = "#7aa2f7" })
+vim.api.nvim_set_hl(0, "FloatCalcTitle", { fg = "#7aa2f7", bold = true })
+vim.api.nvim_set_hl(0, "FloatProseBorder", { fg = "#ff9e64" })
+vim.api.nvim_set_hl(0, "FloatProseTitle", { fg = "#ff9e64", bold = true })
 
+-- floating input at cursor position
+local function float_input(opts, on_submit)
+	local parent_buf = vim.api.nvim_get_current_buf()
+	local parent_win = vim.api.nvim_get_current_win()
+	local cursor = vim.api.nvim_win_get_cursor(parent_win)
+
+	local buf = vim.api.nvim_create_buf(false, true)
 	local win = vim.api.nvim_open_win(buf, true, {
-		relative = "editor",
-		width = width,
-		height = height,
-		row = row,
-		col = col,
+		relative = "win",
+		win = parent_win,
+		width = opts.width,
+		height = 1,
+		row = 1,
+		col = 0,
+		bufpos = { cursor[1] - 1, cursor[2] },
 		style = "minimal",
 		border = "single",
-		title = " Calculator ",
+		title = " " .. opts.icon .. " " .. opts.title .. " ",
 		title_pos = "center",
 	})
 
-	vim.api.nvim_buf_set_lines(buf, 0, -1, false, { "" })
-	vim.bo[buf].filetype = "calculator"
+	vim.wo[win].winhighlight = "FloatBorder:" .. opts.border_hl .. ",FloatTitle:" .. opts.title_hl
+
 	vim.bo[buf].buftype = "nofile"
 	vim.bo[buf].bufhidden = "wipe"
 	vim.cmd("startinsert!")
 
-	-- Disable diagnostics/LSP
 	vim.diagnostic.disable(buf)
-	vim.lsp.stop_client(vim.lsp.get_clients({ bufnr = buf }))
 
 	local function close()
 		pcall(vim.api.nvim_win_close, win, true)
@@ -80,36 +87,44 @@ vim.keymap.set("i", "<a-i>", function()
 
 	vim.keymap.set("i", "<CR>", function()
 		local input = vim.api.nvim_buf_get_lines(buf, 0, 1, false)[1]
-		local ok, result = pcall(function()
-			return load("return " .. input)()
-		end)
 		close()
-		if ok and result ~= nil then
-			vim.api.nvim_feedkeys(tostring(result) .. "rem", "i", true)
+		if input and input ~= "" then
+			on_submit(input, parent_buf, parent_win, cursor)
 		end
 	end, { buffer = buf })
+end
 
-	vim.keymap.set("i", "<C-CR>", function()
-		local input = vim.api.nvim_buf_get_lines(buf, 0, 1, false)[1]
+vim.keymap.set("i", "<a-i>", function()
+	float_input({
+		title = "Calculator",
+		icon = " ",
+		width = 40,
+		border_hl = "FloatCalcBorder",
+		title_hl = "FloatCalcTitle",
+	}, function(input, _, _, cursor)
 		local ok, result = pcall(function()
 			return load("return " .. input)()
 		end)
+
 		if ok and result ~= nil then
-			vim.api.nvim_buf_set_lines(buf, 0, -1, false, { tostring(result) })
+			local text = tostring(result)
+			vim.api.nvim_buf_set_text(0, cursor[1] - 1, cursor[2], cursor[1] - 1, cursor[2], { text })
+			vim.api.nvim_win_set_cursor(0, { cursor[1], cursor[2] + #text })
 		end
-	end, { buffer = buf })
+	end)
 end)
 
 vim.keymap.set("i", "<a-p>", function()
-	vim.ui.input({ prompt = "Tag: " }, function(tag)
-		if not tag then
-			return
-		end
-
+	float_input({
+		title = "Tag",
+		icon = "󰓹 ",
+		width = 30,
+		border_hl = "FloatProseBorder",
+		title_hl = "FloatProseTitle",
+	}, function(tag, _, _, cursor)
 		local prefix = "prose-" .. tag .. ":"
-		local pos = vim.api.nvim_win_get_cursor(0)
-		vim.api.nvim_buf_set_text(0, pos[1] - 1, pos[2], pos[1] - 1, pos[2], { prefix })
-		vim.api.nvim_win_set_cursor(0, { pos[1], pos[2] + #prefix })
+		vim.api.nvim_buf_set_text(0, cursor[1] - 1, cursor[2], cursor[1] - 1, cursor[2], { prefix })
+		vim.api.nvim_win_set_cursor(0, { cursor[1], cursor[2] + #prefix })
 
 		vim.schedule(function()
 			require("blink.cmp").show()

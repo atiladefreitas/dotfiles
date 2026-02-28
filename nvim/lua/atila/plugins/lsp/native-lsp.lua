@@ -25,6 +25,18 @@ return {
 	config = function()
 		local capabilities = require("blink.cmp").get_lsp_capabilities()
 
+		-- Fix vtsls duplicate diagnostics: it sends two identical sets with
+		-- different sources ("ts" and "typescript") in separate calls. Drop "typescript".
+		local original_handler = vim.lsp.handlers["textDocument/publishDiagnostics"]
+		vim.lsp.handlers["textDocument/publishDiagnostics"] = function(err, result, ctx, config)
+			if result and result.diagnostics then
+				result.diagnostics = vim.tbl_filter(function(d)
+					return d.source ~= "typescript"
+				end, result.diagnostics)
+			end
+			return original_handler(err, result, ctx, config)
+		end
+
 		-- Global keymaps via LspAttach autocmd
 		vim.api.nvim_create_autocmd("LspAttach", {
 			callback = function(args)
@@ -48,11 +60,6 @@ return {
 					keymap("n", "<leader>ih", function()
 						vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
 					end, { noremap = true, silent = true, buffer = bufnr, desc = "Toggle inlay hints" })
-				end
-
-				-- Biome: disable completion to avoid duplicates with vtsls
-				if client and client.name == "biome" then
-					client.server_capabilities.completionProvider = nil
 				end
 			end,
 		})
@@ -85,11 +92,6 @@ return {
 					},
 				},
 			},
-		})
-
-		-- Biome (Linter only -- formatting handled by conform.nvim)
-		vim.lsp.config("biome", {
-			capabilities = capabilities,
 		})
 
 		-- HTML
@@ -143,7 +145,6 @@ return {
 		-- Enable all configured servers
 		vim.lsp.enable({
 			"vtsls",
-			"biome",
 			"html",
 			"cssls",
 			"tailwindcss",

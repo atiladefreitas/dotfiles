@@ -4,3 +4,5 @@ btop.log
 
 .gitignore
 AGENTS.md
+
+/.moc/pid
