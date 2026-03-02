@@ -107,7 +107,7 @@ vim.keymap.set("i", "<a-i>", function()
 		end)
 
 		if ok and result ~= nil then
-			local text = tostring(result)
+			local text = tostring(result) .. "rem"
 			vim.api.nvim_buf_set_text(0, cursor[1] - 1, cursor[2], cursor[1] - 1, cursor[2], { text })
 			vim.api.nvim_win_set_cursor(0, { cursor[1], cursor[2] + #text })
 		end
