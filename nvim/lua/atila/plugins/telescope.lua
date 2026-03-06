@@ -36,8 +36,46 @@ return {
 		local actions = require("telescope.actions")
 		local previewers = require("telescope.previewers")
 
-		-- image preview support via image.nvim
+		-- file type priority groups (lower number = shown first)
+		local code_exts = {
+			tsx = true, jsx = true, ts = true, js = true,
+			lua = true, py = true, rb = true, go = true, rs = true,
+			c = true, cpp = true, h = true, hpp = true,
+			java = true, kt = true, swift = true,
+			css = true, scss = true, html = true,
+			json = true, yaml = true, yml = true, toml = true,
+			sh = true, zsh = true, bash = true,
+			vue = true, svelte = true, astro = true,
+		}
 		local image_exts = { png = true, jpg = true, jpeg = true, gif = true, webp = true, avif = true, ico = true, bmp = true, svg = true }
+
+		local function get_type_priority(entry)
+			local path = entry.filename or entry.path or entry.value or ""
+			-- directories first
+			if entry.lstat and entry.lstat.isdir then
+				return -2
+			end
+			local ext = (path:match("%.(%w+)$") or ""):lower()
+			if code_exts[ext] then
+				return -1
+			end
+			if image_exts[ext] then
+				return 1
+			end
+			return 0
+		end
+
+		-- tiebreak function: when fzf scores are equal, sort by file type priority
+		local function file_type_tiebreak(current_entry, existing_entry, _prompt)
+			local current_prio = get_type_priority(current_entry)
+			local existing_prio = get_type_priority(existing_entry)
+			if current_prio ~= existing_prio then
+				return current_prio < existing_prio
+			end
+			return false
+		end
+
+		-- image preview support via image.nvim
 		local is_image = function(filepath)
 			local ext = (filepath:match("%.(%w+)$") or ""):lower()
 			return image_exts[ext] or false
@@ -183,12 +221,15 @@ return {
 					},
 				},
 			},
-			pickers = {
-				find_files = {
-					file_sorter = require("telescope.sorters").get_fuzzy_file,
-				},
-			},
+			pickers = {},
 			extensions = {
+				fzf = {
+					fuzzy = true,
+					override_generic_sorter = true,
+					override_file_sorter = true,
+					case_mode = "smart_case",
+					tiebreak = file_type_tiebreak,
+				},
 				file_browser = {
 					path = "%:p:h",
 					cwd = vim.loop.cwd(),
