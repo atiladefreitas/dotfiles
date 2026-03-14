@@ -99,19 +99,12 @@ alias brilho='xrandr --output HDMI-1-0 --brightness'
 alias c='clear'
 # alias b='cd ~/.config/helium/open.sh && ./open.sh &'
 alias b='(cd config/helium && ./open.sh && :q)'
+alias p='[[ ! -d node_modules ]] && pnpm install && pnpm dev || pnpm dev'
 
 # ─────────────────────────────────────────────────────────────
 # Aliases: Tmux Workflows
 # ─────────────────────────────────────────────────────────────
-alias t='
-function _tmux_session() {
-  read "name?Session name: "
-  tmux new-session -s "$name" -d
-  tmux send-keys -t "$name" "nvim" C-m
-  tmux new-window -t "$name" -n dev
-  tmux send-keys -t "$name:dev" "pnpm install && pnpm dev" C-m
-  tmux attach -t "$name"
-}; _tmux_session'
+alias t='tmux new -s "$(basename "$PWD")"'
 
 alias notes='cd $HOME/Documents/notes/ && tmux new -As notes "nvim"'
 
@@ -152,5 +145,8 @@ export FRANKMD_BROWSER=helium-browser        # or google-chrome, microsoft-edge,
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
+
+export PATH="$HOME/.local/share/pnpm:$PATH"
+export PATH="$(npm config get prefix)/bin:$PATH"
 
 . "$HOME/.local/share/../bin/env"

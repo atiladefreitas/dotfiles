@@ -1,2 +1,3 @@
 Layout1 = directory(0,0,100%,100%):playlist(0,0,100%,100%)
 Theme = darkdot_theme
+SoundDriver = PULSEAUDIO:JACK:ALSA:OSS
