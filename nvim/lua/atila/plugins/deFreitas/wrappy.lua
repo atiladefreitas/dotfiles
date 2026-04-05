@@ -1,7 +1,7 @@
 -- soft-wrap toggle that breaks at word boundaries at a specific column
 return {
 	enabled = true,
-	dir = vim.fn.stdpath("config"),
+	dir = vim.fn.stdpath("config") .. "/local-plugins/wrappy",
 	name = "wrappy",
 	cmd = "WrappyToggle",
 	keys = {

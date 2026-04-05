@@ -1,6 +1,6 @@
 return {
 	enabled = true,
-	dir = vim.fn.stdpath("config"),
+	dir = vim.fn.stdpath("config") .. "/local-plugins/widgy",
 	name = "widgy",
 	cmd = "Widgy",
 	config = function()

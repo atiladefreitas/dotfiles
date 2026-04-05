@@ -111,9 +111,9 @@ return {
 				end,
 				css = { "prettier" },
 				scss = { "prettier" },
-				html = { "djlint", "rustywind", "prose_sort", "prettier" },
-				jinja = { "djlint" },
-				jinja2 = { "djlint" },
+				html = { "rustywind", "prose_sort", "prettier" },
+				jinja = { "rustywind", "prose_sort", "prettier" },
+				jinja2 = { "rustywind", "prose_sort", "prettier" },
 				json = { "biome", "prettier" },
 				jsonc = { "biome", "prettier" },
 				yaml = { "prettier" },
@@ -132,14 +132,6 @@ return {
 				}
 			end,
 			formatters = {
-				djlint = {
-					prepend_args = {
-						"--profile=jinja",
-						"--indent=2",
-						"--max-line-length=120",
-						"--max-attribute-length=120",
-					},
-				},
 				rustywind = {},
 				prose_sort = {
 					format = function(_, _, lines, callback)
@@ -153,8 +145,11 @@ return {
 								end
 								return quote .. content .. quote
 							end)
-							-- Also handle template literal / backtick strings
+							-- Also handle template literal / backtick strings, but skip those with interpolations
 							new_line = new_line:gsub("`(.-)`", function(content)
+								if content:match("%${") then
+									return "`" .. content .. "`"
+								end
 								if content:match("prose%-") then
 									return "`" .. sort_prose_classes(content) .. "`"
 								end
@@ -181,6 +176,20 @@ return {
 							"biome.json",
 							"biome.jsonc",
 						}, { path = ctx.filename, upward = true })[1] == nil
+					end,
+					prepend_args = function(self, ctx)
+						local ft = vim.bo[ctx.buf].filetype
+						local args = {
+							"--print-width=" .. (vim.g.prettier_print_width or 120),
+							"--single-attribute-per-line",
+							"--bracket-same-line",
+							"--html-whitespace-sensitivity=ignore",
+						}
+						-- Force HTML parser for Jinja files so prettier formats them like standard HTML
+						if ft == "jinja" or ft == "jinja2" or ft == "html.jinja" then
+							table.insert(args, "--parser=html")
+						end
+						return args
 					end,
 				},
 			},

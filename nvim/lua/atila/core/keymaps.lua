@@ -171,3 +171,14 @@ vim.keymap.set("n", "<leader>tf", function()
 		vim.notify("Format on save enabled")
 	end
 end, { desc = "Toggle format on save" })
+
+-- Toggle prettier line wrapping (120 <-> effectively off)
+vim.keymap.set("n", "<leader>tw", function()
+	if (vim.g.prettier_print_width or 120) == 120 then
+		vim.g.prettier_print_width = 9999
+		vim.notify("Prettier line wrapping disabled")
+	else
+		vim.g.prettier_print_width = 120
+		vim.notify("Prettier line wrapping enabled (120)")
+	end
+end, { desc = "Toggle prettier line wrapping" })
