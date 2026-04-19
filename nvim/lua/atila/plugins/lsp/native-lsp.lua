@@ -25,18 +25,6 @@ return {
 	config = function()
 		local capabilities = require("blink.cmp").get_lsp_capabilities()
 
-		-- Fix vtsls duplicate diagnostics: it sends two identical sets with
-		-- different sources ("ts" and "typescript") in separate calls. Drop "typescript".
-		local original_handler = vim.lsp.handlers["textDocument/publishDiagnostics"]
-		vim.lsp.handlers["textDocument/publishDiagnostics"] = function(err, result, ctx, config)
-			if result and result.diagnostics then
-				result.diagnostics = vim.tbl_filter(function(d)
-					return d.source ~= "typescript"
-				end, result.diagnostics)
-			end
-			return original_handler(err, result, ctx, config)
-		end
-
 		-- Global keymaps via LspAttach autocmd
 		vim.api.nvim_create_autocmd("LspAttach", {
 			callback = function(args)
@@ -67,6 +55,18 @@ return {
 		-- JS/TS/React (lightweight and fast)
 		vim.lsp.config("vtsls", {
 			capabilities = capabilities,
+			-- Fix vtsls duplicate diagnostics: it sends two identical sets with
+			-- different sources ("ts" and "typescript") in separate calls. Drop "typescript".
+			handlers = {
+				["textDocument/publishDiagnostics"] = function(err, result, ctx)
+					if result and result.diagnostics then
+						result.diagnostics = vim.tbl_filter(function(d)
+							return d.source ~= "typescript"
+						end, result.diagnostics)
+					end
+					vim.lsp.diagnostic.on_publish_diagnostics(err, result, ctx)
+				end,
+			},
 			settings = {
 				vtsls = {
 					enableMoveToFileCodeAction = true,

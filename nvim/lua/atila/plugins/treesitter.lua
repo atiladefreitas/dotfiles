@@ -1,6 +1,6 @@
 return {
 	"nvim-treesitter/nvim-treesitter",
-	event = { "BufReadPre", "BufNewFile" },
+	event = { "VeryLazy", "BufReadPre", "BufNewFile" },
 	build = ":TSUpdate",
 	dependencies = {
 		"windwp/nvim-ts-autotag",
@@ -20,7 +20,7 @@ return {
 				-- Enable vim syntax alongside treesitter for jinja filetypes
 				-- so that jinja.vim highlighting works with treesitter HTML
 				vim.api.nvim_create_autocmd("FileType", {
-					pattern = "*.jinja",
+					pattern = { "html.jinja", "jinja" },
 					callback = function()
 						vim.opt_local.syntax = "on"
 					end,
@@ -41,10 +41,6 @@ return {
 			},
 			-- enable indentation
 			indent = { enable = true },
-			context_commentstring = {
-				enable = true,
-				enable_autocmd = false,
-			},
 			-- ensure these language parsers are installed
 			ensure_installed = {
 				"javascript",
@@ -57,7 +53,9 @@ return {
 				"json",
 				"markdown",
 				"markdown_inline",
+				"vim",
 				"vimdoc",
+				"python",
 				"jinja",
 				"jinja_inline",
 			},

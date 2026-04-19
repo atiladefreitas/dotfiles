@@ -37,7 +37,17 @@ return {
 		local previewers = require("telescope.previewers")
 
 		-- image preview support via image.nvim
-		local image_exts = { png = true, jpg = true, jpeg = true, gif = true, webp = true, avif = true, ico = true, bmp = true, svg = true }
+		local image_exts = {
+			png = true,
+			jpg = true,
+			jpeg = true,
+			gif = true,
+			webp = true,
+			avif = true,
+			ico = true,
+			bmp = true,
+			svg = true,
+		}
 		local is_image = function(filepath)
 			local ext = (filepath:match("%.(%w+)$") or ""):lower()
 			return image_exts[ext] or false
@@ -47,15 +57,28 @@ return {
 		local last_image = nil
 		local debounce_timer = nil
 
+		-- wrap original maker to catch treesitter highlighter errors in preview
+		local safe_maker = function(filepath, bufnr, opts)
+			local ok, err = pcall(original_maker, filepath, bufnr, opts)
+			if not ok then
+				-- fallback: show file without treesitter highlighting
+				if vim.api.nvim_buf_is_valid(bufnr) then
+					vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, vim.fn.readfile(filepath, "", 500))
+				end
+			end
+		end
+
 		local custom_maker = function(filepath, bufnr, opts)
 			-- clear previous image immediately
 			if last_image then
-				pcall(function() last_image:clear() end)
+				pcall(function()
+					last_image:clear()
+				end)
 				last_image = nil
 			end
 
 			if not is_image(filepath) then
-				return original_maker(filepath, bufnr, opts)
+				return safe_maker(filepath, bufnr, opts)
 			end
 
 			-- debounce rapid scrolling
@@ -65,42 +88,49 @@ return {
 			end
 
 			debounce_timer = vim.uv.new_timer()
-			debounce_timer:start(100, 0, vim.schedule_wrap(function()
-				debounce_timer:stop()
-				debounce_timer:close()
-				debounce_timer = nil
+			debounce_timer:start(
+				100,
+				0,
+				vim.schedule_wrap(function()
+					debounce_timer:stop()
+					debounce_timer:close()
+					debounce_timer = nil
 
-				-- bail if buffer was wiped during debounce
-				if not vim.api.nvim_buf_is_valid(bufnr) then
-					return
-				end
+					-- bail if buffer was wiped during debounce
+					if not vim.api.nvim_buf_is_valid(bufnr) then
+						return
+					end
 
-				-- downscale for faster preview
-				local tmp = vim.fn.tempname() .. ".png"
-				vim.fn.system({
-					"magick", filepath,
-					"-resize", "400x400>",
-					"-quality", "50",
-					tmp,
-				})
+					-- downscale for faster preview
+					local tmp = vim.fn.tempname() .. ".png"
+					vim.fn.system({
+						"magick",
+						filepath,
+						"-resize",
+						"400x400>",
+						"-quality",
+						"50",
+						tmp,
+					})
 
-				local ok, image = pcall(require, "image")
-				if not ok then
+					local ok, image = pcall(require, "image")
+					if not ok then
+						vim.fn.delete(tmp)
+						return safe_maker(filepath, bufnr, opts)
+					end
+
+					local img = image.from_file(tmp, {
+						window = opts.winid,
+						buffer = bufnr,
+						with_virtual_padding = true,
+					})
+					if img then
+						img:render()
+						last_image = img
+					end
 					vim.fn.delete(tmp)
-					return original_maker(filepath, bufnr, opts)
-				end
-
-				local img = image.from_file(tmp, {
-					window = opts.winid,
-					buffer = bufnr,
-					with_virtual_padding = true,
-				})
-				if img then
-					img:render()
-					last_image = img
-				end
-				vim.fn.delete(tmp)
-			end))
+				end)
+			)
 		end
 
 		telescope.load_extension("themes")
@@ -141,9 +171,6 @@ return {
 		telescope.setup({
 			defaults = {
 				buffer_previewer_maker = custom_maker,
-				file_ignore_patterns = {
-					"%.md",
-				},
 				path_display = { "smart" },
 				file_sorter = require("telescope.sorters").get_fuzzy_file,
 				generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
@@ -191,7 +218,7 @@ return {
 			extensions = {
 				file_browser = {
 					path = "%:p:h",
-					cwd = vim.loop.cwd(),
+					cwd = vim.uv.cwd(),
 					cwd_to_path = false,
 					grouped = false,
 					files = true,
@@ -253,11 +280,6 @@ return {
 			{ desc = "Live Grep (include hidden files)" }
 		)
 		keymap.set("n", "<leader>ls", "<cmd>Telescope lsp_document_symbols<cr>", { desc = "LSP Symbols" })
-		keymap.set(
-			"n",
-			"<leader>lG",
-			"<cmd>Telescope lsp_workspace_symbols<cr>",
-			{ desc = "LSP Workspace Symbols" }
-		)
+		keymap.set("n", "<leader>lG", "<cmd>Telescope lsp_workspace_symbols<cr>", { desc = "LSP Workspace Symbols" })
 	end,
 }

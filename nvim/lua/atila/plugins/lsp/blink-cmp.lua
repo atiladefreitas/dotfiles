@@ -46,6 +46,9 @@ return {
       documentation = {
         auto_show = true,
         auto_show_delay_ms = 200,
+        -- Disable treesitter highlighting in docs to avoid crash on Neovim 0.12
+        -- (upstream bug: nil node passed to vim.treesitter.get_range)
+        treesitter_highlighting = false,
       },
       menu = {
         draw = {

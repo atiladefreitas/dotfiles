@@ -16,8 +16,8 @@ vim.keymap.set("n", "<leader>w", ":w<cr>", { desc = "save file" })
 vim.keymap.set("n", "<leader>q", ":q<cr>", { desc = "close file" })
 vim.keymap.set("n", "<leader>cc", ":bd<cr>", { desc = "close buffer" })
 
--- manual reload buffer
-vim.keymap.set("n", "<c-r>", ":e<cr>", { desc = "reload buffer" })
+-- manual reload neovim
+vim.keymap.set("n", "<leader>rs", ":restart<CR>", { desc = "restart neovim" })
 
 vim.keymap.set("n", "<a-d>", "15j", { noremap = true, silent = true })
 vim.keymap.set("n", "<a-w>", "15k", { noremap = true, silent = true })
@@ -76,7 +76,7 @@ local function float_input(opts, on_submit)
 	vim.bo[buf].bufhidden = "wipe"
 	vim.cmd("startinsert!")
 
-	vim.diagnostic.disable(buf)
+	vim.diagnostic.enable(false, { bufnr = buf })
 
 	local function close()
 		pcall(vim.api.nvim_win_close, win, true)
