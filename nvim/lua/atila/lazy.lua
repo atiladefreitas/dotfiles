@@ -32,7 +32,7 @@ require("lazy").setup({
 				"matchparen",
 				"netrwPlugin",
 				"tarPlugin",
-				"tohtml",
+				-- "tohtml" removed: renamed to "nvim.tohtml" and opt-in in Neovim 0.12
 				"tutor",
 				"zipPlugin",
 			},

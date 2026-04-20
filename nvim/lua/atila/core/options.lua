@@ -49,6 +49,20 @@ opt.splitbelow = true -- split horizontal window to the bottom
 -- turn off swapfile
 opt.swapfile = false
 
+-- Native treesitter highlighting for all supported filetypes (Neovim 0.12+)
+-- Markdown, Lua, Help, and Query are handled by the runtime ftplugins already.
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = {
+    "javascript", "typescript", "typescriptreact", "javascriptreact",
+    "html", "css", "scss", "json", "jsonc", "yaml",
+    "python", "vim", "vimdoc", "tsx",
+    "jinja", "jinja2",
+  },
+  callback = function(ev)
+    pcall(vim.treesitter.start, ev.buf)
+  end,
+})
+
 -- fold persistence
 opt.viewoptions = "folds,cursor"
 opt.sessionoptions:append("folds")
