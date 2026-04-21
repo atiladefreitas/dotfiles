@@ -4,24 +4,17 @@ return {
 	cmd = "Telescope",
 	keys = {
 		{ "<leader><CR>", desc = "Resume previous search" },
-		{ "<leader>f'", desc = "Marks" },
 		{ "<leader>fb", desc = "Buffers" },
 		{ "<leader>fc", desc = "Word at cursor" },
-		{ "<leader>fC", desc = "Commands" },
 		{ "<leader>ff", desc = "Find files" },
 		{ "<leader>fF", desc = "Find files (include hidden)" },
+		{ "<leader>fi", desc = "Find images" },
 		{ "<leader>fh", desc = "Help Tags" },
 		{ "<leader>fk", desc = "Keymaps" },
-		{ "<leader>fm", desc = "Man Pages" },
-		{ "<leader>fn", desc = "Notifications" },
-		{ "<leader>fo", desc = "Old Files" },
-		{ "<leader>fr", desc = "Registers" },
 		{ "<leader>ft", desc = "Colorschemes" },
 		{ "<leader>fw", desc = "Live Grep" },
 		{ "<space>fB", desc = "File Browser" },
 		{ "<leader>fW", desc = "Live Grep (include hidden)" },
-		{ "<leader>ls", desc = "LSP Symbols" },
-		{ "<leader>lG", desc = "LSP Workspace Symbols" },
 	},
 	dependencies = {
 		"nvim-lua/plenary.nvim",
@@ -34,106 +27,6 @@ return {
 	config = function()
 		local telescope = require("telescope")
 		local actions = require("telescope.actions")
-		local previewers = require("telescope.previewers")
-
-		-- image preview support via image.nvim
-		local image_exts = {
-			png = true,
-			jpg = true,
-			jpeg = true,
-			gif = true,
-			webp = true,
-			avif = true,
-			ico = true,
-			bmp = true,
-			svg = true,
-		}
-		local is_image = function(filepath)
-			local ext = (filepath:match("%.(%w+)$") or ""):lower()
-			return image_exts[ext] or false
-		end
-
-		local original_maker = previewers.buffer_previewer_maker
-		local last_image = nil
-		local debounce_timer = nil
-
-		-- wrap original maker to catch treesitter highlighter errors in preview
-		local safe_maker = function(filepath, bufnr, opts)
-			local ok, err = pcall(original_maker, filepath, bufnr, opts)
-			if not ok then
-				-- fallback: show file without treesitter highlighting
-				if vim.api.nvim_buf_is_valid(bufnr) then
-					vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, vim.fn.readfile(filepath, "", 500))
-				end
-			end
-		end
-
-		local custom_maker = function(filepath, bufnr, opts)
-			-- clear previous image immediately
-			if last_image then
-				pcall(function()
-					last_image:clear()
-				end)
-				last_image = nil
-			end
-
-			if not is_image(filepath) then
-				return safe_maker(filepath, bufnr, opts)
-			end
-
-			-- debounce rapid scrolling
-			if debounce_timer then
-				debounce_timer:stop()
-				debounce_timer:close()
-			end
-
-			debounce_timer = vim.uv.new_timer()
-			debounce_timer:start(
-				100,
-				0,
-				vim.schedule_wrap(function()
-					debounce_timer:stop()
-					debounce_timer:close()
-					debounce_timer = nil
-
-					-- bail if buffer was wiped during debounce
-					if not vim.api.nvim_buf_is_valid(bufnr) then
-						return
-					end
-
-					-- downscale for faster preview
-					local tmp = vim.fn.tempname() .. ".png"
-					vim.fn.system({
-						"magick",
-						filepath,
-						"-resize",
-						"400x400>",
-						"-quality",
-						"50",
-						tmp,
-					})
-
-					local ok, image = pcall(require, "image")
-					if not ok then
-						vim.fn.delete(tmp)
-						return safe_maker(filepath, bufnr, opts)
-					end
-
-					local img = image.from_file(tmp, {
-						window = opts.winid,
-						buffer = bufnr,
-						with_virtual_padding = true,
-					})
-					if img then
-						img:render()
-						last_image = img
-					end
-					vim.fn.delete(tmp)
-				end)
-			)
-		end
-
-		telescope.load_extension("themes")
 
 		-- tokyonight-inspired highlight overrides for telescope
 		local bg_dark = "#0a0b11"
@@ -168,12 +61,126 @@ return {
 			vim.api.nvim_set_hl(0, hl, col)
 		end
 
+		-- image preview via image.nvim
+		local previewers = require("telescope.previewers")
+		local from_entry = require("telescope.from_entry")
+		local last_image = nil
+		local debounce_timer = nil
+
+		local image_previewer = previewers.new_buffer_previewer({
+			title = "Image Preview",
+			get_buffer_by_name = function(_, entry)
+				return from_entry.path(entry, false, false)
+			end,
+			define_preview = function(self, entry)
+				local filepath = from_entry.path(entry, true, false)
+				if not filepath or filepath == "" then return end
+
+				-- clear previous image
+				if last_image then
+					pcall(function() last_image:clear() end)
+					last_image = nil
+				end
+
+				-- debounce rapid scrolling
+				if debounce_timer then
+					debounce_timer:stop()
+					debounce_timer:close()
+				end
+
+				local bufnr = self.state.bufnr
+				local winid = self.state.winid
+
+				debounce_timer = vim.uv.new_timer()
+				debounce_timer:start(
+					100,
+					0,
+					vim.schedule_wrap(function()
+						debounce_timer:stop()
+						debounce_timer:close()
+						debounce_timer = nil
+
+						if not vim.api.nvim_buf_is_valid(bufnr) then return end
+
+						-- downscale for faster preview
+						local tmp = vim.fn.tempname() .. ".png"
+						vim.fn.system({
+							"magick", filepath,
+							"-resize", "400x400>",
+							"-quality", "50",
+							tmp,
+						})
+
+						local ok, image = pcall(require, "image")
+						if not ok then
+							vim.fn.delete(tmp)
+							return
+						end
+
+						local img = image.from_file(tmp, {
+							window = winid,
+							buffer = bufnr,
+							with_virtual_padding = true,
+						})
+						if img then
+							img:render()
+							last_image = img
+						end
+						vim.fn.delete(tmp)
+					end)
+				)
+			end,
+		})
+
+		-- image extensions to exclude from find_files
+		local image_patterns = {
+			"%.png$", "%.jpg$", "%.jpeg$", "%.gif$", "%.webp$",
+			"%.avif$", "%.ico$", "%.bmp$", "%.svg$", "%.tiff?$",
+		}
+
+		-- code-first sorter: jsx/tsx > js/ts > everything else
+		local jsx_exts = { jsx = true, tsx = true }
+		local js_exts = { js = true, ts = true }
+
+		local function file_tier(path)
+			local ext = (path:match("%.([^./\\]+)$") or ""):lower()
+			if jsx_exts[ext] then return 0 end
+			if js_exts[ext] then return 1 end
+			return 2
+		end
+
+		local function make_code_first_sorter(base_fn)
+			return function(opts)
+				local base = base_fn(opts)
+				local original = base.scoring_function
+				base.scoring_function = function(self, prompt, line, ...)
+					local score = original(self, prompt, line, ...)
+					if score == -1 then return score end
+
+					local query = prompt:lower()
+					if query ~= "" then
+						-- extract only the filename (strip directories and extension)
+						local basename = (line:match("[^/\\]+$") or line)
+						local name_no_ext = (basename:match("^(.+)%.[^.]+$") or basename):lower()
+
+						if name_no_ext:find(query, 1, true) then
+							-- filename contains query: best priority
+							return file_tier(line)
+						else
+							-- query only matches in path, not filename: push down
+							return score + 50 + file_tier(line) * 10
+						end
+					end
+
+					return score + file_tier(line) * 10
+				end
+				return base
+			end
+		end
+
 		telescope.setup({
 			defaults = {
-				buffer_previewer_maker = custom_maker,
 				path_display = { "smart" },
-				file_sorter = require("telescope.sorters").get_fuzzy_file,
-				generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
 				sorting_strategy = "descending",
 
 				-- visual polish
@@ -203,8 +210,8 @@ return {
 
 				mappings = {
 					i = {
-						["<C-k>"] = actions.move_selection_previous, -- move to prev result
-						["<C-j>"] = actions.move_selection_next, -- move to next result
+						["<C-k>"] = actions.move_selection_previous,
+						["<C-j>"] = actions.move_selection_next,
 						["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
 						["<C-s>"] = actions.select_vertical,
 					},
@@ -212,7 +219,7 @@ return {
 			},
 			pickers = {
 				find_files = {
-					file_sorter = require("telescope.sorters").get_fuzzy_file,
+					file_ignore_patterns = image_patterns,
 				},
 			},
 			extensions = {
@@ -246,17 +253,21 @@ return {
 			},
 		})
 
+		telescope.load_extension("themes")
 		telescope.load_extension("fzf")
+
+		-- wrap fzf's sorter with our code-first + filename-match boosting
+		local conf_values = require("telescope.config").values
+		conf_values.file_sorter = make_code_first_sorter(conf_values.file_sorter)
+
 		telescope.load_extension("file_browser")
 
-		-- set keymaps
-		local keymap = vim.keymap -- for conciseness
+		-- keymaps
+		local keymap = vim.keymap
 
 		keymap.set("n", "<leader><CR>", "<cmd>Telescope resume<cr>", { desc = "Resume previous search" })
-		keymap.set("n", "<leader>f'", "<cmd>Telescope marks<cr>", { desc = "Marks" })
 		keymap.set("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "Buffers" })
 		keymap.set("n", "<leader>fc", "<cmd>Telescope grep_string<cr>", { desc = "Word at cursor" })
-		keymap.set("n", "<leader>fC", "<cmd>Telescope commands<cr>", { desc = "Commands" })
 		keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Find files" })
 		keymap.set(
 			"n",
@@ -264,22 +275,28 @@ return {
 			"<cmd>Telescope find_files hidden=true<cr>",
 			{ desc = "Find files (include hidden files)" }
 		)
+		keymap.set("n", "<leader>fi", function()
+			require("telescope.builtin").find_files({
+				prompt_title = "Find Images",
+				find_command = {
+					"fd", "--type", "f", "-e", "png", "-e", "jpg", "-e", "jpeg",
+					"-e", "gif", "-e", "webp", "-e", "avif", "-e", "ico",
+					"-e", "bmp", "-e", "svg", "-e", "tiff", "-e", "tif",
+				},
+				file_ignore_patterns = {},
+				previewer = image_previewer,
+			})
+		end, { desc = "Find images" })
 		keymap.set("n", "<leader>fh", "<cmd>Telescope help_tags<cr>", { desc = "Help Tags" })
 		keymap.set("n", "<leader>fk", "<cmd>Telescope keymaps<cr>", { desc = "Keymaps" })
-		keymap.set("n", "<leader>fm", "<cmd>Telescope man_pages<cr>", { desc = "Man Pages" })
-		keymap.set("n", "<leader>fn", "<cmd>Telescope notifications<cr>", { desc = "Notifications" })
-		keymap.set("n", "<leader>fo", "<cmd>Telescope oldfiles<cr>", { desc = "Old Files" })
-		keymap.set("n", "<leader>fr", "<cmd>Telescope registers<cr>", { desc = "Registers" })
 		keymap.set("n", "<leader>ft", "<cmd>Telescope colorscheme<cr>", { desc = "Colorschemes" })
 		keymap.set("n", "<leader>fw", "<cmd>Telescope live_grep<cr>", { desc = "Live Grep" })
-		keymap.set("n", "<space>fB", ":Telescope file_browser<CR>")
+		keymap.set("n", "<space>fB", "<cmd>Telescope file_browser<cr>", { desc = "File Browser" })
 		keymap.set(
 			"n",
 			"<leader>fW",
 			"<cmd>Telescope live_grep hidden=true<cr>",
 			{ desc = "Live Grep (include hidden files)" }
 		)
-		keymap.set("n", "<leader>ls", "<cmd>Telescope lsp_document_symbols<cr>", { desc = "LSP Symbols" })
-		keymap.set("n", "<leader>lG", "<cmd>Telescope lsp_workspace_symbols<cr>", { desc = "LSP Workspace Symbols" })
 	end,
 }
