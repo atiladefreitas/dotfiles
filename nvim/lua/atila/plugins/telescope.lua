@@ -9,6 +9,7 @@ return {
 		{ "<leader>ff", desc = "Find files" },
 		{ "<leader>fF", desc = "Find files (include hidden)" },
 		{ "<leader>fi", desc = "Find images" },
+		{ "<leader>fm", desc = "Find markdowns" },
 		{ "<leader>fh", desc = "Help Tags" },
 		{ "<leader>fk", desc = "Keymaps" },
 		{ "<leader>ft", desc = "Colorschemes" },
@@ -132,10 +133,11 @@ return {
 			end,
 		})
 
-		-- image extensions to exclude from find_files
-		local image_patterns = {
+		-- extensions to exclude from find_files
+		local ignore_patterns = {
 			"%.png$", "%.jpg$", "%.jpeg$", "%.gif$", "%.webp$",
 			"%.avif$", "%.ico$", "%.bmp$", "%.svg$", "%.tiff?$",
+			"%.md$",
 		}
 
 		-- code-first sorter: jsx/tsx > js/ts > everything else
@@ -219,7 +221,7 @@ return {
 			},
 			pickers = {
 				find_files = {
-					file_ignore_patterns = image_patterns,
+					file_ignore_patterns = ignore_patterns,
 				},
 			},
 			extensions = {
@@ -287,6 +289,13 @@ return {
 				previewer = image_previewer,
 			})
 		end, { desc = "Find images" })
+		keymap.set("n", "<leader>fm", function()
+			require("telescope.builtin").find_files({
+				prompt_title = "Find Markdowns",
+				find_command = { "fd", "--type", "f", "-e", "md" },
+				file_ignore_patterns = {},
+			})
+		end, { desc = "Find markdowns" })
 		keymap.set("n", "<leader>fh", "<cmd>Telescope help_tags<cr>", { desc = "Help Tags" })
 		keymap.set("n", "<leader>fk", "<cmd>Telescope keymaps<cr>", { desc = "Keymaps" })
 		keymap.set("n", "<leader>ft", "<cmd>Telescope colorscheme<cr>", { desc = "Colorschemes" })
