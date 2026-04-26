@@ -145,6 +145,12 @@ return {
 				mux = {
 					backend = "tmux",
 					enabled = true,
+					-- open new CLI sessions in a tmux split (pane) instead of a Neovim terminal
+					create = "split",
+					split = {
+						vertical = true, -- vertical split (pane on the side); set false for horizontal
+						size = 0.4, -- 40% of the window
+					},
 				},
 			},
 		},
