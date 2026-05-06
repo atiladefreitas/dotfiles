@@ -13,23 +13,24 @@ return {
 			max_file_size = 10.0,
 			debounce = 100,
 
-			-- Headings with gradient colors and icons
+			-- Editorial heading hierarchy
+			-- H1/H2: block-style with subtle background
+			-- H3+: lighter touch, descending refinement
 			heading = {
 				enabled = true,
-				sign = true,
+				sign = false,
 				position = "overlay",
-				icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
-				signs = { "󰫎 " },
-				width = "full",
+				icons = { "█  ", "▌  ", "›  ", "·  ", "·  ", "·  " },
+				width = "block",
 				left_margin = 0,
-				left_pad = 0,
-				right_pad = 0,
-				min_width = 0,
+				left_pad = 1,
+				right_pad = 4,
+				min_width = 60,
 				border = false,
 				border_virtual = false,
 				border_prefix = false,
-				above = "▄",
-				below = "▀",
+				above = "▁",
+				below = "▔",
 				backgrounds = {
 					"RenderMarkdownH1Bg",
 					"RenderMarkdownH2Bg",
@@ -48,40 +49,43 @@ return {
 				},
 			},
 
-			-- Beautiful code blocks
+			-- Generous, centered-feeling code blocks
 			code = {
 				enabled = true,
-				sign = true,
+				sign = false,
 				style = "full",
 				position = "left",
-				language_pad = 0,
+				language_pad = 2,
 				language_name = true,
+				language_icon = true,
 				disable_background = { "diff" },
-				width = "full",
-				left_margin = 0,
-				left_pad = 2,
-				right_pad = 2,
-				min_width = 45,
-				border = "thin",
-				above = "▄",
-				below = "▀",
+				width = "block",
+				left_margin = 2,
+				left_pad = 3,
+				right_pad = 3,
+				min_width = 70,
+				border = "thick",
+				above = "▁",
+				below = "▔",
 				highlight = "RenderMarkdownCode",
 				highlight_inline = "RenderMarkdownCodeInline",
-				highlight_language = nil,
+				highlight_language = "RenderMarkdownCodeLanguage",
+				inline_pad = 1,
 			},
 
-			-- Dash/horizontal rule
+			-- Soft horizontal rule, like a manuscript section break
 			dash = {
 				enabled = true,
 				icon = "─",
-				width = "full",
+				width = 80,
+				left_margin = 0,
 				highlight = "RenderMarkdownDash",
 			},
 
-			-- Bullet points with nice icons
+			-- Refined bullets: filled circle, open circle, diamond, dot
 			bullet = {
 				enabled = true,
-				icons = { "●", "○", "◆", "◇" },
+				icons = { "•", "◦", "▸", "·" },
 				ordered_icons = function(ctx)
 					local value = vim.trim(ctx.value or "")
 					local num = tonumber(value:sub(1, #value - 1))
@@ -93,7 +97,7 @@ return {
 				highlight = "RenderMarkdownBullet",
 			},
 
-			-- Checkboxes with multiple states
+			-- Refined checkboxes
 			checkbox = {
 				enabled = true,
 				position = "inline",
@@ -115,73 +119,57 @@ return {
 				},
 			},
 
-			-- Quote/blockquote styling
+			-- Magazine-style pull-quote with thick magenta rule
 			quote = {
 				enabled = true,
-				icon = "▋",
-				repeat_linebreak = false,
+				icon = "▎",
+				repeat_linebreak = true,
 				highlight = "RenderMarkdownQuote",
 			},
 
-			-- Pipe tables - heavy borders
+			-- Refined tables: rounded preset, calmer borders
 			pipe_table = {
 				enabled = true,
-				preset = "heavy",
+				preset = "round",
 				style = "full",
 				cell = "padded",
 				padding = 1,
 				min_width = 0,
-				border = {
-					"┏",
-					"━",
-					"┓",
-					"┳",
-					"┣",
-					"━",
-					"┗",
-					"┻",
-					"┛",
-					"┃",
-					"━",
-					"1",
-					"┃",
-					"┃",
-				},
-				alignment_indicator = "━",
+				alignment_indicator = "─",
 				head = "RenderMarkdownTableHead",
 				row = "RenderMarkdownTableRow",
 				filler = "RenderMarkdownTableFill",
 			},
 
-			-- Callouts (GitHub-style alerts)
+			-- Editorial callouts: rounded labels with breathing room
 			callout = {
-				note = { raw = "[!NOTE]", rendered = "󰋽 Note", highlight = "RenderMarkdownInfo" },
-				tip = { raw = "[!TIP]", rendered = "󰌶 Tip", highlight = "RenderMarkdownSuccess" },
-				important = { raw = "[!IMPORTANT]", rendered = "󰅾 Important", highlight = "RenderMarkdownHint" },
-				warning = { raw = "[!WARNING]", rendered = "󰀪 Warning", highlight = "RenderMarkdownWarn" },
-				caution = { raw = "[!CAUTION]", rendered = "󰳦 Caution", highlight = "RenderMarkdownError" },
-				abstract = { raw = "[!ABSTRACT]", rendered = "󰨸 Abstract", highlight = "RenderMarkdownInfo" },
-				summary = { raw = "[!SUMMARY]", rendered = "󰨸 Summary", highlight = "RenderMarkdownInfo" },
-				tldr = { raw = "[!TLDR]", rendered = "󰨸 TL;DR", highlight = "RenderMarkdownInfo" },
-				info = { raw = "[!INFO]", rendered = "󰋽 Info", highlight = "RenderMarkdownInfo" },
-				todo = { raw = "[!TODO]", rendered = "󰗡 Todo", highlight = "RenderMarkdownInfo" },
-				hint = { raw = "[!HINT]", rendered = "󰌶 Hint", highlight = "RenderMarkdownSuccess" },
-				success = { raw = "[!SUCCESS]", rendered = "󰄬 Success", highlight = "RenderMarkdownSuccess" },
-				check = { raw = "[!CHECK]", rendered = "󰄬 Check", highlight = "RenderMarkdownSuccess" },
-				done = { raw = "[!DONE]", rendered = "󰄬 Done", highlight = "RenderMarkdownSuccess" },
-				question = { raw = "[!QUESTION]", rendered = "󰘥 Question", highlight = "RenderMarkdownWarn" },
-				help = { raw = "[!HELP]", rendered = "󰘥 Help", highlight = "RenderMarkdownWarn" },
-				faq = { raw = "[!FAQ]", rendered = "󰘥 FAQ", highlight = "RenderMarkdownWarn" },
-				attention = { raw = "[!ATTENTION]", rendered = "󰀪 Attention", highlight = "RenderMarkdownWarn" },
-				failure = { raw = "[!FAILURE]", rendered = "󰅖 Failure", highlight = "RenderMarkdownError" },
-				fail = { raw = "[!FAIL]", rendered = "󰅖 Fail", highlight = "RenderMarkdownError" },
-				missing = { raw = "[!MISSING]", rendered = "󰅖 Missing", highlight = "RenderMarkdownError" },
-				danger = { raw = "[!DANGER]", rendered = "󱐌 Danger", highlight = "RenderMarkdownError" },
-				error = { raw = "[!ERROR]", rendered = "󱐌 Error", highlight = "RenderMarkdownError" },
-				bug = { raw = "[!BUG]", rendered = "󰨰 Bug", highlight = "RenderMarkdownError" },
-				example = { raw = "[!EXAMPLE]", rendered = "󰉹 Example", highlight = "RenderMarkdownHint" },
-				quote = { raw = "[!QUOTE]", rendered = "󱆨 Quote", highlight = "RenderMarkdownQuote" },
-				cite = { raw = "[!CITE]", rendered = "󱆨 Cite", highlight = "RenderMarkdownQuote" },
+				note = { raw = "[!NOTE]", rendered = "  Note", highlight = "RenderMarkdownInfo" },
+				tip = { raw = "[!TIP]", rendered = "  Tip", highlight = "RenderMarkdownSuccess" },
+				important = { raw = "[!IMPORTANT]", rendered = "  Important", highlight = "RenderMarkdownHint" },
+				warning = { raw = "[!WARNING]", rendered = "  Warning", highlight = "RenderMarkdownWarn" },
+				caution = { raw = "[!CAUTION]", rendered = "  Caution", highlight = "RenderMarkdownError" },
+				abstract = { raw = "[!ABSTRACT]", rendered = "  Abstract", highlight = "RenderMarkdownInfo" },
+				summary = { raw = "[!SUMMARY]", rendered = "  Summary", highlight = "RenderMarkdownInfo" },
+				tldr = { raw = "[!TLDR]", rendered = "  TL;DR", highlight = "RenderMarkdownInfo" },
+				info = { raw = "[!INFO]", rendered = "  Info", highlight = "RenderMarkdownInfo" },
+				todo = { raw = "[!TODO]", rendered = "  Todo", highlight = "RenderMarkdownInfo" },
+				hint = { raw = "[!HINT]", rendered = "  Hint", highlight = "RenderMarkdownSuccess" },
+				success = { raw = "[!SUCCESS]", rendered = "  Success", highlight = "RenderMarkdownSuccess" },
+				check = { raw = "[!CHECK]", rendered = "  Check", highlight = "RenderMarkdownSuccess" },
+				done = { raw = "[!DONE]", rendered = "  Done", highlight = "RenderMarkdownSuccess" },
+				question = { raw = "[!QUESTION]", rendered = "  Question", highlight = "RenderMarkdownWarn" },
+				help = { raw = "[!HELP]", rendered = "  Help", highlight = "RenderMarkdownWarn" },
+				faq = { raw = "[!FAQ]", rendered = "  FAQ", highlight = "RenderMarkdownWarn" },
+				attention = { raw = "[!ATTENTION]", rendered = "  Attention", highlight = "RenderMarkdownWarn" },
+				failure = { raw = "[!FAILURE]", rendered = "  Failure", highlight = "RenderMarkdownError" },
+				fail = { raw = "[!FAIL]", rendered = "  Fail", highlight = "RenderMarkdownError" },
+				missing = { raw = "[!MISSING]", rendered = "  Missing", highlight = "RenderMarkdownError" },
+				danger = { raw = "[!DANGER]", rendered = "  Danger", highlight = "RenderMarkdownError" },
+				error = { raw = "[!ERROR]", rendered = "  Error", highlight = "RenderMarkdownError" },
+				bug = { raw = "[!BUG]", rendered = "  Bug", highlight = "RenderMarkdownError" },
+				example = { raw = "[!EXAMPLE]", rendered = "  Example", highlight = "RenderMarkdownHint" },
+				quote = { raw = "[!QUOTE]", rendered = "  Quote", highlight = "RenderMarkdownQuote" },
+				cite = { raw = "[!CITE]", rendered = "  Cite", highlight = "RenderMarkdownQuote" },
 			},
 
 			-- Links
@@ -207,13 +195,13 @@ return {
 				},
 			},
 
-			-- Sign column
+			-- Quiet sign column
 			sign = {
-				enabled = true,
+				enabled = false,
 				highlight = "RenderMarkdownSign",
 			},
 
-			-- Indent guide
+			-- Indent guide off — cleaner long-form reading
 			indent = {
 				enabled = false,
 				per_level = 2,
@@ -242,63 +230,183 @@ return {
 		config = function(_, opts)
 			require("render-markdown").setup(opts)
 
-			-- Custom highlight groups for a cohesive look
-			local colors = {
-				h1 = "#f38ba8", -- Pink/Red
-				h2 = "#fab387", -- Peach/Orange
-				h3 = "#f9e2af", -- Yellow
-				h4 = "#a6e3a1", -- Green
-				h5 = "#89dceb", -- Teal
-				h6 = "#b4befe", -- Lavender
-				code_bg = "#1e1e2e",
-				quote = "#6c7086",
+			-- ────────────────────────────────────────────────────────────────
+			--  Editorial palette tuned for Tokyo Night (bg #090a12)
+			-- ────────────────────────────────────────────────────────────────
+			local p = {
+				-- Foreground tones (warm-paper hierarchy)
+				h1 = "#c0caf5", -- bright vellum, the title
+				h2 = "#bb9af7", -- magenta, section
+				h3 = "#7aa2f7", -- blue, subsection
+				h4 = "#7dcfff", -- cyan
+				h5 = "#9ece6a", -- soft green
+				h6 = "#e0af68", -- amber
+
+				-- Heading backgrounds (very subtle, layered tints)
+				h1_bg = "#13141f",
+				h2_bg = "#11121c",
+				h3_bg = "#0f1019",
+				h4_bg = "#0d0e16",
+				h5_bg = "#0c0d14",
+				h6_bg = "#0b0c12",
+
+				-- Surfaces
+				code_bg = "#0c0e18",
+				code_inline_bg = "#1a1b2e",
+				code_inline_fg = "#f7768e", -- pink
+				code_lang_fg = "#7dcfff",
+
+				-- Type
+				body = "#a9b1d6",
+				muted = "#565f89",
+				rule = "#1f2335",
+
+				-- Accents
+				link = "#7aa2f7",
+				wiki = "#bb9af7",
+				bullet = "#7dcfff",
+				quote = "#bb9af7",
+				quote_text = "#9aa5ce",
 			}
 
-			-- Heading colors (gradient effect)
-			vim.api.nvim_set_hl(0, "RenderMarkdownH1", { fg = colors.h1, bold = true })
-			vim.api.nvim_set_hl(0, "RenderMarkdownH2", { fg = colors.h2, bold = true })
-			vim.api.nvim_set_hl(0, "RenderMarkdownH3", { fg = colors.h3, bold = true })
-			vim.api.nvim_set_hl(0, "RenderMarkdownH4", { fg = colors.h4, bold = true })
-			vim.api.nvim_set_hl(0, "RenderMarkdownH5", { fg = colors.h5, bold = true })
-			vim.api.nvim_set_hl(0, "RenderMarkdownH6", { fg = colors.h6, bold = true })
+			-- Headings: bold foregrounds, whisper-quiet backgrounds
+			vim.api.nvim_set_hl(0, "RenderMarkdownH1", { fg = p.h1, bold = true })
+			vim.api.nvim_set_hl(0, "RenderMarkdownH2", { fg = p.h2, bold = true })
+			vim.api.nvim_set_hl(0, "RenderMarkdownH3", { fg = p.h3, bold = true })
+			vim.api.nvim_set_hl(0, "RenderMarkdownH4", { fg = p.h4, bold = true })
+			vim.api.nvim_set_hl(0, "RenderMarkdownH5", { fg = p.h5, bold = true })
+			vim.api.nvim_set_hl(0, "RenderMarkdownH6", { fg = p.h6, bold = true, italic = true })
 
-			-- Heading backgrounds (subtle)
-			vim.api.nvim_set_hl(0, "RenderMarkdownH1Bg", { bg = "#2a2030" })
-			vim.api.nvim_set_hl(0, "RenderMarkdownH2Bg", { bg = "#2a2520" })
-			vim.api.nvim_set_hl(0, "RenderMarkdownH3Bg", { bg = "#2a2820" })
-			vim.api.nvim_set_hl(0, "RenderMarkdownH4Bg", { bg = "#202a20" })
-			vim.api.nvim_set_hl(0, "RenderMarkdownH5Bg", { bg = "#202a2a" })
-			vim.api.nvim_set_hl(0, "RenderMarkdownH6Bg", { bg = "#25202a" })
+			vim.api.nvim_set_hl(0, "RenderMarkdownH1Bg", { bg = p.h1_bg })
+			vim.api.nvim_set_hl(0, "RenderMarkdownH2Bg", { bg = p.h2_bg })
+			vim.api.nvim_set_hl(0, "RenderMarkdownH3Bg", { bg = p.h3_bg })
+			vim.api.nvim_set_hl(0, "RenderMarkdownH4Bg", { bg = p.h4_bg })
+			vim.api.nvim_set_hl(0, "RenderMarkdownH5Bg", { bg = p.h5_bg })
+			vim.api.nvim_set_hl(0, "RenderMarkdownH6Bg", { bg = p.h6_bg })
 
-			-- Code blocks
-			vim.api.nvim_set_hl(0, "RenderMarkdownCode", { bg = "#181825" })
-			vim.api.nvim_set_hl(0, "RenderMarkdownCodeInline", { bg = "#313244", fg = "#f5c2e7" })
+			-- Heading borders (top/bottom rule under H1, H2)
+			vim.api.nvim_set_hl(0, "RenderMarkdownH1Border", { fg = p.h2, bg = p.h1_bg })
+			vim.api.nvim_set_hl(0, "RenderMarkdownH2Border", { fg = p.muted, bg = p.h2_bg })
+
+			-- Code blocks: deep, refined, with cyan language tag
+			vim.api.nvim_set_hl(0, "RenderMarkdownCode", { bg = p.code_bg })
+			vim.api.nvim_set_hl(0, "RenderMarkdownCodeInline", { bg = p.code_inline_bg, fg = p.code_inline_fg })
+			vim.api.nvim_set_hl(0, "RenderMarkdownCodeLanguage", { fg = p.code_lang_fg, bg = p.code_bg, italic = true })
 
 			-- Checkboxes
-			vim.api.nvim_set_hl(0, "RenderMarkdownUnchecked", { fg = "#6c7086" })
-			vim.api.nvim_set_hl(0, "RenderMarkdownChecked", { fg = "#a6e3a1" })
-			vim.api.nvim_set_hl(0, "RenderMarkdownTodo", { fg = "#f9e2af" })
+			vim.api.nvim_set_hl(0, "RenderMarkdownUnchecked", { fg = p.muted })
+			vim.api.nvim_set_hl(0, "RenderMarkdownChecked", { fg = "#9ece6a" })
+			vim.api.nvim_set_hl(0, "RenderMarkdownTodo", { fg = "#e0af68" })
 
-			-- Callouts
-			vim.api.nvim_set_hl(0, "RenderMarkdownInfo", { fg = "#89b4fa" })
-			vim.api.nvim_set_hl(0, "RenderMarkdownSuccess", { fg = "#a6e3a1" })
-			vim.api.nvim_set_hl(0, "RenderMarkdownHint", { fg = "#cba6f7" })
-			vim.api.nvim_set_hl(0, "RenderMarkdownWarn", { fg = "#f9e2af" })
-			vim.api.nvim_set_hl(0, "RenderMarkdownError", { fg = "#f38ba8" })
-			vim.api.nvim_set_hl(0, "RenderMarkdownQuote", { fg = colors.quote, italic = true })
+			-- Callouts: refined Tokyo Night accents
+			vim.api.nvim_set_hl(0, "RenderMarkdownInfo", { fg = "#7aa2f7", bold = true })
+			vim.api.nvim_set_hl(0, "RenderMarkdownSuccess", { fg = "#9ece6a", bold = true })
+			vim.api.nvim_set_hl(0, "RenderMarkdownHint", { fg = "#bb9af7", bold = true })
+			vim.api.nvim_set_hl(0, "RenderMarkdownWarn", { fg = "#e0af68", bold = true })
+			vim.api.nvim_set_hl(0, "RenderMarkdownError", { fg = "#f7768e", bold = true })
+
+			-- Quote: magenta rule + softly muted italic body
+			vim.api.nvim_set_hl(0, "RenderMarkdownQuote", { fg = p.quote, italic = true })
+			vim.api.nvim_set_hl(0, "@markup.quote.markdown", { fg = p.quote_text, italic = true })
 
 			-- Links
-			vim.api.nvim_set_hl(0, "RenderMarkdownLink", { fg = "#89b4fa", underline = true })
-			vim.api.nvim_set_hl(0, "RenderMarkdownWikiLink", { fg = "#cba6f7", underline = true })
+			vim.api.nvim_set_hl(0, "RenderMarkdownLink", { fg = p.link, underline = true })
+			vim.api.nvim_set_hl(0, "RenderMarkdownWikiLink", { fg = p.wiki, underline = true })
 
-			-- Tables - visible with good contrast
-			vim.api.nvim_set_hl(0, "RenderMarkdownTableHead", { fg = "#cba6f7", bold = true })
-			vim.api.nvim_set_hl(0, "RenderMarkdownTableRow", { fg = "#bac2de" })
-			vim.api.nvim_set_hl(0, "RenderMarkdownTableFill", { fg = "#585b70" })
+			-- Tables: subtle, readable
+			vim.api.nvim_set_hl(0, "RenderMarkdownTableHead", { fg = p.h2, bold = true })
+			vim.api.nvim_set_hl(0, "RenderMarkdownTableRow", { fg = p.body })
+			vim.api.nvim_set_hl(0, "RenderMarkdownTableFill", { fg = p.rule })
 
 			-- Misc
-			vim.api.nvim_set_hl(0, "RenderMarkdownBullet", { fg = "#89dceb" })
-			vim.api.nvim_set_hl(0, "RenderMarkdownDash", { fg = "#45475a" })
+			vim.api.nvim_set_hl(0, "RenderMarkdownBullet", { fg = p.bullet, bold = true })
+			vim.api.nvim_set_hl(0, "RenderMarkdownDash", { fg = p.muted })
+			vim.api.nvim_set_hl(0, "RenderMarkdownSign", { fg = p.muted })
+
+			-- ────────────────────────────────────────────────────────────────
+			--  Treesitter polish: italics, bold, strikethrough, emphasis
+			--  These make body prose feel like a magazine
+			-- ────────────────────────────────────────────────────────────────
+			vim.api.nvim_set_hl(0, "@markup.strong.markdown_inline", { fg = "#f7768e", bold = true })
+			vim.api.nvim_set_hl(0, "@markup.italic.markdown_inline", { fg = "#bb9af7", italic = true })
+			vim.api.nvim_set_hl(0, "@markup.strikethrough.markdown_inline", { fg = p.muted, strikethrough = true })
+			vim.api.nvim_set_hl(0, "@markup.raw.markdown_inline", { fg = p.code_inline_fg, bg = p.code_inline_bg })
+			vim.api.nvim_set_hl(0, "@markup.link.label.markdown_inline", { fg = p.link, italic = true })
+			vim.api.nvim_set_hl(0, "@markup.link.url.markdown_inline", { fg = p.muted, italic = true, underline = true })
+
+			-- ────────────────────────────────────────────────────────────────
+			--  Reading-mode ergonomics for markdown buffers
+			--  Soft wrap at 80 columns, breathing line height
+			--
+			--  Neovim has no native "soft wrap at column N" — `linebreak` only
+			--  wraps at the window edge. Trick: pad the window with foldcolumn
+			--  so the *effective* text area is 80 columns, then `linebreak`
+			--  wraps there naturally. We recompute padding on resize.
+			-- ────────────────────────────────────────────────────────────────
+			local TARGET_WIDTH = 80
+
+			local function apply_reading_padding(win)
+				if not win or not vim.api.nvim_win_is_valid(win) then return end
+				local buf = vim.api.nvim_win_get_buf(win)
+				if not vim.api.nvim_buf_is_valid(buf) then return end
+				local ft = vim.bo[buf].filetype
+				if ft ~= "markdown" then return end
+				-- Skip floating windows and special buffers
+				local cfg = vim.api.nvim_win_get_config(win)
+				if cfg.relative and cfg.relative ~= "" then return end
+				if vim.bo[buf].buftype ~= "" then return end
+
+				local win_width = vim.api.nvim_win_get_width(win)
+				local gutter = 6 -- sign column + small breathing room
+				local available = win_width - gutter
+				local padding = math.max(0, math.floor((available - TARGET_WIDTH) / 2))
+				padding = math.min(padding, 9) -- foldcolumn maxes at 9
+				local target = tostring(padding)
+				-- Only update if changed (avoids re-render storm)
+				if vim.wo[win].foldcolumn ~= target then
+					vim.wo[win].foldcolumn = target
+				end
+			end
+
+			-- Make the foldcolumn invisible (it's just padding)
+			vim.api.nvim_set_hl(0, "FoldColumn", { fg = "NONE", bg = "NONE" })
+
+			vim.api.nvim_create_autocmd("FileType", {
+				pattern = "markdown",
+				callback = function(ev)
+					vim.opt_local.wrap = true
+					vim.opt_local.linebreak = true
+					vim.opt_local.breakindent = true
+					vim.opt_local.showbreak = "  ↳ "
+					vim.opt_local.conceallevel = 2
+					vim.opt_local.concealcursor = ""
+					vim.opt_local.spell = false
+					vim.opt_local.cursorline = false
+					vim.opt_local.signcolumn = "yes:1"
+					vim.opt_local.number = false
+					vim.opt_local.relativenumber = false
+					vim.opt_local.scrolloff = 8
+					vim.opt_local.textwidth = 0
+					vim.opt_local.formatoptions:remove("t")
+					vim.opt_local.formatoptions:remove("c")
+					vim.opt_local.colorcolumn = ""
+					-- Defer padding so render-markdown can register the buffer first
+					vim.schedule(function()
+						apply_reading_padding(vim.api.nvim_get_current_win())
+					end)
+				end,
+			})
+
+			-- Recompute padding only when actually needed, deferred
+			vim.api.nvim_create_autocmd({ "WinResized", "VimResized" }, {
+				callback = function()
+					vim.schedule(function()
+						for _, win in ipairs(vim.api.nvim_list_wins()) do
+							apply_reading_padding(win)
+						end
+					end)
+				end,
+			})
 		end,
 	},
 
@@ -473,40 +581,37 @@ return {
 				max_file_length = 5000, -- disable UI features for files with more than this many lines
 				checkboxes = {
 					[" "] = { char = "󰄱", hl_group = "ObsidianTodo" },
-					["x"] = { char = "", hl_group = "ObsidianDone" },
-					[">"] = { char = "", hl_group = "ObsidianRightArrow" },
+					["x"] = { char = "", hl_group = "ObsidianDone" },
+					[">"] = { char = "", hl_group = "ObsidianRightArrow" },
 					["~"] = { char = "󰰱", hl_group = "ObsidianTilde" },
-					["!"] = { char = "", hl_group = "ObsidianImportant" },
+					["!"] = { char = "", hl_group = "ObsidianImportant" },
 				},
 				bullets = { char = "•", hl_group = "ObsidianBullet" },
-				external_link_icon = { char = "", hl_group = "ObsidianExtLinkIcon" },
-				-- Replace the above with this if you don't have a patched font:
-				-- external_link_icon = { char = "", hl_group = "ObsidianExtLinkIcon" },
+				external_link_icon = { char = "", hl_group = "ObsidianExtLinkIcon" },
 				reference_text = { hl_group = "ObsidianRefText" },
 				highlight_text = { hl_group = "ObsidianHighlightText" },
 				tags = { hl_group = "ObsidianTag" },
 				block_ids = { hl_group = "ObsidianBlockID" },
 				hl_groups = {
-					ObsidianTodo = { bold = true, fg = "#f78c6c" },
-					ObsidianDone = { bold = true, fg = "#89ddff" },
-					ObsidianRightArrow = { bold = true, fg = "#f78c6c" },
-					ObsidianTilde = { bold = true, fg = "#ff5370" },
-					ObsidianImportant = { bold = true, fg = "#d73128" },
-					ObsidianBullet = { bold = true, fg = "#89ddff" },
-					ObsidianRefText = { underline = true, fg = "#c792ea" },
-					ObsidianExtLinkIcon = { fg = "#c792ea" },
-					ObsidianTag = { italic = true, fg = "#89ddff" },
-					ObsidianBlockID = { italic = true, fg = "#89ddff" },
-					ObsidianHighlightText = { bg = "#75662e" },
+					-- Tokyo Night-tuned Obsidian UI
+					ObsidianTodo = { bold = true, fg = "#e0af68" },
+					ObsidianDone = { bold = true, fg = "#9ece6a" },
+					ObsidianRightArrow = { bold = true, fg = "#7aa2f7" },
+					ObsidianTilde = { bold = true, fg = "#f7768e" },
+					ObsidianImportant = { bold = true, fg = "#f7768e" },
+					ObsidianBullet = { bold = true, fg = "#7dcfff" },
+					ObsidianRefText = { underline = true, fg = "#bb9af7" },
+					ObsidianExtLinkIcon = { fg = "#bb9af7" },
+					ObsidianTag = { italic = true, fg = "#7dcfff" },
+					ObsidianBlockID = { italic = true, fg = "#7dcfff" },
+					ObsidianHighlightText = { bg = "#3d2f1f", fg = "#e0af68" },
 				},
 			},
 			attachments = {
 				img_folder = "assets/imgs", -- This is the default
-
 				img_name_func = function()
 					return string.format("%s-", os.time())
 				end,
-
 				img_text_func = function(client, path)
 					path = client:vault_relative_path(path) or path
 					return string.format("![%s](%s)", path.name, path)

@@ -30,6 +30,18 @@ opt.cursorline = true
 
 opt.linespace = 4
 
+-- Fold column: show fold state markers on the left (matches midnight-atila theme)
+opt.foldcolumn = "1"
+opt.foldlevel = 99      -- start with all folds open
+opt.foldlevelstart = 99
+opt.foldenable = true
+opt.fillchars:append({
+  fold = " ",
+  foldopen = "▾",     -- open fold marker
+  foldclose = "▸",    -- closed fold marker
+  foldsep = "│",
+})
+
 -- turn on termguicolors for tokyonight colorscheme to work
 -- (have to use iterm2 or any other true color terminal)
 opt.termguicolors = true

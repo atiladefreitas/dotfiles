@@ -114,22 +114,232 @@ vim.keymap.set("i", "<a-i>", function()
 	end)
 end)
 
-vim.keymap.set("i", "<a-p>", function()
-	float_input({
-		title = "Tag",
-		icon = "󰓹 ",
-		width = 30,
-		border_hl = "FloatProseBorder",
-		title_hl = "FloatProseTitle",
-	}, function(tag, _, _, cursor)
-		local prefix = "prose-" .. tag .. ":"
-		vim.api.nvim_buf_set_text(0, cursor[1] - 1, cursor[2], cursor[1] - 1, cursor[2], { prefix })
-		vim.api.nvim_win_set_cursor(0, { cursor[1], cursor[2] + #prefix })
+-- prose-supported tags from Tailwind Typography
+local prose_tags = {
+	{ tag = "headings", desc = "all h1–h6" },
+	{ tag = "h1", desc = "heading 1" },
+	{ tag = "h2", desc = "heading 2" },
+	{ tag = "h3", desc = "heading 3" },
+	{ tag = "h4", desc = "heading 4" },
+	{ tag = "h5", desc = "heading 5" },
+	{ tag = "h6", desc = "heading 6" },
+	{ tag = "p", desc = "paragraph" },
+	{ tag = "lead", desc = "lead paragraph" },
+	{ tag = "a", desc = "link" },
+	{ tag = "strong", desc = "bold" },
+	{ tag = "em", desc = "italic" },
+	{ tag = "small", desc = "small text" },
+	{ tag = "kbd", desc = "keyboard" },
+	{ tag = "code", desc = "inline code" },
+	{ tag = "pre", desc = "code block" },
+	{ tag = "blockquote", desc = "blockquote" },
+	{ tag = "ol", desc = "ordered list" },
+	{ tag = "ul", desc = "unordered list" },
+	{ tag = "li", desc = "list item" },
+	{ tag = "table", desc = "table" },
+	{ tag = "thead", desc = "table head" },
+	{ tag = "tbody", desc = "table body" },
+	{ tag = "tr", desc = "table row" },
+	{ tag = "th", desc = "table header cell" },
+	{ tag = "td", desc = "table cell" },
+	{ tag = "img", desc = "image" },
+	{ tag = "video", desc = "video" },
+	{ tag = "figure", desc = "figure" },
+	{ tag = "figcaption", desc = "figure caption" },
+	{ tag = "hr", desc = "horizontal rule" },
+}
 
-		vim.schedule(function()
-			require("blink.cmp").show()
-		end)
+local function float_select(opts, items, on_submit)
+	local parent_win = vim.api.nvim_get_current_win()
+	local cursor = vim.api.nvim_win_get_cursor(parent_win)
+
+	local max_tag = 0
+	for _, item in ipairs(items) do
+		if #item.tag > max_tag then
+			max_tag = #item.tag
+		end
+	end
+
+	local function fmt(item)
+		local pad = string.rep(" ", max_tag - #item.tag)
+		return "  " .. item.tag .. pad .. "  " .. item.desc
+	end
+
+	local width = opts.width
+	local result_height = math.min(#items, 12)
+
+	local input_buf = vim.api.nvim_create_buf(false, true)
+	vim.bo[input_buf].buftype = "nofile"
+	vim.bo[input_buf].bufhidden = "wipe"
+	vim.b[input_buf].disable_blink_cmp = true
+
+	local result_buf = vim.api.nvim_create_buf(false, true)
+	vim.bo[result_buf].buftype = "nofile"
+	vim.bo[result_buf].bufhidden = "wipe"
+
+	local result_win = vim.api.nvim_open_win(result_buf, false, {
+		relative = "win",
+		win = parent_win,
+		width = width,
+		height = result_height,
+		row = 4,
+		col = 0,
+		bufpos = { cursor[1] - 1, cursor[2] },
+		style = "minimal",
+		border = "single",
+		focusable = false,
+	})
+
+	local input_win = vim.api.nvim_open_win(input_buf, true, {
+		relative = "win",
+		win = parent_win,
+		width = width,
+		height = 1,
+		row = 1,
+		col = 0,
+		bufpos = { cursor[1] - 1, cursor[2] },
+		style = "minimal",
+		border = "single",
+		title = " " .. opts.icon .. " " .. opts.title .. " ",
+		title_pos = "center",
+	})
+
+	vim.wo[input_win].winhighlight = "FloatBorder:" .. opts.border_hl .. ",FloatTitle:" .. opts.title_hl
+	vim.wo[result_win].winhighlight = "FloatBorder:" .. opts.border_hl .. ",CursorLine:Visual"
+	vim.wo[result_win].cursorline = true
+	vim.wo[result_win].cursorlineopt = "line"
+
+	vim.diagnostic.enable(false, { bufnr = input_buf })
+	vim.diagnostic.enable(false, { bufnr = result_buf })
+
+	local filtered = {}
+
+	local function refresh()
+		local query = (vim.api.nvim_buf_get_lines(input_buf, 0, 1, false)[1] or ""):lower()
+		filtered = {}
+		for _, item in ipairs(items) do
+			if query == "" or item.tag:lower():find(query, 1, true) then
+				table.insert(filtered, item)
+			end
+		end
+		local lines = {}
+		for _, item in ipairs(filtered) do
+			table.insert(lines, fmt(item))
+		end
+		if #lines == 0 then
+			lines = { "  no matches" }
+		end
+		vim.bo[result_buf].modifiable = true
+		vim.api.nvim_buf_set_lines(result_buf, 0, -1, false, lines)
+		vim.bo[result_buf].modifiable = false
+		if #filtered > 0 and vim.api.nvim_win_is_valid(result_win) then
+			vim.api.nvim_win_set_cursor(result_win, { 1, 0 })
+		end
+	end
+
+	refresh()
+	vim.schedule(function()
+		if vim.api.nvim_win_is_valid(input_win) then
+			vim.api.nvim_set_current_win(input_win)
+			vim.cmd("startinsert!")
+		end
 	end)
+
+	local closed = false
+	local function close()
+		if closed then
+			return
+		end
+		closed = true
+		pcall(vim.api.nvim_win_close, input_win, true)
+		pcall(vim.api.nvim_win_close, result_win, true)
+	end
+
+	local function move(delta)
+		if #filtered == 0 or not vim.api.nvim_win_is_valid(result_win) then
+			return
+		end
+		local row = vim.api.nvim_win_get_cursor(result_win)[1] + delta
+		if row < 1 then
+			row = #filtered
+		elseif row > #filtered then
+			row = 1
+		end
+		vim.api.nvim_win_set_cursor(result_win, { row, 0 })
+	end
+
+	local function select_current()
+		if #filtered == 0 then
+			close()
+			return
+		end
+		local row = vim.api.nvim_win_get_cursor(result_win)[1]
+		local item = filtered[row]
+		close()
+		if item then
+			on_submit(item.tag, cursor)
+		end
+	end
+
+	vim.api.nvim_create_autocmd({ "TextChangedI", "TextChanged" }, {
+		buffer = input_buf,
+		callback = refresh,
+	})
+	vim.api.nvim_create_autocmd("BufLeave", {
+		buffer = input_buf,
+		once = true,
+		callback = close,
+	})
+
+	local map_opts = { buffer = input_buf, nowait = true }
+	vim.keymap.set({ "i", "n" }, "<Esc>", close, map_opts)
+	vim.keymap.set({ "i", "n" }, "<CR>", select_current, map_opts)
+	vim.keymap.set({ "i", "n" }, "<Tab>", select_current, map_opts)
+	vim.keymap.set("i", "<C-n>", function()
+		move(1)
+	end, map_opts)
+	vim.keymap.set("i", "<C-p>", function()
+		move(-1)
+	end, map_opts)
+	vim.keymap.set("i", "<C-j>", function()
+		move(1)
+	end, map_opts)
+	vim.keymap.set("i", "<C-k>", function()
+		move(-1)
+	end, map_opts)
+	vim.keymap.set("i", "<Down>", function()
+		move(1)
+	end, map_opts)
+	vim.keymap.set("i", "<Up>", function()
+		move(-1)
+	end, map_opts)
+end
+
+vim.keymap.set("i", "<a-p>", function()
+	float_select(
+		{
+			title = "Prose Tag",
+			icon = "󰓹 ",
+			width = 36,
+			border_hl = "FloatProseBorder",
+			title_hl = "FloatProseTitle",
+		},
+		prose_tags,
+		function(tag, cursor)
+			local prefix = "prose-" .. tag .. ":"
+			vim.api.nvim_buf_set_text(0, cursor[1] - 1, cursor[2], cursor[1] - 1, cursor[2], { prefix })
+			vim.api.nvim_win_set_cursor(0, { cursor[1], cursor[2] + #prefix })
+			if vim.api.nvim_win_get_cursor(0)[2] >= #vim.api.nvim_get_current_line() then
+				vim.cmd("startinsert!")
+			else
+				vim.cmd("startinsert")
+			end
+
+			vim.schedule(function()
+				require("blink.cmp").show()
+			end)
+		end
+	)
 end)
 
 vim.keymap.set("n", "<a-e>", ":Widgy<CR>", { desc = "create widgy widget" })
