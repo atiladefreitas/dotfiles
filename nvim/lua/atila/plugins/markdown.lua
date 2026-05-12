@@ -253,7 +253,7 @@ return {
 				-- Surfaces
 				code_bg = "#0c0e18",
 				code_inline_bg = "#1a1b2e",
-				code_inline_fg = "#f7768e", -- pink
+				code_inline_fg = "#7dcfff", -- cyan
 				code_lang_fg = "#7dcfff",
 
 				-- Type
@@ -327,7 +327,7 @@ return {
 			--  Treesitter polish: italics, bold, strikethrough, emphasis
 			--  These make body prose feel like a magazine
 			-- ────────────────────────────────────────────────────────────────
-			vim.api.nvim_set_hl(0, "@markup.strong.markdown_inline", { fg = "#f7768e", bold = true })
+			vim.api.nvim_set_hl(0, "@markup.strong.markdown_inline", { fg = "#c0caf5", bold = true })
 			vim.api.nvim_set_hl(0, "@markup.italic.markdown_inline", { fg = "#bb9af7", italic = true })
 			vim.api.nvim_set_hl(0, "@markup.strikethrough.markdown_inline", { fg = p.muted, strikethrough = true })
 			vim.api.nvim_set_hl(0, "@markup.raw.markdown_inline", { fg = p.code_inline_fg, bg = p.code_inline_bg })
@@ -597,8 +597,8 @@ return {
 					ObsidianTodo = { bold = true, fg = "#e0af68" },
 					ObsidianDone = { bold = true, fg = "#9ece6a" },
 					ObsidianRightArrow = { bold = true, fg = "#7aa2f7" },
-					ObsidianTilde = { bold = true, fg = "#f7768e" },
-					ObsidianImportant = { bold = true, fg = "#f7768e" },
+					ObsidianTilde = { bold = true, fg = "#bb9af7" },
+					ObsidianImportant = { bold = true, fg = "#e0af68" },
 					ObsidianBullet = { bold = true, fg = "#7dcfff" },
 					ObsidianRefText = { underline = true, fg = "#bb9af7" },
 					ObsidianExtLinkIcon = { fg = "#bb9af7" },
