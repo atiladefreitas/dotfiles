@@ -34,8 +34,10 @@ border_style  = { fg = "#414868" }
 # : Tabs {{{
 
 [tabs]
-active   = { fg = "#292e42", bg = "#7aa2f7", bold = true }
-inactive = { fg = "#7aa2f7", bg = "#292e42" }
+active    = { fg = "#1a1b26", bg = "#bb9af7", bold = true }
+inactive  = { fg = "#c0caf5", bg = "#414868" }
+sep_inner = { open = "", close = "" }
+sep_outer = { open = "", close = "" }
 
 # : }}}
 
@@ -183,8 +185,8 @@ rules = [
 	{ mime = "application/vnd.*",      fg = "#9ece6a" },
 
 	# Fallback
-	{ name = "*", fg = "#c6d0f5" },
-	{ name = "*/", fg = "#7aa2f7" }
+	{ url = "*", fg = "#c6d0f5" },
+	{ url = "*/", fg = "#7aa2f7" }
 ]
 
 # : }}}
