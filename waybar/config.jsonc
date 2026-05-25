@@ -61,14 +61,14 @@
 
     "cpu": {
         "interval": 5,
-        "format": "<span size=\"large\"> </span> {usage}%",
+        "format": "<span size=\"large\"></span> {usage}%",
         "tooltip": false,
         "on-click": "kitty --class waybar-popup -e btop"
     },
 
     "memory": {
         "interval": 5,
-        "format": "<span size=\"large\"> </span> {percentage}%",
+        "format": "<span size=\"large\"></span> {percentage}%",
         "tooltip-format": "{used:0.1f}G / {total:0.1f}G",
         "on-click": "kitty --class waybar-popup -e btop"
     },
@@ -77,7 +77,7 @@
         "interval": 5,
         "critical-threshold": 85,
         "format": "<span size=\"large\">󰔏</span> {temperatureC}°C",
-        "format-critical": "<span size=\"large\"></span>  {temperatureC}°C",
+        "format-critical": "<span size=\"large\"></span> {temperatureC}°C",
         "on-click": "kitty --class waybar-popup -e btop"
     },
 
@@ -88,9 +88,9 @@
             "critical": 15
         },
         "format": "<span size=\"large\">{icon}</span>",
-        "format-charging": "<span size=\"large\"></span>  {capacity}%",
-        "format-plugged": "<span size=\"large\"></span>  {capacity}%",
-        "format-icons": [" ", " ", " ", " ", " "],
+        "format-charging": "<span size=\"large\"></span> {capacity}%",
+        "format-plugged": "<span size=\"large\"></span> {capacity}%",
+        "format-icons": ["", "", "", "", ""],
         "tooltip-format": "{timeTo}"
     },
 
@@ -106,7 +106,7 @@
         "exec": "pactl get-sink-volume @DEFAULT_SINK@ 2>/dev/null | awk '/Volume:/ {gsub(\"%\",\"\",$5); print $5; exit}'",
         "exec-if": "command -v pactl >/dev/null",
         "interval": 2,
-        "format": "<span size=\"large\">  </span>",
+        "format": "<span size=\"large\"></span>",
         "on-click": "kitty --class waybar-popup -e wiremix",
         "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
         "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
@@ -117,7 +117,7 @@
     "custom/bluetooth": {
         "exec": "bluetoothctl info 2>/dev/null | awk -F': ' '/Name:/ {n=$2} /Connected: yes/ {c=1} END{ if(c) print n; else print \"off\" }'",
         "interval": 10,
-        "format": "<span size=\"large\">󰂯 </span>",
+        "format": "<span size=\"large\">󰂯</span>",
         "on-click": "kitty --class waybar-popup -e bluetui",
         "tooltip": false
     }

@@ -1,17 +1,57 @@
 [[plugin.deps]]
 use = "ndtoan96/ouch"
-rev = "1ee69a5"
-hash = "63679f3daf8551ff8755be38b5ced0f"
-
-[[plugin.deps]]
-use = "michaelrommel/svg-preview"
-rev = "29549c2"
-hash = "dd6ec7253e3a09ea967ac3b047a64ea0"
+rev = "406ce6c"
+hash = "f5afc904d5106ee368c8aa2ded43bd74"
 
 [[plugin.deps]]
 use = "ahkohd/eza-preview"
-rev = "b114b01"
-hash = "7676d7da18953f4351048004ab45f0f4"
+rev = "dc9c103"
+hash = "949fc14ee6b6f8565ac7012d338b37c0"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:mount"
+rev = "be524fb"
+hash = "e3260d0b1feded8c8e3ae3afa1169e30"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:smart-enter"
+rev = "be524fb"
+hash = "187cc58ba7ac3befd49c342129e6f1b6"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:what-size"
+rev = "be524fb"
+hash = "99aa06d3014798d86001c324468d497f"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:full-border"
+rev = "be524fb"
+hash = "7b625412411be411153886894d9acaf"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:glow"
+rev = "be524fb"
+hash = "99aa06d3014798d86001c324468d497f"
+
+[[plugin.deps]]
+use = "dedukun/bookmarks"
+rev = "9ef1254"
+hash = "92fbb5483657fa7976cdf4e0104e18e0"
+
+[[plugin.deps]]
+use = "imsi32/yatline"
+rev = "c5d4b48"
+hash = "e6e98d12b1648d1894c2b560d85eeaa7"
+
+[[plugin.deps]]
+use = "pirafrank/what-size"
+rev = "179ebf6"
+hash = "57056b9728006881d580ccabe8154a9c"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:piper"
+rev = "be524fb"
+hash = "384464b6df8cb807425c521f8cd790f3"
 
 [[flavor.deps]]
 use = "dangooddd/kanagawa"
