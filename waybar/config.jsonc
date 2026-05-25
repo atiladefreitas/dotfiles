@@ -95,11 +95,11 @@
     },
 
     "custom/wifi": {
-        "exec": "nmcli -t -f ACTIVE,SSID dev wifi 2>/dev/null | awk -F: '$1==\"yes\"{print $2; f=1; exit} END{if(!f) print \"off\"}'",
-        "interval": 10,
-        "format": "<span size=\"large\">  </span>",
-        "on-click": "kitty --class waybar-popup -e impala",
-        "tooltip": false
+        "exec": "~/dotfiles/waybar/scripts/network.sh",
+        "return-type": "json",
+        "interval": 5,
+        "format": "<span size=\"large\">{}</span>",
+        "on-click": "kitty --class waybar-popup -e impala"
     },
 
     "custom/audio": {
