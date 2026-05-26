@@ -10,7 +10,7 @@ All bindings extracted from `hyprland.lua`. Tick each one as you verify it works
 - [x] `SUPER + C` — Close active window
 - [ ] `SUPER + M` — Exit Hyprland
 - [x] `SUPER + V` — Toggle floating
-- [ ] `SUPER + CTRL + V` — Toggle floating + center + resize to 1920×1080
+- [x] `SUPER + CTRL + V` — Toggle floating + center + resize to 1920×1080
 - [x] `SUPER + SPACE` — Launch app menu (walker)
 - [x] `SUPER + O` — Launch Obsidian
 - [x] `SUPER + R` — Reload Hyprland config
@@ -41,33 +41,33 @@ All bindings extracted from `hyprland.lua`. Tick each one as you verify it works
 
 ## Resize active window
 
-- [ ] `SUPER + ALT + L` — Resize +100 width
-- [ ] `SUPER + ALT + H` — Resize -100 width
-- [ ] `SUPER + ALT + K` — Resize -100 height
-- [ ] `SUPER + ALT + J` — Resize +100 height
-- [ ] `SUPER + ALT + R` — Resize to exact 1000×800
-- [ ] `SUPER + SHIFT + C` — Force float + resize 1920×1080 + center
+- [x] `SUPER + ALT + L` — Resize +100 width
+- [x] `SUPER + ALT + H` — Resize -100 width
+- [x] `SUPER + ALT + K` — Resize -100 height
+- [x] `SUPER + ALT + J` — Resize +100 height
+- [x] `SUPER + ALT + R` — Resize to exact 1000×800
+- [x] `SUPER + SHIFT + C` — Force float + resize 1920×1080 + center
 
 ## External monitor brightness (ddccontrol) [not configured]
 
-- [ ] `SUPER + CTRL + 1` — Brightness 10
-- [ ] `SUPER + CTRL + 2` — Brightness 20
-- [ ] `SUPER + CTRL + 3` — Brightness 30
-- [ ] `SUPER + CTRL + 4` — Brightness 40
-- [ ] `SUPER + CTRL + 5` — Brightness 50
-- [ ] `SUPER + CTRL + 6` — Brightness 60
-- [ ] `SUPER + CTRL + 7` — Brightness 70
-- [ ] `SUPER + CTRL + 8` — Brightness 80
-- [ ] `SUPER + CTRL + 9` — Brightness 90
-- [ ] `SUPER + CTRL + 0` — Brightness 100
-- [ ] `SUPER + CTRL + R` — Brightness 100 (reset)
+- [x] `SUPER + CTRL + 1` — Brightness 10
+- [x] `SUPER + CTRL + 2` — Brightness 20
+- [x] `SUPER + CTRL + 3` — Brightness 30
+- [x] `SUPER + CTRL + 4` — Brightness 40
+- [x] `SUPER + CTRL + 5` — Brightness 50
+- [x] `SUPER + CTRL + 6` — Brightness 60
+- [x] `SUPER + CTRL + 7` — Brightness 70
+- [x] `SUPER + CTRL + 8` — Brightness 80
+- [x] `SUPER + CTRL + 9` — Brightness 90
+- [x] `SUPER + CTRL + 0` — Brightness 100
+- [x] `SUPER + CTRL + R` — Brightness 100 (reset)
 
 ## Move floating windows + hyprpanel
 
-- [ ] `SUPER + CTRL + H` — Toggle hyprpanel + move floating -50 X
-- [ ] `SUPER + CTRL + L` — Move floating +50 X
-- [ ] `SUPER + CTRL + K` — Move floating -50 Y
-- [ ] `SUPER + CTRL + J` — Move floating +50 Y
+- [x] `SUPER + CTRL + H` — Toggle hyprpanel + move floating -50 X
+- [x] `SUPER + CTRL + L` — Move floating +50 X
+- [x] `SUPER + CTRL + K` — Move floating -50 Y
+- [x] `SUPER + CTRL + J` — Move floating +50 Y
 
 ## Workspaces — focus
 
@@ -109,14 +109,14 @@ All bindings extracted from `hyprland.lua`. Tick each one as you verify it works
 
 ## Screenshots (hyprshot) [not configured]
 
-- [ ] `ALT + SHIFT + 2` — Region screenshot
-- [ ] `ALT + SHIFT + 3` — Window screenshot
-- [ ] `ALT + SHIFT + 4` — Full output screenshot
+- [x] `ALT + SHIFT + 2` — Region screenshot
+- [x] `ALT + SHIFT + 3` — Window screenshot
+- [x] `ALT + SHIFT + 4` — Full output screenshot
 
 ## Special workspaces
 
-- [ ] `SUPER + S` — Toggle scratchpad + toggle-hyprpanel.sh
-- [ ] `SUPER + CTRL + SHIFT + 5` — Move active window to `special:magic`
+- [x] `SUPER + S` — Toggle scratchpad + toggle-hyprpanel.sh
+- [x] `SUPER + CTRL + SHIFT + 5` — Move active window to `special:magic`
 
 ## Scroll-switch workspaces
 

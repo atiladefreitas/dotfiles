@@ -50,7 +50,7 @@ local yaziToggleScript =
 hl.on("hyprland.start", function()
   hl.exec_cmd("env GDK_BACKEND=wayland GTK_USE_PORTAL=1 waybar &")
   hl.exec_cmd("uwsm-app -- hypridle")
-  hl.exec_cmd("uwsm-app -- mako")
+  hl.exec_cmd("uwsm-app -- dunst")
   hl.exec_cmd("uwsm-app -- fcitx5")
   -- hl.exec_cmd("uwsm-app -- swaybg -i ~/.config/omarchy/current/background -m fill")
   hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
@@ -229,14 +229,14 @@ hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.move({ direction = "up" }))
 hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.move({ direction = "down" }))
 
 -- Resize active window (relative via hyprctl; Lua resize() rejects 0/negative as invalid size)
-hl.bind(mainMod .. " + ALT + L", hl.dsp.exec_cmd("hyprctl dispatch resizeactive 100 0"))
-hl.bind(mainMod .. " + ALT + H", hl.dsp.exec_cmd("hyprctl dispatch resizeactive -100 0"))
-hl.bind(mainMod .. " + ALT + K", hl.dsp.exec_cmd("hyprctl dispatch resizeactive 0 -100"))
-hl.bind(mainMod .. " + ALT + J", hl.dsp.exec_cmd("hyprctl dispatch resizeactive 0 100"))
+hl.bind(mainMod .. " + ALT + L", hl.dsp.window.resize({ x = 100, y = 0, relative = true }))
+hl.bind(mainMod .. " + ALT + H", hl.dsp.window.resize({ x = -100, y = 0, relative = true }))
+hl.bind(mainMod .. " + ALT + K", hl.dsp.window.resize({ x = 0, y = -100, relative = true }))
+hl.bind(mainMod .. " + ALT + J", hl.dsp.window.resize({ x = 0, y = 100, relative = true }))
 hl.bind(mainMod .. " + ALT + R", hl.dsp.window.resize({ x = 1000, y = 800, exact = true }))
+
 hl.bind(mainMod .. " + SHIFT + C", function()
-  hl.dispatch(hl.dsp.window.float({ action = "toggle" }))
-  hl.dispatch(hl.dsp.window.resize({ x = 1920, y = 1080, exact = true }))
+  hl.dispatch(hl.dsp.window.resize({ x = 1920, y = 1080 }))
   hl.dispatch(hl.dsp.window.center())
 end)
 
@@ -256,14 +256,11 @@ hl.bind(mainMod .. " + CTRL + R", hl.dsp.exec_cmd(brightness0))
 -- Yazi popup (toggle)
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(yaziToggleScript))
 
--- Move floating windows + (on H) also toggle hyprpanel
-hl.bind(mainMod .. " + CTRL + H", function()
-  hl.exec_cmd("bash -c 'if pgrep -x hyprpanel; then pkill hyprpanel; else hyprpanel & fi'")
-  hl.window.move({ x = -50, y = 0 })
-end)
-hl.bind(mainMod .. " + CTRL + L", hl.dsp.window.move({ x = 50, y = 0 }))
-hl.bind(mainMod .. " + CTRL + K", hl.dsp.window.move({ x = 0, y = -50 }))
-hl.bind(mainMod .. " + CTRL + J", hl.dsp.window.move({ x = 0, y = 50 }))
+-- Move floating windows
+hl.bind(mainMod .. " + CTRL + H", hl.dsp.window.move({ x = -50, y = 0, relative = true }))
+hl.bind(mainMod .. " + CTRL + L", hl.dsp.window.move({ x = 50, y = 0, relative = true }))
+hl.bind(mainMod .. " + CTRL + K", hl.dsp.window.move({ x = 0, y = -50, relative = true }))
+hl.bind(mainMod .. " + CTRL + J", hl.dsp.window.move({ x = 0, y = 50, relative = true }))
 
 -- Workspaces (focus + move)
 for i = 1, 10 do
@@ -285,7 +282,7 @@ hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("brightnessctl s 10%+"), { locked
 hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl s 10%-"), { locked = true, repeating = true })
 
 -- Screenshots
-hl.bind("ALT + SHIFT + 2", hl.dsp.exec_cmd("hyprshot -m region --raw | satty --filename -"))
+hl.bind("ALT + SHIFT + 2", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot-notify.sh"))
 
 hl.window_rule({
   match = { class = "com.gabm.satty" },
@@ -298,7 +295,7 @@ hl.bind("ALT + SHIFT + 4", hl.dsp.exec_cmd("hyprshot -m output"))
 
 -- Special workspace (scratchpad) + toggle hyprpanel script
 hl.bind("SUPER + S", function()
-  hl.workspace.toggle_special("scratchpad")
+  hl.dispatch(hl.dsp.workspace.toggle_special("scratchpad"))
   hl.exec_cmd("~/.config/hypr/scripts/toggle-hyprpanel.sh")
 end)
 hl.bind(mainMod .. " + CTRL + SHIFT + 5", hl.dsp.window.move({ workspace = "special:magic" }))
