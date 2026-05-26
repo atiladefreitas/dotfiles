@@ -32,7 +32,7 @@ tooltip label {
 }
 
 #workspaces button {
-  padding: 0 8px;
+  padding: 0 4px;
   margin: 0 2px;
   color: #555555;
   background: transparent;
@@ -65,11 +65,51 @@ tooltip label {
 #temperature,
 #battery,
 #custom-wifi,
-#custom-bluetooth {
-  padding: 0 12px;
+#custom-audio,
+#custom-bluetooth,
+#tray,
+#power-profiles-daemon,
+#custom-notification,
+#custom-power {
+  padding: 0 8px;
   color: #ffffff;
   background: transparent;
 }
+
+/* ---------- right-side equal spacing ---------- */
+#custom-wifi,
+#custom-audio,
+#custom-bluetooth,
+#battery,
+#power-profiles-daemon,
+#custom-notification,
+#custom-power {
+  padding: 0 6px;
+  margin: 0;
+  min-width: 24px;
+}
+
+#tray {
+  padding: 0 6px;
+  margin: 0;
+}
+
+#custom-tray-toggle {
+  padding: 0 6px;
+  color: #888888;
+  transition: color 150ms ease;
+}
+
+#custom-tray-toggle:hover {
+  color: #ffffff;
+}
+
+.tray-drawer-child {
+  transition: all 200ms ease;
+}
+
+#tray > .passive { -gtk-icon-effect: dim; }
+#tray > .needs-attention { -gtk-icon-effect: highlight; }
 
 /* ---------- center separators ---------- */
 #clock {
@@ -88,7 +128,7 @@ tooltip label {
 #cpu,
 #memory,
 #temperature {
-  color: #cccccc;
+  color: #fff;
 }
 
 #temperature.critical {
@@ -113,13 +153,38 @@ tooltip label {
 }
 
 #custom-wifi,
-#custom-bluetooth {
+#custom-audio,
+#custom-bluetooth,
+#power-profiles-daemon,
+#custom-notification,
+#custom-power {
   color: #cccccc;
 }
 
 #custom-wifi:hover,
-#custom-bluetooth:hover {
+#custom-audio:hover,
+#custom-bluetooth:hover,
+#power-profiles-daemon:hover,
+#custom-notification:hover,
+#custom-power:hover {
   color: #ffffff;
+}
+
+#custom-notification.dnd {
+  color: #666666;
+}
+
+#custom-notification.waiting {
+  color: #ffffff;
+}
+
+#custom-power {
+  color: #ff6b6b;
+}
+
+#custom-power:hover {
+  color: #ffffff;
+  background-color: #ff3b3b;
 }
 
 @keyframes blink {

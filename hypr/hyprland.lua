@@ -51,8 +51,8 @@ hl.on("hyprland.start", function()
   hl.exec_cmd("env GDK_BACKEND=wayland GTK_USE_PORTAL=1 waybar &")
   hl.exec_cmd("uwsm-app -- hypridle")
   hl.exec_cmd("uwsm-app -- dunst")
-  hl.exec_cmd("uwsm-app -- fcitx5")
-  -- hl.exec_cmd("uwsm-app -- swaybg -i ~/.config/omarchy/current/background -m fill")
+  -- hl.exec_cmd("uwsm-app -- fcitx5")
+  hl.exec_cmd("uwsm-app -- swaybg -i ~/dotfiles/wallpapers/current -m fill")
   hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
   -- hl.exec_cmd("omarchy-cmd-first-run")
   hl.exec_cmd("uwsm-app -- elephant")
@@ -363,4 +363,15 @@ hl.window_rule({
   float = true,
   pin   = true,
   move  = "69.5% 4%",
+})
+
+-- Waybar TUI popups (impala/wiremix/bluetui): bottom-right floating panel
+-- Window: 640x440. Right gap 12px, bottom gap 44px (28 waybar + 16 padding)
+-- monitor_w/monitor_h are Hyprland tokens for the monitor's pixel size
+hl.window_rule({
+  name  = "waybar-popup",
+  match = { class = "^(waybar-popup)$" },
+  float = true,
+  size  = "640 440",
+  move  = "monitor_w-652 monitor_h-484",
 })

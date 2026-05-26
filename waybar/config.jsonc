@@ -15,11 +15,33 @@
         "temperature"
     ],
     "modules-right": [
-        "battery",
+        "group/tray-drawer",
+        "power-profiles-daemon",
+        "custom/notification",
         "custom/wifi",
         "custom/audio",
-        "custom/bluetooth"
+        "custom/bluetooth",
+        "battery",
+        "custom/power"
     ],
+
+    "group/tray-drawer": {
+        "orientation": "horizontal",
+        "drawer": {
+            "transition-duration": 250,
+            "transition-left-to-right": true,
+            "children-class": "tray-drawer-child"
+        },
+        "modules": [
+            "custom/tray-toggle",
+            "tray"
+        ]
+    },
+
+    "custom/tray-toggle": {
+        "format": "<span size=\"large\">󱊖</span>",
+        "tooltip": false
+    },
 
     "hyprland/workspaces": {
         "format": "{name}",
@@ -50,7 +72,7 @@
     "custom/media": {
         "format": "{}",
         "return-type": "json",
-        "max-length": 50,
+        "max-length": 30,
         "interval": 2,
         "exec": "playerctl -a metadata --format '{\"text\": \"{{artist}} - {{title}}\", \"alt\": \"{{status}}\", \"tooltip\": \"{{title}} ({{artist}})\", \"class\": \"{{status}}\"}' 2>/dev/null | head -n 1",
         "exec-if": "pgrep playerctld || playerctl status 2>/dev/null",
@@ -61,14 +83,14 @@
 
     "cpu": {
         "interval": 5,
-        "format": "<span size=\"large\"></span> {usage}%",
+        "format": "<span size=\"large\"> </span> {usage}%",
         "tooltip": false,
         "on-click": "kitty --class waybar-popup -e btop"
     },
 
     "memory": {
         "interval": 5,
-        "format": "<span size=\"large\"></span> {percentage}%",
+        "format": "<span size=\"large\"> </span> {percentage}%",
         "tooltip-format": "{used:0.1f}G / {total:0.1f}G",
         "on-click": "kitty --class waybar-popup -e btop"
     },
@@ -87,7 +109,7 @@
             "warning": 30,
             "critical": 15
         },
-        "format": "<span size=\"large\">{icon}</span>",
+        "format": "<span size=\"large\">{icon} </span>",
         "format-charging": "<span size=\"large\"></span> {capacity}%",
         "format-plugged": "<span size=\"large\"></span> {capacity}%",
         "format-icons": ["", "", "", "", ""],
@@ -106,7 +128,7 @@
         "exec": "pactl get-sink-volume @DEFAULT_SINK@ 2>/dev/null | awk '/Volume:/ {gsub(\"%\",\"\",$5); print $5; exit}'",
         "exec-if": "command -v pactl >/dev/null",
         "interval": 2,
-        "format": "<span size=\"large\"></span>",
+        "format": "<span size=\"large\"> </span>",
         "on-click": "kitty --class waybar-popup -e wiremix",
         "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
         "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
@@ -120,5 +142,37 @@
         "format": "<span size=\"large\">󰂯</span>",
         "on-click": "kitty --class waybar-popup -e bluetui",
         "tooltip": false
+    },
+
+    "tray": {
+        "icon-size": 14,
+        "spacing": 6,
+        "show-passive-items": true
+    },
+
+    "power-profiles-daemon": {
+        "format": "<span size=\"large\">{icon}</span>",
+        "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
+        "format-icons": {
+            "default": "󰾅",
+            "performance": "󰓅",
+            "balanced": "󰾅",
+            "power-saver": "󰌪"
+        }
+    },
+
+    "custom/notification": {
+        "exec": "~/dotfiles/waybar/scripts/notifications.sh",
+        "return-type": "json",
+        "interval": 3,
+        "format": "<span size=\"large\">{}</span>",
+        "on-click": "dunstctl set-paused toggle",
+        "on-click-right": "dunstctl history-pop"
+    },
+
+    "custom/power": {
+        "format": "<span size=\"large\">⏻</span>",
+        "tooltip": false,
+        "on-click": "~/dotfiles/waybar/scripts/power-menu.sh"
     }
 }
