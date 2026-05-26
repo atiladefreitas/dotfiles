@@ -146,9 +146,9 @@ hl.animation({ leaf = "windows", enabled = true, speed = 2, bezier = "smooth", s
 hl.animation({ leaf = "windowsIn", enabled = true, speed = 2, bezier = "smooth", style = "slide" })
 hl.animation({ leaf = "windowsOut", enabled = true, speed = 1, bezier = "smooth", style = "slide" })
 hl.animation({ leaf = "windowsMove", enabled = true, speed = 2, bezier = "smooth" })
-hl.animation({ leaf = "fade", enabled = true, speed = 2, bezier = "smooth" })
+hl.animation({ leaf = "fade", enabled = true, speed = 4, bezier = "smooth" })
 hl.animation({ leaf = "border", enabled = true, speed = 1, bezier = "smooth" })
-hl.animation({ leaf = "workspaces", enabled = true, speed = 1, bezier = "smooth", style = "fade" })
+hl.animation({ leaf = "workspaces", enabled = false, speed = 1, bezier = "smooth", style = "fade" })
 hl.animation({ leaf = "specialWorkspace", enabled = true, speed = 4, bezier = "easeOutQuint", style = "slidevert" })
 
 
@@ -370,8 +370,8 @@ hl.window_rule({
 -- monitor_w/monitor_h are Hyprland tokens for the monitor's pixel size
 hl.window_rule({
   name  = "waybar-popup",
-  match = { class = "^(waybar-popup)$" },
+  match = { class = "^(waybar-popup(-.*)?)$" },
   float = true,
-  size  = "640 440",
-  move  = "monitor_w-652 monitor_h-484",
+  size  = "640 940",
+  move  = "monitor_w-652 monitor_h-984",
 })
