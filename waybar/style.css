@@ -86,6 +86,7 @@ tooltip.clock label {
 #temperature,
 #battery,
 #custom-wifi,
+#custom-protonvpn,
 #custom-audio,
 #custom-bluetooth,
 #tray,
@@ -99,6 +100,7 @@ tooltip.clock label {
 
 /* ---------- right-side equal spacing ---------- */
 #custom-wifi,
+#custom-protonvpn,
 #custom-audio,
 #custom-bluetooth,
 #battery,
@@ -188,6 +190,18 @@ tooltip.clock label {
 #power-profiles-daemon:hover,
 #custom-notification:hover,
 #custom-power:hover {
+  color: #ffffff;
+}
+
+#custom-protonvpn.connected {
+  color: #6ee7b7;
+}
+
+#custom-protonvpn.disconnected {
+  color: #6b7280;
+}
+
+#custom-protonvpn:hover {
   color: #ffffff;
 }
 

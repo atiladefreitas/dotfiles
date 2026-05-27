@@ -74,6 +74,10 @@ npm install -g @biomejs/biome
 npm install -g prettier
 ```
 
+```bash
+npm install -g @vtsls/language-server @tailwindcss/language-server vscode-langservers-extracted @biomejs/biome prettier
+```
+
 ## Formatters & Build Tools
 
 ### Python Formatters

@@ -1,186 +1,186 @@
 {
-    "layer": "bottom",
-    "position": "bottom",
-    "height": 28,
-    "spacing": 0,
+  "layer": "bottom",
+  "position": "bottom",
+  "height": 28,
+  "spacing": 0,
 
-    "modules-left": [
-        "hyprland/workspaces"
-    ],
-    "modules-center": [
-        "clock",
-        "custom/media",
-        "cpu",
-        "memory",
-        "temperature"
-    ],
-    "modules-right": [
-        "group/tray-drawer",
-        "power-profiles-daemon",
-        "custom/notification",
-        "custom/wifi",
-        "custom/audio",
-        "custom/bluetooth",
-        "battery",
-        "custom/power"
-    ],
+  "modules-left": ["hyprland/workspaces"],
+  "modules-center": ["clock", "custom/media", "cpu", "memory", "temperature"],
+  "modules-right": [
+    "group/tray-drawer",
+    "power-profiles-daemon",
+    "custom/notification",
+    "custom/protonvpn",
+    "custom/wifi",
+    "custom/audio",
+    "custom/bluetooth",
+    "battery",
+    "custom/power",
+  ],
 
-    "group/tray-drawer": {
-        "orientation": "horizontal",
-        "drawer": {
-            "transition-duration": 250,
-            "transition-left-to-right": true,
-            "children-class": "tray-drawer-child"
-        },
-        "modules": [
-            "custom/tray-toggle",
-            "tray"
-        ]
+  "group/tray-drawer": {
+    "orientation": "horizontal",
+    "drawer": {
+      "transition-duration": 250,
+      "transition-left-to-right": true,
+      "children-class": "tray-drawer-child",
     },
+    "modules": ["custom/tray-toggle", "tray"],
+  },
 
-    "custom/tray-toggle": {
-        "format": "<span size=\"large\">󱊖</span>",
-        "tooltip": false
+  "custom/tray-toggle": {
+    "format": "<span size=\"large\">󱊖</span>",
+    "tooltip": false,
+  },
+
+  "hyprland/workspaces": {
+    "format": "{name}",
+    "on-click": "activate",
+    "all-outputs": true,
+    "sort-by-number": true,
+  },
+
+  "clock": {
+    "interval": 30,
+    "format": "<span size=\"large\">󰥔</span>  {:%a %d %b  %H:%M}",
+    "format-alt": "<span size=\"large\">󰥔</span>  {:%A, %B %d, %Y  ·  %H:%M:%S}",
+    "tooltip-format": "<span size='large' weight='bold'>{:%A, %B %d, %Y}</span>\n\n<tt>{calendar}</tt>",
+    "calendar": {
+      "mode": "month",
+      "mode-mon-col": 1,
+      "weeks-pos": "right",
+      "on-scroll": 1,
+      "on-click-right": "mode",
+      "format": {
+        "months": "<span color='#ffffff' weight='bold'>{}</span>",
+        "days": "<span color='#dddddd'>{}</span>",
+        "weeks": "<span color='#555555' size='small'>w{}</span>",
+        "weekdays": "<span color='#888888' weight='bold'>{}</span>",
+        "today": "<span color='#000000' background='#ffffff' weight='bold'>{}</span>",
+      },
     },
-
-    "hyprland/workspaces": {
-        "format": "{name}",
-        "on-click": "activate",
-        "all-outputs": true,
-        "sort-by-number": true
+    "actions": {
+      "on-click": "mode",
+      "on-click-middle": "shift_reset",
+      "on-scroll-up": "shift_up",
+      "on-scroll-down": "shift_down",
     },
+  },
 
-    "clock": {
-        "interval": 30,
-        "format": "<span size=\"large\">󰥔</span>  {:%a %d %b  %H:%M}",
-        "format-alt": "<span size=\"large\">󰥔</span>  {:%A, %B %d, %Y  ·  %H:%M:%S}",
-        "tooltip-format": "<span size='large' weight='bold'>{:%A, %B %d, %Y}</span>\n\n<tt>{calendar}</tt>",
-        "calendar": {
-            "mode": "month",
-            "mode-mon-col": 1,
-            "weeks-pos": "right",
-            "on-scroll": 1,
-            "on-click-right": "mode",
-            "format": {
-                "months":   "<span color='#ffffff' weight='bold'>{}</span>",
-                "days":     "<span color='#dddddd'>{}</span>",
-                "weeks":    "<span color='#555555' size='small'>w{}</span>",
-                "weekdays": "<span color='#888888' weight='bold'>{}</span>",
-                "today":    "<span color='#000000' background='#ffffff' weight='bold'>{}</span>"
-            }
-        },
-        "actions": {
-            "on-click":         "mode",
-            "on-click-middle":  "shift_reset",
-            "on-scroll-up":     "shift_up",
-            "on-scroll-down":   "shift_down"
-        }
+  "custom/media": {
+    "format": "{}",
+    "return-type": "json",
+    "max-length": 30,
+    "interval": 2,
+    "exec": "playerctl -a metadata --format '{\"text\": \"{{artist}} - {{title}}\", \"alt\": \"{{status}}\", \"tooltip\": \"{{title}} ({{artist}})\", \"class\": \"{{status}}\"}' 2>/dev/null | head -n 1",
+    "exec-if": "pgrep playerctld || playerctl status 2>/dev/null",
+    "on-click": "playerctl play-pause",
+    "on-scroll-up": "playerctl next",
+    "on-scroll-down": "playerctl previous",
+  },
+
+  "cpu": {
+    "interval": 5,
+    "format": "<span size=\"large\"> </span> {usage}%",
+    "tooltip": false,
+    "on-click": "~/dotfiles/waybar/scripts/popup-toggle.sh btop btop",
+  },
+
+  "memory": {
+    "interval": 5,
+    "format": "<span size=\"large\"> </span> {percentage}%",
+    "tooltip-format": "{used:0.1f}G / {total:0.1f}G",
+    "on-click": "~/dotfiles/waybar/scripts/popup-toggle.sh btop btop",
+  },
+
+  "temperature": {
+    "interval": 5,
+    "critical-threshold": 85,
+    "format": "<span size=\"large\">󰔏</span> {temperatureC}°C",
+    "format-critical": "<span size=\"large\"></span> {temperatureC}°C",
+    "on-click": "~/dotfiles/waybar/scripts/popup-toggle.sh btop btop",
+  },
+
+  "battery": {
+    "interval": 30,
+    "states": {
+      "warning": 30,
+      "critical": 15,
     },
+    "format": "<span size=\"large\">{icon} </span>",
+    "format-charging": "<span size=\"large\"></span> {capacity}%",
+    "format-plugged": "<span size=\"large\"></span> {capacity}%",
+    "format-icons": ["", "", "", "", ""],
+    "tooltip-format": "{timeTo}",
+  },
 
-    "custom/media": {
-        "format": "{}",
-        "return-type": "json",
-        "max-length": 30,
-        "interval": 2,
-        "exec": "playerctl -a metadata --format '{\"text\": \"{{artist}} - {{title}}\", \"alt\": \"{{status}}\", \"tooltip\": \"{{title}} ({{artist}})\", \"class\": \"{{status}}\"}' 2>/dev/null | head -n 1",
-        "exec-if": "pgrep playerctld || playerctl status 2>/dev/null",
-        "on-click": "playerctl play-pause",
-        "on-scroll-up": "playerctl next",
-        "on-scroll-down": "playerctl previous"
+  "custom/wifi": {
+    "exec": "~/dotfiles/waybar/scripts/network.sh",
+    "return-type": "json",
+    "interval": 5,
+    "format": "<span size=\"large\">{}</span>",
+    "on-click": "~/dotfiles/waybar/scripts/popup-toggle.sh wifi impala",
+  },
+
+  "custom/protonvpn": {
+    "exec": "~/dotfiles/waybar/scripts/protonvpn-status.sh",
+    "return-type": "json",
+    "interval": 5,
+    "signal": 8,
+    "format": "<span size=\"large\"></span> {}",
+    "on-click": "~/dotfiles/waybar/scripts/protonvpn-toggle.sh",
+    "tooltip": true,
+  },
+
+  "custom/audio": {
+    "exec": "pactl get-sink-volume @DEFAULT_SINK@ 2>/dev/null | awk '/Volume:/ {gsub(\"%\",\"\",$5); print $5; exit}'",
+    "exec-if": "command -v pactl >/dev/null",
+    "interval": 2,
+    "format": "<span size=\"large\"> </span>",
+    "on-click": "~/dotfiles/waybar/scripts/popup-toggle.sh audio wiremix",
+    "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+    "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
+    "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -5%",
+    "tooltip": false,
+  },
+
+  "custom/bluetooth": {
+    "exec": "bluetoothctl info 2>/dev/null | awk -F': ' '/Name:/ {n=$2} /Connected: yes/ {c=1} END{ if(c) print n; else print \"off\" }'",
+    "interval": 10,
+    "format": "<span size=\"large\">󰂯</span>",
+    "on-click": "~/dotfiles/waybar/scripts/popup-toggle.sh bluetooth bluetui",
+    "tooltip": false,
+  },
+
+  "tray": {
+    "icon-size": 14,
+    "spacing": 6,
+    "show-passive-items": true,
+  },
+
+  "power-profiles-daemon": {
+    "format": "<span size=\"large\">{icon}</span>",
+    "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
+    "format-icons": {
+      "default": "󰾅",
+      "performance": "󰓅",
+      "balanced": "󰾅",
+      "power-saver": "󰌪",
     },
+  },
 
-    "cpu": {
-        "interval": 5,
-        "format": "<span size=\"large\"> </span> {usage}%",
-        "tooltip": false,
-        "on-click": "~/dotfiles/waybar/scripts/popup-toggle.sh btop btop"
-    },
+  "custom/notification": {
+    "exec": "~/dotfiles/waybar/scripts/notifications.sh",
+    "return-type": "json",
+    "interval": 3,
+    "format": "<span size=\"large\">{}</span>",
+    "on-click": "dunstctl set-paused toggle",
+    "on-click-right": "dunstctl history-pop",
+  },
 
-    "memory": {
-        "interval": 5,
-        "format": "<span size=\"large\"> </span> {percentage}%",
-        "tooltip-format": "{used:0.1f}G / {total:0.1f}G",
-        "on-click": "~/dotfiles/waybar/scripts/popup-toggle.sh btop btop"
-    },
-
-    "temperature": {
-        "interval": 5,
-        "critical-threshold": 85,
-        "format": "<span size=\"large\">󰔏</span> {temperatureC}°C",
-        "format-critical": "<span size=\"large\"></span> {temperatureC}°C",
-        "on-click": "~/dotfiles/waybar/scripts/popup-toggle.sh btop btop"
-    },
-
-    "battery": {
-        "interval": 30,
-        "states": {
-            "warning": 30,
-            "critical": 15
-        },
-        "format": "<span size=\"large\">{icon} </span>",
-        "format-charging": "<span size=\"large\"></span> {capacity}%",
-        "format-plugged": "<span size=\"large\"></span> {capacity}%",
-        "format-icons": ["", "", "", "", ""],
-        "tooltip-format": "{timeTo}"
-    },
-
-    "custom/wifi": {
-        "exec": "~/dotfiles/waybar/scripts/network.sh",
-        "return-type": "json",
-        "interval": 5,
-        "format": "<span size=\"large\">{}</span>",
-        "on-click": "~/dotfiles/waybar/scripts/popup-toggle.sh wifi impala"
-    },
-
-    "custom/audio": {
-        "exec": "pactl get-sink-volume @DEFAULT_SINK@ 2>/dev/null | awk '/Volume:/ {gsub(\"%\",\"\",$5); print $5; exit}'",
-        "exec-if": "command -v pactl >/dev/null",
-        "interval": 2,
-        "format": "<span size=\"large\"> </span>",
-        "on-click": "~/dotfiles/waybar/scripts/popup-toggle.sh audio wiremix",
-        "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
-        "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
-        "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -5%",
-        "tooltip": false
-    },
-
-    "custom/bluetooth": {
-        "exec": "bluetoothctl info 2>/dev/null | awk -F': ' '/Name:/ {n=$2} /Connected: yes/ {c=1} END{ if(c) print n; else print \"off\" }'",
-        "interval": 10,
-        "format": "<span size=\"large\">󰂯</span>",
-        "on-click": "~/dotfiles/waybar/scripts/popup-toggle.sh bluetooth bluetui",
-        "tooltip": false
-    },
-
-    "tray": {
-        "icon-size": 14,
-        "spacing": 6,
-        "show-passive-items": true
-    },
-
-    "power-profiles-daemon": {
-        "format": "<span size=\"large\">{icon}</span>",
-        "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
-        "format-icons": {
-            "default": "󰾅",
-            "performance": "󰓅",
-            "balanced": "󰾅",
-            "power-saver": "󰌪"
-        }
-    },
-
-    "custom/notification": {
-        "exec": "~/dotfiles/waybar/scripts/notifications.sh",
-        "return-type": "json",
-        "interval": 3,
-        "format": "<span size=\"large\">{}</span>",
-        "on-click": "dunstctl set-paused toggle",
-        "on-click-right": "dunstctl history-pop"
-    },
-
-    "custom/power": {
-        "format": "<span size=\"large\">⏻</span>",
-        "tooltip": false,
-        "on-click": "~/dotfiles/waybar/scripts/power-menu.sh"
-    }
+  "custom/power": {
+    "format": "<span size=\"large\">⏻</span>",
+    "tooltip": false,
+    "on-click": "~/dotfiles/waybar/scripts/power-menu.sh",
+  },
 }
