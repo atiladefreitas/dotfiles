@@ -196,6 +196,7 @@ hl.bind(mainMod .. " + CTRL + V", function()
 	hl.dispatch(hl.dsp.window.center())
 end)
 hl.bind(mainMod .. " + space", hl.dsp.exec_cmd(menu))
+hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("~/dotfiles/waybar/scripts/protonvpn-toggle.sh"))
 
 -- System pane (floating tmux: cliamp + yazi + btop)
 hl.bind(mainMod .. " + P", hl.dsp.exec_cmd(systempaneScript))
