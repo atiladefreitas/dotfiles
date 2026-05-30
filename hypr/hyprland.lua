@@ -188,7 +188,7 @@ hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd(terminal))
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser .. " & ./open.sh"))
 hl.bind(mainMod .. " + C", hl.dsp.window.close())
-hl.bind(mainMod .. " + M", hl.dsp.exit())
+-- hl.bind(mainMod .. " + M", hl.dsp.exit())
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + CTRL + V", function()
 	hl.dispatch(hl.dsp.window.float({ action = "toggle" }))
@@ -289,8 +289,8 @@ hl.window_rule({
 	center = true,
 })
 
-hl.bind("ALT + SHIFT + 3", hl.dsp.exec_cmd("hyprshot -m window"))
-hl.bind("ALT + SHIFT + 4", hl.dsp.exec_cmd("hyprshot -m output"))
+hl.bind("ALT + SHIFT + 3", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot-notify.sh window"))
+hl.bind("ALT + SHIFT + 4", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot-notify.sh output"))
 
 -- Special workspace (scratchpad) + toggle hyprpanel script
 hl.bind("SUPER + S", function()
