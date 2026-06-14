@@ -41,6 +41,10 @@ local systempaneScript =
 local yaziToggleScript =
 	[[bash -c 'PID=$(hyprctl clients -j | jq -r ".[] | select(.title == \"Yazi\") | .pid"); if [ -n "$PID" ]; then kill "$PID"; else kitty -T Yazi -e tmux new-session -A -s yazi "yazi"; fi']]
 
+-- tical calculator popup, toggled via SUPER+A
+local ticalToggleScript =
+	[[bash -c 'PID=$(hyprctl clients -j | jq -r ".[] | select(.class == \"tical-popup\") | .pid"); if [ -n "$PID" ]; then kill "$PID"; else kitty --class tical-popup -e tical; fi']]
+
 -------------------
 ---- AUTOSTART ----
 -------------------
@@ -201,6 +205,9 @@ hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("~/dotfiles/waybar/scripts/protonvpn-
 -- System pane (floating tmux: cliamp + yazi + btop)
 hl.bind(mainMod .. " + P", hl.dsp.exec_cmd(systempaneScript))
 
+-- Calculator popup (tical TUI in a small floating kitty), toggled
+hl.bind(mainMod .. " + A", hl.dsp.exec_cmd(ticalToggleScript))
+
 hl.bind(mainMod .. " + O", hl.dsp.exec_cmd(obsidian))
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd("hyprctl reload"))
 -- hl.bind("SUPER + ALT + space", hl.dsp.exec_cmd("omarchy-menu"), { description = "Omarchy menu" })
@@ -356,6 +363,14 @@ hl.window_rule({
 })
 
 hl.window_rule({
+	name = "tical-popup",
+	match = { class = "^(tical-popup)$" },
+	float = true,
+	size = "390 650",
+	center = true,
+})
+
+hl.window_rule({
 	name = "pip",
 	match = { title = "^(Picture-in-Picture)$" },
 	float = true,
@@ -370,8 +385,8 @@ hl.window_rule({
 	name = "waybar-popup",
 	match = { class = "^(waybar-popup(-.*)?)$" },
 	float = true,
-	size = "640 940",
-	move = "monitor_w-652 monitor_h-984",
+	size = "940 940",
+	move = "monitor_w-954 monitor_h-984",
 })
 
 hl.env("GTK_IM_MODULE", "cedilla")
