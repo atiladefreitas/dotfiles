@@ -1,10 +1,10 @@
-# Ported Vial features + banger OLED (Luna module)
+# Ported Vial features + Arch/Neovim info OLED
 OLED_ENABLE  = yes
 WPM_ENABLE   = yes
 COMBO_ENABLE = yes
 
-# Authentic Luna frames + custom info panel live in this module:
-SRC += oled_luna.c
+# OLED rendering + last-key tracking live in this module:
+SRC += oled_arch_nvim.c
 
 # Wired Corne with OLEDs, no per-key RGB
 RGB_MATRIX_ENABLE = no
