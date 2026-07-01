@@ -51,6 +51,7 @@ local ticalToggleScript =
 
 hl.on("hyprland.start", function()
 	hl.exec_cmd("env GDK_BACKEND=wayland GTK_USE_PORTAL=1 waybar &")
+	hl.exec_cmd("uwsm-app -- fcitx5 -d --replace")
 	hl.exec_cmd("uwsm-app -- hypridle")
 	hl.exec_cmd("uwsm-app -- dunst")
 	-- hl.exec_cmd("uwsm-app -- fcitx5")

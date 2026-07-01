@@ -134,9 +134,20 @@ return {
 		})
 
 		-- Jinja2 (via jinja-lsp) -- diagnostics disabled to avoid false "undefined variable" errors
+		--
+		-- init_options constrains jinja-lsp's startup indexing to fix high CPU. Without it,
+		-- jinja-lsp defaults to templates="./" + backend={"."} and recursively tree-sitter-parses
+		-- every template-extension file (html/jinja/j2) under the process cwd -- including the
+		-- thousands of .html files inside node_modules. We scope it to a conventional "templates"
+		-- dir (indexed only when present) and disable backend (.py/.rs) scanning entirely.
+		-- The walk root is the cwd, not root_dir, so this -- not root_dir -- is the only lever.
 		vim.lsp.config("jinja_lsp", {
 			capabilities = capabilities,
 			filetypes = { "html", "jinja", "jinja2" },
+			init_options = {
+				templates = "templates",
+				backend = {},
+			},
 			handlers = {
 				["textDocument/publishDiagnostics"] = function() end,
 			},
