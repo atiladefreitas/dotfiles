@@ -5,7 +5,7 @@
   "spacing": 0,
 
   "modules-left": ["hyprland/workspaces"],
-  "modules-center": ["clock", "custom/media", "cpu", "memory", "temperature"],
+  "modules-center": ["clock", "custom/media", "cpu", "memory", "temperature", "custom/top-process"],
   "modules-right": [
     "group/tray-drawer",
     "power-profiles-daemon",
@@ -95,10 +95,21 @@
 
   "temperature": {
     "interval": 5,
+    "hwmon-path-abs": "/sys/devices/platform/coretemp.0/hwmon",
+    "input-filename": "temp1_input",
     "critical-threshold": 85,
     "format": "<span size=\"large\">󰔏</span> {temperatureC}°C",
     "format-critical": "<span size=\"large\"></span> {temperatureC}°C",
     "on-click": "~/dotfiles/waybar/scripts/popup-toggle.sh btop btop",
+  },
+
+  "custom/top-process": {
+    "exec": "~/dotfiles/waybar/scripts/top-process.sh",
+    "return-type": "json",
+    "interval": 3,
+    "format": "<span size=\"large\">󰓅</span> {}",
+    "on-click": "~/dotfiles/waybar/scripts/popup-toggle.sh btop btop",
+    "tooltip": true,
   },
 
   "battery": {

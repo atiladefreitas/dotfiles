@@ -84,6 +84,7 @@ tooltip.clock label {
 #cpu,
 #memory,
 #temperature,
+#custom-top-process,
 #battery,
 #custom-wifi,
 #custom-protonvpn,
@@ -157,6 +158,24 @@ tooltip.clock label {
 #temperature.critical {
   color: #000000;
   background-color: #ffffff;
+}
+
+/* ---------- top process ---------- */
+#custom-top-process {
+  color: #aaaaaa;
+}
+
+#custom-top-process.high {
+  color: #ffffff;
+}
+
+#custom-top-process.critical {
+  color: #000000;
+  background-color: #ffffff;
+}
+
+#custom-top-process:hover {
+  color: #ffffff;
 }
 
 /* ---------- right side ---------- */
