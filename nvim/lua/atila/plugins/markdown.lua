@@ -1,4 +1,132 @@
+-- ╭──────────────────────────────────────────────────────────────────╮
+-- │  markdown.lua — editorial markdown, tuned for Tokyo Night        │
+-- │                                                                  │
+-- │  1. palette      shared ink & paper tones                        │
+-- │  2. paint()      highlight groups (reapplied on ColorScheme)     │
+-- │  3. render-markdown.nvim                                         │
+-- │  4. obsidian.nvim                                                │
+-- ╰──────────────────────────────────────────────────────────────────╯
+
+-- ── 1. Palette ──────────────────────────────────────────────────────
+-- One ink set for everything markdown, so render-markdown, treesitter
+-- and obsidian.nvim all read as a single typeset page.
+local p = {
+  -- Heading foregrounds (bright vellum → descending accents)
+  h1 = "#c0caf5",
+  h2 = "#bb9af7",
+  h3 = "#7aa2f7",
+  h4 = "#7dcfff",
+  h5 = "#9ece6a",
+  h6 = "#e0af68",
+
+  -- Heading backgrounds (whisper-quiet, layered tints)
+  h1_bg = "#13141f",
+  h2_bg = "#11121c",
+  h3_bg = "#0f1019",
+  h4_bg = "#0d0e16",
+  h5_bg = "#0c0d14",
+  h6_bg = "#0b0c12",
+
+  -- Surfaces
+  code_bg = "#0c0e18",
+  code_inline_bg = "#1a1b2e",
+
+  -- Type
+  body = "#a9b1d6",
+  muted = "#565f89",
+  rule = "#1f2335",
+
+  -- Accents
+  blue = "#7aa2f7",
+  cyan = "#7dcfff",
+  green = "#9ece6a",
+  amber = "#e0af68",
+  magenta = "#bb9af7",
+  red = "#f7768e",
+  quote_text = "#9aa5ce",
+  highlight_bg = "#3d2f1f",
+}
+
+-- ── 2. Highlights ───────────────────────────────────────────────────
+-- Everything lives in one function so a colorscheme change can't wash
+-- the page out — we simply repaint.
+local function paint()
+  local hl = function(group, spec)
+    vim.api.nvim_set_hl(0, group, spec)
+  end
+
+  -- Headings: bold ink, whisper-quiet paper
+  hl("RenderMarkdownH1", { fg = p.h1, bold = true })
+  hl("RenderMarkdownH2", { fg = p.h2, bold = true })
+  hl("RenderMarkdownH3", { fg = p.h3, bold = true })
+  hl("RenderMarkdownH4", { fg = p.h4, bold = true })
+  hl("RenderMarkdownH5", { fg = p.h5, bold = true })
+  hl("RenderMarkdownH6", { fg = p.h6, bold = true, italic = true })
+
+  hl("RenderMarkdownH1Bg", { bg = p.h1_bg })
+  hl("RenderMarkdownH2Bg", { bg = p.h2_bg })
+  hl("RenderMarkdownH3Bg", { bg = p.h3_bg })
+  hl("RenderMarkdownH4Bg", { bg = p.h4_bg })
+  hl("RenderMarkdownH5Bg", { bg = p.h5_bg })
+  hl("RenderMarkdownH6Bg", { bg = p.h6_bg })
+
+  -- Heading rules (top/bottom border under H1, H2)
+  hl("RenderMarkdownH1Border", { fg = p.h2, bg = p.h1_bg })
+  hl("RenderMarkdownH2Border", { fg = p.muted, bg = p.h2_bg })
+
+  -- Code: deep surface, cyan language tag
+  hl("RenderMarkdownCode", { bg = p.code_bg })
+  hl("RenderMarkdownCodeBorder", { fg = p.rule, bg = p.code_bg })
+  hl("RenderMarkdownCodeInline", { bg = p.code_inline_bg, fg = p.cyan })
+  hl("RenderMarkdownCodeLanguage", { fg = p.cyan, bg = p.code_bg, italic = true })
+
+  -- Checkboxes
+  hl("RenderMarkdownUnchecked", { fg = p.muted })
+  hl("RenderMarkdownChecked", { fg = p.green })
+  hl("RenderMarkdownTodo", { fg = p.amber })
+
+  -- Callouts
+  hl("RenderMarkdownInfo", { fg = p.blue, bold = true })
+  hl("RenderMarkdownSuccess", { fg = p.green, bold = true })
+  hl("RenderMarkdownHint", { fg = p.magenta, bold = true })
+  hl("RenderMarkdownWarn", { fg = p.amber, bold = true })
+  hl("RenderMarkdownError", { fg = p.red, bold = true })
+
+  -- Quote: magenta rule, softly muted italic body
+  hl("RenderMarkdownQuote", { fg = p.magenta, italic = true })
+  hl("@markup.quote.markdown", { fg = p.quote_text, italic = true })
+
+  -- Links
+  hl("RenderMarkdownLink", { fg = p.blue, underline = true })
+  hl("RenderMarkdownWikiLink", { fg = p.magenta, underline = true })
+
+  -- Tables
+  hl("RenderMarkdownTableHead", { fg = p.h2, bold = true })
+  hl("RenderMarkdownTableRow", { fg = p.body })
+  hl("RenderMarkdownTableFill", { fg = p.rule })
+
+  -- ==Inline highlights== read like a marker pen
+  hl("RenderMarkdownInlineHighlight", { bg = p.highlight_bg, fg = p.amber })
+
+  -- Misc
+  hl("RenderMarkdownBullet", { fg = p.cyan, bold = true })
+  hl("RenderMarkdownDash", { fg = p.muted })
+  hl("RenderMarkdownSign", { fg = p.muted })
+
+  -- Treesitter polish: body prose like a magazine
+  hl("@markup.strong.markdown_inline", { fg = p.h1, bold = true })
+  hl("@markup.italic.markdown_inline", { fg = p.magenta, italic = true })
+  hl("@markup.strikethrough.markdown_inline", { fg = p.muted, strikethrough = true })
+  hl("@markup.raw.markdown_inline", { fg = p.cyan, bg = p.code_inline_bg })
+  hl("@markup.link.label.markdown_inline", { fg = p.blue, italic = true })
+  hl("@markup.link.url.markdown_inline", { fg = p.muted, italic = true, underline = true })
+
+  -- The foldcolumn is reading-margin padding, keep it invisible
+  hl("FoldColumn", { fg = "NONE", bg = "NONE" })
+end
+
 return {
+  -- ── 3. render-markdown.nvim ───────────────────────────────────────
   {
     "MeanderingProgrammer/render-markdown.nvim",
     ft = { "markdown", "md", "Avante" },
@@ -82,7 +210,7 @@ return {
         highlight = "RenderMarkdownDash",
       },
 
-      -- Refined bullets: filled circle, open circle, diamond, dot
+      -- Refined bullets: filled circle, open circle, arrow, dot
       bullet = {
         enabled = true,
         icons = { "•", "◦", "▸", "·" },
@@ -113,6 +241,8 @@ return {
         },
         custom = {
           todo = { raw = "[-]", rendered = "󰥔 ", highlight = "RenderMarkdownTodo" },
+          forwarded = { raw = "[>]", rendered = " ", highlight = "RenderMarkdownInfo" },
+          cancelled = { raw = "[~]", rendered = "󰰱 ", highlight = "RenderMarkdownError" },
           important = { raw = "[!]", rendered = " ", highlight = "DiagnosticError" },
           question = { raw = "[?]", rendered = " ", highlight = "DiagnosticWarn" },
           star = { raw = "[*]", rendered = "󰓎 ", highlight = "DiagnosticHint" },
@@ -139,6 +269,12 @@ return {
         head = "RenderMarkdownTableHead",
         row = "RenderMarkdownTableRow",
         filler = "RenderMarkdownTableFill",
+      },
+
+      -- ==Marker-pen== inline highlights
+      inline_highlight = {
+        enabled = true,
+        highlight = "RenderMarkdownInlineHighlight",
       },
 
       -- Editorial callouts: rounded labels with breathing room
@@ -230,109 +366,13 @@ return {
     config = function(_, opts)
       require("render-markdown").setup(opts)
 
-      -- ────────────────────────────────────────────────────────────────
-      --  Editorial palette tuned for Tokyo Night (bg #090a12)
-      -- ────────────────────────────────────────────────────────────────
-      local p = {
-        -- Foreground tones (warm-paper hierarchy)
-        h1 = "#c0caf5", -- bright vellum, the title
-        h2 = "#bb9af7", -- magenta, section
-        h3 = "#7aa2f7", -- blue, subsection
-        h4 = "#7dcfff", -- cyan
-        h5 = "#9ece6a", -- soft green
-        h6 = "#e0af68", -- amber
-
-        -- Heading backgrounds (very subtle, layered tints)
-        h1_bg = "#13141f",
-        h2_bg = "#11121c",
-        h3_bg = "#0f1019",
-        h4_bg = "#0d0e16",
-        h5_bg = "#0c0d14",
-        h6_bg = "#0b0c12",
-
-        -- Surfaces
-        code_bg = "#0c0e18",
-        code_inline_bg = "#1a1b2e",
-        code_inline_fg = "#7dcfff", -- cyan
-        code_lang_fg = "#7dcfff",
-
-        -- Type
-        body = "#a9b1d6",
-        muted = "#565f89",
-        rule = "#1f2335",
-
-        -- Accents
-        link = "#7aa2f7",
-        wiki = "#bb9af7",
-        bullet = "#7dcfff",
-        quote = "#bb9af7",
-        quote_text = "#9aa5ce",
-      }
-
-      -- Headings: bold foregrounds, whisper-quiet backgrounds
-      vim.api.nvim_set_hl(0, "RenderMarkdownH1", { fg = p.h1, bold = true })
-      vim.api.nvim_set_hl(0, "RenderMarkdownH2", { fg = p.h2, bold = true })
-      vim.api.nvim_set_hl(0, "RenderMarkdownH3", { fg = p.h3, bold = true })
-      vim.api.nvim_set_hl(0, "RenderMarkdownH4", { fg = p.h4, bold = true })
-      vim.api.nvim_set_hl(0, "RenderMarkdownH5", { fg = p.h5, bold = true })
-      vim.api.nvim_set_hl(0, "RenderMarkdownH6", { fg = p.h6, bold = true, italic = true })
-
-      vim.api.nvim_set_hl(0, "RenderMarkdownH1Bg", { bg = p.h1_bg })
-      vim.api.nvim_set_hl(0, "RenderMarkdownH2Bg", { bg = p.h2_bg })
-      vim.api.nvim_set_hl(0, "RenderMarkdownH3Bg", { bg = p.h3_bg })
-      vim.api.nvim_set_hl(0, "RenderMarkdownH4Bg", { bg = p.h4_bg })
-      vim.api.nvim_set_hl(0, "RenderMarkdownH5Bg", { bg = p.h5_bg })
-      vim.api.nvim_set_hl(0, "RenderMarkdownH6Bg", { bg = p.h6_bg })
-
-      -- Heading borders (top/bottom rule under H1, H2)
-      vim.api.nvim_set_hl(0, "RenderMarkdownH1Border", { fg = p.h2, bg = p.h1_bg })
-      vim.api.nvim_set_hl(0, "RenderMarkdownH2Border", { fg = p.muted, bg = p.h2_bg })
-
-      -- Code blocks: deep, refined, with cyan language tag
-      vim.api.nvim_set_hl(0, "RenderMarkdownCode", { bg = p.code_bg })
-      vim.api.nvim_set_hl(0, "RenderMarkdownCodeInline", { bg = p.code_inline_bg, fg = p.code_inline_fg })
-      vim.api.nvim_set_hl(0, "RenderMarkdownCodeLanguage", { fg = p.code_lang_fg, bg = p.code_bg, italic = true })
-
-      -- Checkboxes
-      vim.api.nvim_set_hl(0, "RenderMarkdownUnchecked", { fg = p.muted })
-      vim.api.nvim_set_hl(0, "RenderMarkdownChecked", { fg = "#9ece6a" })
-      vim.api.nvim_set_hl(0, "RenderMarkdownTodo", { fg = "#e0af68" })
-
-      -- Callouts: refined Tokyo Night accents
-      vim.api.nvim_set_hl(0, "RenderMarkdownInfo", { fg = "#7aa2f7", bold = true })
-      vim.api.nvim_set_hl(0, "RenderMarkdownSuccess", { fg = "#9ece6a", bold = true })
-      vim.api.nvim_set_hl(0, "RenderMarkdownHint", { fg = "#bb9af7", bold = true })
-      vim.api.nvim_set_hl(0, "RenderMarkdownWarn", { fg = "#e0af68", bold = true })
-      vim.api.nvim_set_hl(0, "RenderMarkdownError", { fg = "#f7768e", bold = true })
-
-      -- Quote: magenta rule + softly muted italic body
-      vim.api.nvim_set_hl(0, "RenderMarkdownQuote", { fg = p.quote, italic = true })
-      vim.api.nvim_set_hl(0, "@markup.quote.markdown", { fg = p.quote_text, italic = true })
-
-      -- Links
-      vim.api.nvim_set_hl(0, "RenderMarkdownLink", { fg = p.link, underline = true })
-      vim.api.nvim_set_hl(0, "RenderMarkdownWikiLink", { fg = p.wiki, underline = true })
-
-      -- Tables: subtle, readable
-      vim.api.nvim_set_hl(0, "RenderMarkdownTableHead", { fg = p.h2, bold = true })
-      vim.api.nvim_set_hl(0, "RenderMarkdownTableRow", { fg = p.body })
-      vim.api.nvim_set_hl(0, "RenderMarkdownTableFill", { fg = p.rule })
-
-      -- Misc
-      vim.api.nvim_set_hl(0, "RenderMarkdownBullet", { fg = p.bullet, bold = true })
-      vim.api.nvim_set_hl(0, "RenderMarkdownDash", { fg = p.muted })
-      vim.api.nvim_set_hl(0, "RenderMarkdownSign", { fg = p.muted })
-
-      -- ────────────────────────────────────────────────────────────────
-      --  Treesitter polish: italics, bold, strikethrough, emphasis
-      --  These make body prose feel like a magazine
-      -- ────────────────────────────────────────────────────────────────
-      vim.api.nvim_set_hl(0, "@markup.strong.markdown_inline", { fg = "#c0caf5", bold = true })
-      vim.api.nvim_set_hl(0, "@markup.italic.markdown_inline", { fg = "#bb9af7", italic = true })
-      vim.api.nvim_set_hl(0, "@markup.strikethrough.markdown_inline", { fg = p.muted, strikethrough = true })
-      vim.api.nvim_set_hl(0, "@markup.raw.markdown_inline", { fg = p.code_inline_fg, bg = p.code_inline_bg })
-      vim.api.nvim_set_hl(0, "@markup.link.label.markdown_inline", { fg = p.link, italic = true })
-      vim.api.nvim_set_hl(0, "@markup.link.url.markdown_inline", { fg = p.muted, italic = true, underline = true })
+      -- Paint now, and repaint whenever the colorscheme changes so the
+      -- editorial palette survives theme reloads.
+      paint()
+      vim.api.nvim_create_autocmd("ColorScheme", {
+        group = vim.api.nvim_create_augroup("MarkdownEditorialInk", { clear = true }),
+        callback = paint,
+      })
 
       -- ────────────────────────────────────────────────────────────────
       --  Reading-mode ergonomics for markdown buffers
@@ -368,12 +408,9 @@ return {
         end
       end
 
-      -- Make the foldcolumn invisible (it's just padding)
-      vim.api.nvim_set_hl(0, "FoldColumn", { fg = "NONE", bg = "NONE" })
-
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "markdown",
-        callback = function(ev)
+        callback = function()
           vim.opt_local.wrap = true
           vim.opt_local.linebreak = true
           vim.opt_local.breakindent = true
@@ -410,6 +447,7 @@ return {
     end,
   },
 
+  -- ── 4. obsidian.nvim ──────────────────────────────────────────────
   {
     "epwalsh/obsidian.nvim",
     version = "*", -- recommended, use latest release instead of latest commit
@@ -540,11 +578,11 @@ return {
       },
 
       follow_url_func = function(url)
-        vim.fn.jobstart({ "open", url }) -- Mac OS
+        vim.ui.open(url)
       end,
 
       follow_img_func = function(img)
-        vim.fn.jobstart({ "qlmanage", "-p", img }) -- Mac OS quick look preview
+        vim.ui.open(img)
       end,
 
       use_advanced_uri = false,
@@ -593,18 +631,18 @@ return {
         tags = { hl_group = "ObsidianTag" },
         block_ids = { hl_group = "ObsidianBlockID" },
         hl_groups = {
-          -- Tokyo Night-tuned Obsidian UI
-          ObsidianTodo = { bold = true, fg = "#e0af68" },
-          ObsidianDone = { bold = true, fg = "#9ece6a" },
-          ObsidianRightArrow = { bold = true, fg = "#7aa2f7" },
-          ObsidianTilde = { bold = true, fg = "#bb9af7" },
-          ObsidianImportant = { bold = true, fg = "#e0af68" },
-          ObsidianBullet = { bold = true, fg = "#7dcfff" },
-          ObsidianRefText = { underline = true, fg = "#bb9af7" },
-          ObsidianExtLinkIcon = { fg = "#bb9af7" },
-          ObsidianTag = { italic = true, fg = "#7dcfff" },
-          ObsidianBlockID = { italic = true, fg = "#7dcfff" },
-          ObsidianHighlightText = { bg = "#3d2f1f", fg = "#e0af68" },
+          -- Same editorial ink as render-markdown
+          ObsidianTodo = { bold = true, fg = p.amber },
+          ObsidianDone = { bold = true, fg = p.green },
+          ObsidianRightArrow = { bold = true, fg = p.blue },
+          ObsidianTilde = { bold = true, fg = p.magenta },
+          ObsidianImportant = { bold = true, fg = p.amber },
+          ObsidianBullet = { bold = true, fg = p.cyan },
+          ObsidianRefText = { underline = true, fg = p.magenta },
+          ObsidianExtLinkIcon = { fg = p.magenta },
+          ObsidianTag = { italic = true, fg = p.cyan },
+          ObsidianBlockID = { italic = true, fg = p.cyan },
+          ObsidianHighlightText = { bg = p.highlight_bg, fg = p.amber },
         },
       },
       attachments = {

@@ -7,14 +7,7 @@ return {
 			{ "<leader>tb", "<cmd>BloockyToggle<cr>", desc = "Bloocky: toggle calendar" },
 		},
 		config = function()
-			require("bloocky").setup({
-				integrations = {
-					dooing = {
-						enabled = true, -- show dooing todos on their due date
-						show_done = false, -- set true to also show completed ones
-					},
-				},
-			})
+			require("bloocky").setup({})
 		end,
 	},
 }

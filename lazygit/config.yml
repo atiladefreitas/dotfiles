@@ -43,9 +43,9 @@ gui:
     activeBorderColor:
       - "#7dcfff"
       - bold
-    # Very dark, low-contrast border on the resting panels — makes active pop
+    # Light grey-white border on resting panels — visible, active cyan still pops
     inactiveBorderColor:
-      - "#1f2335"
+      - "#a9b1d6"
     # Bold orange when you're searching — unmistakable
     searchingActiveBorderColor:
       - "#ff9e64"
@@ -58,7 +58,7 @@ gui:
       - "#3d59a1"
     # Softer selection bg when the panel is not focused
     inactiveViewSelectedLineBgColor:
-      - "#292e42"
+      - "#3b4261"
     # Cherry-picked commits glow purple — the one tasteful purple accent
     cherryPickedCommitBgColor:
       - "#414868"
