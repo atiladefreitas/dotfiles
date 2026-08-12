@@ -11,7 +11,7 @@ return {
 		config = function()
 			require("dooing").setup({
 				ui = {
-					style = "classic", -- "classic" | "modern"
+					style = "modern", -- "classic" | "modern"
 				},
 				timestamp = {
 					enabled = true, -- Show relative timestamps (this is what `show_entered_date` meant)
