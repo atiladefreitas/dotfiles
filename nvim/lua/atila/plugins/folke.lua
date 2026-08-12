@@ -24,14 +24,9 @@ return {
 		opts = {
 			messages = { view = "mini", view_warn = "mini" },
 		},
-		dependencies = {
-			-- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
-			"MunifTanjim/nui.nvim",
-			-- OPTIONAL:
-			--   `nvim-notify` is only needed, if you want to use the notification view.
-			--   If not available, we use `mini` as the fallback
-			"rcarriga/nvim-notify",
-		},
+		-- nvim-notify omitted on purpose: messages use the `mini` view below,
+		-- which is noice's fallback when notify isn't installed.
+		dependencies = { "MunifTanjim/nui.nvim" },
 	},
 
 	{

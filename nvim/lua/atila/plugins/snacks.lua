@@ -48,7 +48,9 @@ return {
 		},
 		indent = { enabled = true },
 		input = { enabled = true },
-		notifier = { enabled = false },
+		-- noice's `notify` view resolves backend = { "snacks", "notify" }, so this
+		-- serves the notification popups that nvim-notify used to render.
+		notifier = { enabled = true },
 		quickfile = { enabled = true },
 		statuscolumn = { enabled = true },
 		lazygit = {

@@ -30,6 +30,22 @@ opt.cursorline = true
 
 opt.linespace = 4
 
+-- Native treesitter folding (Neovim 0.11+), replaces nvim-ufo.
+opt.foldmethod = "expr"
+opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+
+-- treesitter foldexpr yields no folds when a buffer has no parser, so fall back
+-- to indent folding there (ufo did this via provider_selector = {treesitter, indent}).
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("atila_fold_fallback", { clear = true }),
+  callback = function(ev)
+    local ok, parser = pcall(vim.treesitter.get_parser, ev.buf, nil, { error = false })
+    if not ok or not parser then
+      vim.opt_local.foldmethod = "indent"
+    end
+  end,
+})
+
 -- Fold column: show fold state markers on the left (matches midnight-atila theme)
 opt.foldcolumn = "1"
 opt.foldlevel = 99      -- start with all folds open
@@ -75,25 +91,6 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- fold persistence
-opt.viewoptions = "folds,cursor"
-opt.sessionoptions:append("folds")
-
--- auto save and restore folds
-vim.api.nvim_create_autocmd({ "BufWinLeave", "BufWritePost", "WinLeave" }, {
-  pattern = "*",
-  callback = function()
-    if vim.bo.buftype == "" and vim.fn.expand("%") ~= "" then
-      vim.cmd("silent! mkview")
-    end
-  end,
-})
-
-vim.api.nvim_create_autocmd("BufWinEnter", {
-  pattern = "*",
-  callback = function()
-    if vim.bo.buftype == "" and vim.fn.expand("%") ~= "" then
-      vim.cmd("silent! loadview")
-    end
-  end,
-})
+-- No mkview/loadview fold persistence: view files bake in foldmethod/foldexpr,
+-- which silently overrode the treesitter foldexpr set above. Folds are derived
+-- from the parser on every open instead.
