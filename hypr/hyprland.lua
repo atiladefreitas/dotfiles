@@ -45,6 +45,9 @@ local yaziToggleScript =
 local ticalToggleScript =
 	[[bash -c 'PID=$(hyprctl clients -j | jq -r ".[] | select(.class == \"tical-popup\") | .pid"); if [ -n "$PID" ]; then kill "$PID"; else kitty --class tical-popup -e tical; fi']]
 
+-- Bloocky timeblocking calendar (nvim plugin) popup, toggled via SUPER+D
+local bloockyToggleScript = "~/.config/hypr/scripts/bloocky-popup.sh"
+
 -------------------
 ---- AUTOSTART ----
 -------------------
@@ -210,6 +213,9 @@ hl.bind(mainMod .. " + P", hl.dsp.exec_cmd(systempaneScript))
 -- Calculator popup (tical TUI in a small floating kitty), toggled
 hl.bind(mainMod .. " + A", hl.dsp.exec_cmd(ticalToggleScript))
 
+-- Bloocky calendar popup (nvim in a floating kitty), toggled
+hl.bind(mainMod .. " + D", hl.dsp.exec_cmd(bloockyToggleScript))
+
 hl.bind(mainMod .. " + O", hl.dsp.exec_cmd(obsidian))
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd("hyprctl reload"))
 -- hl.bind("SUPER + ALT + space", hl.dsp.exec_cmd("omarchy-menu"), { description = "Omarchy menu" })
@@ -370,6 +376,15 @@ hl.window_rule({
 	float = true,
 	size = "390 650",
 	center = true,
+})
+
+hl.window_rule({
+	name = "bloocky-popup",
+	match = { class = "^(bloocky-popup)$" },
+	float = true,
+	size = "1400 900",
+	center = true,
+	dim_around = true,
 })
 
 hl.window_rule({

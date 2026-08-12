@@ -1,155 +1,64 @@
 return {
 	-- nvim-treesitter is kept solely for parser management (:TSInstall, :TSUpdate).
-	-- Neovim 0.12 handles highlighting, indentation, and queries natively.
+	-- Neovim 0.12 handles highlighting, indentation, and queries natively; highlighting is
+	-- started per-filetype in lua/atila/core/options.lua via vim.treesitter.start().
 	--
 	-- WHY THIS SETUP:
-	-- nvim-treesitter's query_predicates.lua registers custom directives (set-lang-from-info-string!,
-	-- set-lang-from-mimetype!, downcase!) that are incompatible with Neovim 0.12's query API where
-	-- match[capture_id] returns TSNode[] instead of a single TSNode. This causes:
-	--   "attempt to call method 'range' (a nil value)"
-	-- We preload a shim that replaces the broken directives with 0.12-compatible versions, and
-	-- delete nvim-treesitter's query files so the built-in runtime queries (which don't use
-	-- these custom directives) take precedence.
+	-- We track the `main` branch (the rewrite), which is a pure parser/query installer:
+	-- no `nvim-treesitter.configs`, no highlight/indent modules, no `ensure_installed` option.
+	-- Parsers and queries install into stdpath("data")/site instead of the plugin directory.
+	-- The old 0.12 directive shims (set-lang-from-info-string!, downcase!, nth?, ...) are gone
+	-- because the rewrite no longer registers those broken handlers.
 	{
 		"nvim-treesitter/nvim-treesitter",
+		branch = "main",
 		build = ":TSUpdate",
 		lazy = false,
 		priority = 900,
-		init = function()
-			-- Preload a shim module BEFORE nvim-treesitter loads.
-			-- When nvim-treesitter does `require "nvim-treesitter.query_predicates"`,
-			-- it will register broken directive handlers. We fix them right after.
-		end,
 		config = function()
-			-- Load nvim-treesitter for parser management
-			require("nvim-treesitter.configs").setup({
-				highlight = { enable = false }, -- native Neovim 0.12
-				indent = { enable = false }, -- native Neovim 0.12
-				ensure_installed = {
-					"javascript",
-					"typescript",
-					"tsx",
-					"html",
-					"css",
-					"scss",
-					"lua",
-					"json",
-					"markdown",
-					"markdown_inline",
-					"vim",
-					"vimdoc",
-					"python",
-					"jinja",
-					"jinja_inline",
-				},
-				modules = {},
-				sync_install = false,
-				ignore_install = {},
-				auto_install = true,
-			})
+			local ts = require("nvim-treesitter")
 
-			-- FIX: Override the broken custom directives registered by nvim-treesitter's
-			-- query_predicates.lua. In Neovim 0.12, match[capture_id] returns TSNode[] (a list)
-			-- instead of a single TSNode. The original handlers pass the list directly to
-			-- vim.treesitter.get_node_text() which calls node:range() on the list and crashes.
-			local query = require("vim.treesitter.query")
+			local ensure_installed = {
+				"javascript",
+				"typescript",
+				"tsx",
+				"html",
+				"css",
+				"scss",
+				"lua",
+				"json",
+				"markdown",
+				"markdown_inline",
+				"vim",
+				"vimdoc",
+				"python",
+				"jinja",
+				"jinja_inline",
+			}
 
-			query.add_directive("set-lang-from-info-string!", function(match, _, bufnr, pred, metadata)
-				local capture_id = pred[2]
-				local nodes = match[capture_id]
-				if not nodes then
-					return
-				end
-				-- Handle both old (single node) and new (list of nodes) API
-				local node = type(nodes) == "table" and nodes[1] or nodes
-				if not node then
-					return
-				end
-				local ok, text = pcall(vim.treesitter.get_node_text, node, bufnr)
-				if not ok or not text then
-					return
-				end
-				local injection_alias = text:lower()
-				-- Try filetype match first, then use the alias directly
-				local lang = vim.filetype.match({ filename = "a." .. injection_alias })
-				metadata["injection.language"] = lang or injection_alias
-			end, { force = true })
-
-			query.add_directive("set-lang-from-mimetype!", function(match, _, bufnr, pred, metadata)
-				local capture_id = pred[2]
-				local nodes = match[capture_id]
-				if not nodes then
-					return
-				end
-				local node = type(nodes) == "table" and nodes[1] or nodes
-				if not node then
-					return
-				end
-				local ok, text = pcall(vim.treesitter.get_node_text, node, bufnr)
-				if not ok or not text then
-					return
-				end
-				local html_script_type_languages = {
-					["importmap"] = "json",
-					["module"] = "javascript",
-					["application/ecmascript"] = "javascript",
-					["text/ecmascript"] = "javascript",
-				}
-				local configured = html_script_type_languages[text]
-				if configured then
-					metadata["injection.language"] = configured
-				else
-					local parts = vim.split(text, "/", {})
-					metadata["injection.language"] = parts[#parts]
-				end
-			end, { force = true })
-
-			query.add_directive("downcase!", function(match, _, bufnr, pred, metadata)
-				local id = pred[2]
-				local nodes = match[id]
-				if not nodes then
-					return
-				end
-				local node = type(nodes) == "table" and nodes[1] or nodes
-				if not node then
-					return
-				end
-				local ok, text = pcall(vim.treesitter.get_node_text, node, bufnr, { metadata = metadata[id] })
-				if not ok then
-					return
-				end
-				text = text or ""
-				if not metadata[id] then
-					metadata[id] = {}
-				end
-				metadata[id].text = string.lower(text)
-			end, { force = true })
-
-			-- Also fix the custom predicates (nth?, is?, kind-eq?) used in indent/highlight queries
-			local function unwrap_node(nodes)
-				if not nodes then
-					return nil
-				end
-				return type(nodes) == "table" and nodes[1] or nodes
+			-- Replaces `ensure_installed`: install() is a no-op for up-to-date parsers,
+			-- but filtering first keeps startup from queueing work every launch.
+			local installed = require("nvim-treesitter.config").get_installed("parsers")
+			local missing = vim.tbl_filter(function(lang)
+				return not vim.tbl_contains(installed, lang)
+			end, ensure_installed)
+			if #missing > 0 then
+				ts.install(missing)
 			end
 
-			query.add_predicate("nth?", function(match, _pattern, _bufnr, pred)
-				local node = unwrap_node(match[pred[2]])
-				local n = tonumber(pred[3])
-				if node and node:parent() and node:parent():named_child_count() > n then
-					return node:parent():named_child(n) == node
-				end
-				return false
-			end, { force = true })
-
-			query.add_predicate("kind-eq?", function(match, _pattern, _bufnr, pred)
-				local node = unwrap_node(match[pred[2]])
-				local types = { unpack(pred, 3) }
-				if not node then
-					return true
-				end
-				return vim.tbl_contains(types, node:type())
-			end, { force = true })
+			-- Replaces `auto_install = true`: pull a parser the first time a filetype is opened.
+			vim.api.nvim_create_autocmd("FileType", {
+				group = vim.api.nvim_create_augroup("atila_ts_auto_install", { clear = true }),
+				callback = function(ev)
+					local lang = vim.treesitter.language.get_lang(ev.match)
+					if not lang or #vim.api.nvim_get_runtime_file("parser/" .. lang .. ".*", false) > 0 then
+						return
+					end
+					if vim.tbl_contains(ts.get_available(), lang) then
+						pcall(ts.install, { lang })
+					end
+				end,
+			})
 		end,
 	},
 

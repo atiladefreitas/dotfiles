@@ -1,6 +1,9 @@
 return {
 	"nvim-telescope/telescope.nvim",
-	branch = "0.1.x",
+	-- master, not 0.1.x: that branch is frozen at May 2024 and still calls
+	-- nvim-treesitter's removed ft_to_lang/is_enabled APIs. master uses
+	-- vim.treesitter.start() directly and needs Neovim >= 0.11.7.
+	branch = "master",
 	cmd = "Telescope",
 	keys = {
 		{ "<leader><CR>", desc = "Resume previous search" },

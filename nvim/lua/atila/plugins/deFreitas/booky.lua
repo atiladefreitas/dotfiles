@@ -1,20 +1,16 @@
 return {
-	-- beautiful time-blocking manager
-	{
-		dir = "~/Documents/projects/bloocky.nvim",
-		cmd = { "Bloocky", "BloockyToggle", "BloockyAdd" },
-		keys = {
-			{ "<leader>tb", "<cmd>BloockyToggle<cr>", desc = "Bloocky: toggle calendar" },
-		},
-		config = function()
-			require("bloocky").setup({
-				integrations = {
-					dooing = {
-						enabled = true, -- show dooing todos on their due date
-						show_done = false, -- set true to also show completed ones
-					},
-				},
-			})
-		end,
-	},
+    -- bookmark manager
+    {
+        dir = "~/Documents/projects/booky.nvim",
+        cmd = { "BookyAdd", "BookyRemove", "BookyToggle", "BookyAddLine", "BookyList", "BookyGlobal" },
+        keys = {
+            { "<leader>ba", "<cmd>BookyToggle<cr>", desc = "Booky: toggle bookmark for this file" },
+            { "<leader>bl", "<cmd>BookyAddLine<cr>", desc = "Booky: bookmark this line" },
+            { "<leader>bb", "<cmd>BookyList<cr>", desc = "Booky: project bookmarks" },
+            { "<leader>bg", "<cmd>BookyGlobal<cr>", desc = "Booky: global bookmarks" },
+        },
+        config = function()
+            require("booky").setup({})
+        end,
+    },
 }

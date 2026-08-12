@@ -53,28 +53,8 @@ return {
 		statuscolumn = { enabled = true },
 		lazygit = {
 			enabled = true,
-			configure = true,
-			config = {
-				os = { editPreset = "nvim-remote" },
-				gui = {
-					nerdFontsVersion = "3",
-				},
-			},
-			theme_path = vim.fs.normalize(vim.fn.stdpath("cache") .. "/lazygit-theme.yml"),
-			theme = {
-				[241] = { fg = "Special" },
-				activeBorderColor = { fg = "Function", bold = true },
-				inactiveBorderColor = { fg = "Comment" },
-				searchingActiveBorderColor = { fg = "DiagnosticInfo", bold = true },
-				optionsTextColor = { fg = "Function" },
-				selectedLineBgColor = { bg = "CursorLine" },
-				cherryPickedCommitBgColor = { fg = "Statement" },
-				cherryPickedCommitFgColor = { fg = "Normal" },
-				markedBaseCommitBgColor = { fg = "String" },
-				markedBaseCommitFgColor = { fg = "Normal" },
-				defaultFgColor = { fg = "Normal" },
-				unstagedChangesColor = { fg = "DiagnosticError" },
-			},
+			-- use ~/.config/lazygit/config.yml as-is instead of a generated theme
+			configure = false,
 			win = {
 				style = "lazygit",
 			},

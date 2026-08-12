@@ -80,11 +80,10 @@ tooltip.clock label {
 
 /* ---------- shared module styling ---------- */
 #clock,
-#custom-media,
 #cpu,
 #memory,
+#custom-gpu,
 #temperature,
-#custom-top-process,
 #battery,
 #custom-wifi,
 #custom-protonvpn,
@@ -141,14 +140,6 @@ tooltip.clock label {
   font-weight: 600;
 }
 
-#custom-media {
-  color: #aaaaaa;
-}
-
-#custom-media.Paused {
-  color: #666666;
-}
-
 #cpu,
 #memory,
 #temperature {
@@ -160,21 +151,26 @@ tooltip.clock label {
   background-color: #ffffff;
 }
 
-/* ---------- top process ---------- */
-#custom-top-process {
-  color: #aaaaaa;
-}
-
-#custom-top-process.high {
+/* ---------- gpu ---------- */
+#custom-gpu {
   color: #ffffff;
 }
 
-#custom-top-process.critical {
+/* dGPU parked in D3 — dim it so the bar reads as "nothing running there". */
+#custom-gpu.idle {
+  color: #666666;
+}
+
+#custom-gpu.high {
+  color: #ffffff;
+}
+
+#custom-gpu.critical {
   color: #000000;
   background-color: #ffffff;
 }
 
-#custom-top-process:hover {
+#custom-gpu:hover {
   color: #ffffff;
 }
 

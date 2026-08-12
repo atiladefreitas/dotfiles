@@ -36,7 +36,6 @@ gui:
   commitHashLength: 8
   commitAuthorShortLength: 2
   commitAuthorLongLength: 17
-
   # Tokyo Night — cyan-forward, stunning
   theme:
     # Bright cyan border on the focused panel (was purple)
@@ -75,90 +74,89 @@ gui:
       - "#f7768e"
     defaultFgColor:
       - "#c0caf5"
-
   # Let lazygit auto-color authors via hash (more visually varied than a wildcard)
 
   # Regex-driven branch coloring — cyan/blue/green/orange palette, minimal purple
   branchColorPatterns:
-    "^(main|master)$":         "#7dcfff"  # cyan — trunk
-    "^(develop|dev)$":         "#7aa2f7"  # blue — integration
-    "^(staging|qa|preview)$":  "#e0af68"  # yellow — staging
-    "^(production|prod)$":     "#f7768e"  # red — prod
-    "^feature/":               "#9ece6a"  # green — features
-    "^feat/":                  "#9ece6a"
-    "^fix/":                   "#ff9e64"  # orange — fixes
-    "^bugfix/":                "#ff9e64"
-    "^hotfix/":                "#f7768e"  # red — hotfixes
-    "^release/":               "#2ac3de"  # blue1 — releases
-    "^chore/":                 "#565f89"  # comment-grey — chores
-    "^docs/":                  "#7dcfff"  # cyan — docs
-    "^refactor/":              "#0db9d7"  # blue2 — refactors
-    "^test/":                  "#e0af68"  # yellow — tests
-    "^perf/":                  "#9ece6a"  # green — perf
-    "^style/":                 "#bb9af7"  # magenta — style (the lone purple)
-
+    "^(main|master)$": "#7dcfff" # cyan — trunk
+    "^(develop|dev)$": "#7aa2f7" # blue — integration
+    "^(staging|qa|preview)$": "#e0af68" # yellow — staging
+    "^(production|prod)$": "#f7768e" # red — prod
+    "^feature/": "#9ece6a" # green — features
+    "^feat/": "#9ece6a"
+    "^fix/": "#ff9e64" # orange — fixes
+    "^bugfix/": "#ff9e64"
+    "^hotfix/": "#f7768e" # red — hotfixes
+    "^release/": "#2ac3de" # blue1 — releases
+    "^chore/": "#565f89" # comment-grey — chores
+    "^docs/": "#7dcfff" # cyan — docs
+    "^refactor/": "#0db9d7" # blue2 — refactors
+    "^test/": "#e0af68" # yellow — tests
+    "^perf/": "#9ece6a" # green — perf
+    "^style/": "#bb9af7" # magenta — style (the lone purple)
   # File-type icons painted in Tokyo Night accents.
   # Glyphs are nerd-font v3 codepoints.
   customIcons:
     filenames:
-      "README.md":          { icon: "", color: "#7dcfff" }
-      "LICENSE":            { icon: "", color: "#e0af68" }
-      "Makefile":           { icon: "", color: "#f7768e" }
-      "Dockerfile":         { icon: "", color: "#7aa2f7" }
-      "docker-compose.yml": { icon: "", color: "#7aa2f7" }
-      ".gitignore":         { icon: "", color: "#ff9e64" }
-      ".env":               { icon: "", color: "#e0af68" }
-      "package.json":       { icon: "", color: "#9ece6a" }
-      "package-lock.json":  { icon: "", color: "#565f89" }
-      "tsconfig.json":      { icon: "", color: "#7aa2f7" }
-      "Cargo.toml":         { icon: "", color: "#ff9e64" }
-      "go.mod":             { icon: "", color: "#7dcfff" }
-      "init.lua":           { icon: "", color: "#7aa2f7" }
-      "config.yml":         { icon: "", color: "#7dcfff" }
+      "README.md": {icon: "", color: "#7dcfff"}
+      "LICENSE": {icon: "", color: "#e0af68"}
+      "Makefile": {icon: "", color: "#f7768e"}
+      "Dockerfile": {icon: "", color: "#7aa2f7"}
+      "docker-compose.yml": {icon: "", color: "#7aa2f7"}
+      ".gitignore": {icon: "", color: "#ff9e64"}
+      ".env": {icon: "", color: "#e0af68"}
+      "package.json": {icon: "", color: "#9ece6a"}
+      "package-lock.json": {icon: "", color: "#565f89"}
+      "tsconfig.json": {icon: "", color: "#7aa2f7"}
+      "Cargo.toml": {icon: "", color: "#ff9e64"}
+      "go.mod": {icon: "", color: "#7dcfff"}
+      "init.lua": {icon: "", color: "#7aa2f7"}
+      "config.yml": {icon: "", color: "#7dcfff"}
     extensions:
-      ".lua":     { icon: "", color: "#7aa2f7" }
-      ".ts":      { icon: "", color: "#7aa2f7" }
-      ".tsx":     { icon: "", color: "#7dcfff" }
-      ".js":      { icon: "", color: "#e0af68" }
-      ".jsx":     { icon: "", color: "#7dcfff" }
-      ".py":      { icon: "", color: "#e0af68" }
-      ".rs":      { icon: "", color: "#ff9e64" }
-      ".go":      { icon: "", color: "#7dcfff" }
-      ".rb":      { icon: "", color: "#f7768e" }
-      ".java":    { icon: "", color: "#ff9e64" }
-      ".kt":      { icon: "", color: "#ff9e64" }
-      ".swift":   { icon: "", color: "#ff9e64" }
-      ".c":       { icon: "", color: "#7aa2f7" }
-      ".cpp":     { icon: "", color: "#7aa2f7" }
-      ".h":       { icon: "", color: "#7dcfff" }
-      ".hpp":     { icon: "", color: "#7dcfff" }
-      ".sh":      { icon: "", color: "#9ece6a" }
-      ".zsh":     { icon: "", color: "#9ece6a" }
-      ".bash":    { icon: "", color: "#9ece6a" }
-      ".md":      { icon: "", color: "#7dcfff" }
-      ".html":    { icon: "", color: "#ff9e64" }
-      ".css":     { icon: "", color: "#7aa2f7" }
-      ".scss":    { icon: "", color: "#f7768e" }
-      ".json":    { icon: "", color: "#e0af68" }
-      ".jsonc":   { icon: "", color: "#e0af68" }
-      ".yml":     { icon: "", color: "#f7768e" }
-      ".yaml":    { icon: "", color: "#f7768e" }
-      ".toml":    { icon: "", color: "#ff9e64" }
-      ".conf":    { icon: "", color: "#a9b1d6" }
-      ".sql":     { icon: "", color: "#7aa2f7" }
-      ".vim":     { icon: "", color: "#9ece6a" }
-      ".lock":    { icon: "", color: "#565f89" }
-      ".log":     { icon: "", color: "#565f89" }
-      ".png":     { icon: "", color: "#2ac3de" }
-      ".jpg":     { icon: "", color: "#2ac3de" }
-      ".svg":     { icon: "", color: "#e0af68" }
-      ".gif":     { icon: "", color: "#2ac3de" }
-
+      ".lua": {icon: "", color: "#7aa2f7"}
+      ".ts": {icon: "", color: "#7aa2f7"}
+      ".tsx": {icon: "", color: "#7dcfff"}
+      ".js": {icon: "", color: "#e0af68"}
+      ".jsx": {icon: "", color: "#7dcfff"}
+      ".py": {icon: "", color: "#e0af68"}
+      ".rs": {icon: "", color: "#ff9e64"}
+      ".go": {icon: "", color: "#7dcfff"}
+      ".rb": {icon: "", color: "#f7768e"}
+      ".java": {icon: "", color: "#ff9e64"}
+      ".kt": {icon: "", color: "#ff9e64"}
+      ".swift": {icon: "", color: "#ff9e64"}
+      ".c": {icon: "", color: "#7aa2f7"}
+      ".cpp": {icon: "", color: "#7aa2f7"}
+      ".h": {icon: "", color: "#7dcfff"}
+      ".hpp": {icon: "", color: "#7dcfff"}
+      ".sh": {icon: "", color: "#9ece6a"}
+      ".zsh": {icon: "", color: "#9ece6a"}
+      ".bash": {icon: "", color: "#9ece6a"}
+      ".md": {icon: "", color: "#7dcfff"}
+      ".html": {icon: "", color: "#ff9e64"}
+      ".css": {icon: "", color: "#7aa2f7"}
+      ".scss": {icon: "", color: "#f7768e"}
+      ".json": {icon: "", color: "#e0af68"}
+      ".jsonc": {icon: "", color: "#e0af68"}
+      ".yml": {icon: "", color: "#f7768e"}
+      ".yaml": {icon: "", color: "#f7768e"}
+      ".toml": {icon: "", color: "#ff9e64"}
+      ".conf": {icon: "", color: "#a9b1d6"}
+      ".sql": {icon: "", color: "#7aa2f7"}
+      ".vim": {icon: "", color: "#9ece6a"}
+      ".lock": {icon: "", color: "#565f89"}
+      ".log": {icon: "", color: "#565f89"}
+      ".png": {icon: "", color: "#2ac3de"}
+      ".jpg": {icon: "", color: "#2ac3de"}
+      ".svg": {icon: "", color: "#e0af68"}
+      ".gif": {icon: "", color: "#2ac3de"}
 git:
-  pagers:
+  diffRenderers:
     - colorArg: always
       # Install `delta` for syntax-highlighted diffs, then uncomment:
       # pager: delta --dark --paging=never --line-numbers --hunk-header-style="omit" --file-style="#7aa2f7" --file-decoration-style="#1a1d29 ul" --plus-style="syntax #1f3b2a" --minus-style="syntax #3b1f2b"
+
+      type: rawGit
   commit:
     signOff: false
     autoWrapCommitMessage: true
@@ -179,10 +177,9 @@ git:
   disableForcePushing: false
   allBranchesLogCmds:
     - git log --graph --all --color=always --abbrev-commit --decorate --date=relative --pretty=medium
-
 os:
-  editPreset: "nvim"
-
+  # opens in the parent nvim when lazygit runs inside nvim; plain nvim otherwise
+  editPreset: "nvim-remote"
 confirmOnQuit: false
 quitOnTopLevelReturn: false
 disableStartupPopups: true

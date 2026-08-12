@@ -5,7 +5,7 @@
   "spacing": 0,
 
   "modules-left": ["hyprland/workspaces"],
-  "modules-center": ["clock", "custom/media", "cpu", "memory", "temperature", "custom/top-process"],
+  "modules-center": ["clock", "cpu", "memory", "custom/gpu", "temperature"],
   "modules-right": [
     "group/tray-drawer",
     "power-profiles-daemon",
@@ -67,18 +67,6 @@
     },
   },
 
-  "custom/media": {
-    "format": "{}",
-    "return-type": "json",
-    "max-length": 30,
-    "interval": 2,
-    "exec": "playerctl -a metadata --format '{\"text\": \"{{artist}} - {{title}}\", \"alt\": \"{{status}}\", \"tooltip\": \"{{title}} ({{artist}})\", \"class\": \"{{status}}\"}' 2>/dev/null | head -n 1",
-    "exec-if": "pgrep playerctld || playerctl status 2>/dev/null",
-    "on-click": "playerctl play-pause",
-    "on-scroll-up": "playerctl next",
-    "on-scroll-down": "playerctl previous",
-  },
-
   "cpu": {
     "interval": 5,
     "format": "<span size=\"large\"> </span> {usage}%",
@@ -103,11 +91,11 @@
     "on-click": "~/dotfiles/waybar/scripts/popup-toggle.sh btop btop",
   },
 
-  "custom/top-process": {
-    "exec": "~/dotfiles/waybar/scripts/top-process.sh",
+  "custom/gpu": {
+    "exec": "~/dotfiles/waybar/scripts/gpu.sh",
     "return-type": "json",
-    "interval": 3,
-    "format": "<span size=\"large\">󰓅</span> {}",
+    "interval": 5,
+    "format": "<span size=\"large\">󰢮 </span> {}",
     "on-click": "~/dotfiles/waybar/scripts/popup-toggle.sh btop btop",
     "tooltip": true,
   },
