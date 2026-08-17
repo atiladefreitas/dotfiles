@@ -78,11 +78,15 @@ return {
 			end,
 			define_preview = function(self, entry)
 				local filepath = from_entry.path(entry, true, false)
-				if not filepath or filepath == "" then return end
+				if not filepath or filepath == "" then
+					return
+				end
 
 				-- clear previous image
 				if last_image then
-					pcall(function() last_image:clear() end)
+					pcall(function()
+						last_image:clear()
+					end)
 					last_image = nil
 				end
 
@@ -104,14 +108,19 @@ return {
 						debounce_timer:close()
 						debounce_timer = nil
 
-						if not vim.api.nvim_buf_is_valid(bufnr) then return end
+						if not vim.api.nvim_buf_is_valid(bufnr) then
+							return
+						end
 
 						-- downscale for faster preview
 						local tmp = vim.fn.tempname() .. ".png"
 						vim.fn.system({
-							"magick", filepath,
-							"-resize", "400x400>",
-							"-quality", "50",
+							"magick",
+							filepath,
+							"-resize",
+							"400x400>",
+							"-quality",
+							"50",
 							tmp,
 						})
 
@@ -138,9 +147,16 @@ return {
 
 		-- extensions to exclude from find_files
 		local ignore_patterns = {
-			"%.png$", "%.jpg$", "%.jpeg$", "%.gif$", "%.webp$",
-			"%.avif$", "%.ico$", "%.bmp$", "%.svg$", "%.tiff?$",
-			"%.md$",
+			"%.png$",
+			"%.jpg$",
+			"%.jpeg$",
+			"%.gif$",
+			"%.webp$",
+			"%.avif$",
+			"%.ico$",
+			"%.bmp$",
+			"%.svg$",
+			"%.tiff?$",
 		}
 
 		-- code-first sorter: jsx/tsx > js/ts > everything else
@@ -149,8 +165,12 @@ return {
 
 		local function file_tier(path)
 			local ext = (path:match("%.([^./\\]+)$") or ""):lower()
-			if jsx_exts[ext] then return 0 end
-			if js_exts[ext] then return 1 end
+			if jsx_exts[ext] then
+				return 0
+			end
+			if js_exts[ext] then
+				return 1
+			end
 			return 2
 		end
 
@@ -160,7 +180,9 @@ return {
 				local original = base.scoring_function
 				base.scoring_function = function(self, prompt, line, ...)
 					local score = original(self, prompt, line, ...)
-					if score == -1 then return score end
+					if score == -1 then
+						return score
+					end
 
 					local query = prompt:lower()
 					if query ~= "" then
@@ -284,9 +306,31 @@ return {
 			require("telescope.builtin").find_files({
 				prompt_title = "Find Images",
 				find_command = {
-					"fd", "--type", "f", "-e", "png", "-e", "jpg", "-e", "jpeg",
-					"-e", "gif", "-e", "webp", "-e", "avif", "-e", "ico",
-					"-e", "bmp", "-e", "svg", "-e", "tiff", "-e", "tif",
+					"fd",
+					"--type",
+					"f",
+					"-e",
+					"png",
+					"-e",
+					"jpg",
+					"-e",
+					"jpeg",
+					"-e",
+					"gif",
+					"-e",
+					"webp",
+					"-e",
+					"avif",
+					"-e",
+					"ico",
+					"-e",
+					"bmp",
+					"-e",
+					"svg",
+					"-e",
+					"tiff",
+					"-e",
+					"tif",
 				},
 				file_ignore_patterns = {},
 				previewer = image_previewer,

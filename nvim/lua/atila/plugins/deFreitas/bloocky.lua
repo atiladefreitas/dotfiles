@@ -1,7 +1,7 @@
 return {
 	-- beautiful time-blocking manager
 	{
-		dir = "~/Documents/projects/bloocky.nvim",
+		dir = "~/Documents/projects/Dooing/bloocky.nvim",
 		cmd = { "Bloocky", "BloockyToggle", "BloockyAdd" },
 		keys = {
 			{ "<leader>tb", "<cmd>BloockyToggle<cr>", desc = "Bloocky: toggle calendar" },
@@ -12,6 +12,19 @@ return {
 					dooing = {
 						enabled = true, -- show dooing todos on their due date
 						show_done = false, -- set true to also show completed ones
+					},
+				},
+
+				sync = {
+					enabled = true,
+					accounts = {
+						{
+							id = "gcal",
+							provider = "google",
+							client_id = "1038364586651-2ji16749avfdbnualmseddojfttdj68b.apps.googleusercontent.com",
+							client_secret_cmd = { "secret-tool", "lookup", "service", "bloocky", "key", "google" },
+							calendar_id = "atilajcfreitas@gmail.com",
+						},
 					},
 				},
 

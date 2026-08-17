@@ -10,9 +10,9 @@ return {
 				transparent = false,
 				on_colors = function(colors)
 					colors.bg = "#090a12"
-					colors.bg_dark = "#0a0b11"
-					colors.bg_dark1 = "#05060a"
-					colors.bg_highlight = "#1a1d29"
+					-- colors.bg_dark = "#0a0b11"
+					-- colors.bg_dark1 = "#05060a"
+					-- colors.bg_highlight = "#1a1d29"
 				end,
 			})
 			vim.cmd("colorscheme tokyonight")

@@ -1,4 +1,7 @@
 -- homepagge
+local dashboard = require("atila.dashboard")
+local dooing_dash = dashboard.dooing
+
 return {
 	"folke/snacks.nvim",
 	priority = 1000,
@@ -7,22 +10,30 @@ return {
 		bigfile = { enabled = true },
 		dashboard = {
 			enabled = true,
+			pane_gap = 6,
 			sections = {
 				{ section = "header" },
 				{ section = "keys", gap = 1, padding = 1 },
 				{ section = "startup" },
+
+				-- right pane: repo, pending Dooing todos, today's Bloocky blocks, actions
+				dashboard.git.section({ pane = 2 }),
+				dooing_dash.section({ pane = 2, limit = 6 }),
+				dashboard.bloocky.section({ pane = 2, limit = 4 }),
+				dashboard.bloocky.week_section({ pane = 2 }),
+				{
+					pane = 2,
+					gap = 1,
+					{ icon = "󰄲 ", key = "d", desc = "Todos (Dooing)", action = ":Dooing" },
+					{ icon = "󰐕 ", key = "a", desc = "Add Todo", action = dooing_dash.add_todo },
+					{ icon = "󰃭 ", key = "b", desc = "Time Blocks (Bloocky)", action = ":BloockyToggle" },
+				},
 			},
 			preset = {
 				keys = {
 					{ icon = " ", key = "f", desc = "Find File", action = ":Telescope find_files" },
 					{ icon = "󱎸 ", key = "g", desc = "Find Text", action = ":Telescope live_grep" },
 					{ icon = " ", key = "r", desc = "Recent Files", action = ":Telescope oldfiles" },
-					{
-						icon = " ",
-						key = "c",
-						desc = "Config",
-						action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})",
-					},
 					{
 						icon = "󰒲 ",
 						key = "L",
@@ -131,6 +142,9 @@ return {
 	},
 
 	init = function()
+		-- redraw the todo/schedule panes whenever the dashboard is entered
+		dashboard.setup()
+
 		vim.api.nvim_create_autocmd("User", {
 			pattern = "VeryLazy",
 			callback = function()

@@ -16,6 +16,7 @@ return {
 				timestamp = {
 					enabled = true, -- Show relative timestamps (this is what `show_entered_date` meant)
 				},
+				sync = { server = { enabled = true } },
 				keymaps = {
 					show_due_notification = "<leader>tM",
 					share_todos = "<leader>S", -- pick any free key

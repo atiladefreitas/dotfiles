@@ -79,7 +79,6 @@ return {
 		},
 		window = {
 			position = "left",
-			width = "30%",
 			mappings = {
 				["<Esc>"] = "close_window",
 				["h"] = "navigate_up",
