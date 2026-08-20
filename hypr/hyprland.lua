@@ -345,13 +345,13 @@ hl.window_rule({
 	float = true,
 	size = "1920 1080",
 	center = true,
-	dim_around = true,
+	dim_around = false,
 })
 
 hl.window_rule({
 	name = "dim-behind-kitty",
 	match = { class = "^(kitty)$", float = true },
-	dim_around = true,
+	dim_around = false,
 })
 
 hl.window_rule({

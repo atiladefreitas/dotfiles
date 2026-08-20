@@ -35,8 +35,8 @@ return {
 					-- Size per view: a fraction of the editor, absolute cells if > 1,
 					-- or "full" for everything available. A single value applies to
 					-- every view. Floating mode only.
-					-- width = "full",
-					-- height = "full",
+					width = "full",
+					height = "full",
 
 					border = "rounded",
 
