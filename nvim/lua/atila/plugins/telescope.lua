@@ -4,38 +4,34 @@
 local telescope = require("telescope")
 local actions = require("telescope.actions")
 
--- tokyonight-inspired highlight overrides for telescope
-local bg_dark = "#0a0b11"
-local bg = "#0f1019"
-local bg_highlight = "#1a1d29"
-local blue = "#7aa2f7"
-local cyan = "#7dcfff"
-local green = "#9ece6a"
-local fg = "#c0caf5"
-local fg_dark = "#565f89"
+-- Telescope's own groups, derived from the active colorscheme and
+-- repainted whenever it changes (see plugins/theme.lua).
+require("atila.plugins.theme").on_change("telescope", function(p)
+	local groups = {
+		TelescopeMatching = { fg = p.cyan, bold = true },
+		TelescopeSelection = { fg = p.fg, bg = p.bg_highlight, bold = true },
+		TelescopeSelectionCaret = { fg = p.blue, bg = p.bg_highlight },
 
-local TelescopeColor = {
-	TelescopeMatching = { fg = cyan },
-	TelescopeSelection = { fg = fg, bg = bg_highlight, bold = true },
-	TelescopeSelectionCaret = { fg = blue, bg = bg_highlight },
+		-- Three surfaces, deepest first: the input well, the list, then the
+		-- preview at page level so previewed code looks like the editor.
+		TelescopePromptPrefix = { fg = p.blue, bg = p.bg_deep },
+		TelescopePromptNormal = { bg = p.bg_deep },
+		TelescopePromptBorder = { bg = p.bg_deep, fg = p.bg_deep },
+		TelescopePromptTitle = { bg = p.blue, fg = p.on_accent, bold = true },
+		TelescopePromptCounter = { fg = p.fg_dark },
 
-	TelescopePromptPrefix = { fg = blue, bg = bg_dark },
-	TelescopePromptNormal = { bg = bg_dark },
-	TelescopePromptBorder = { bg = bg_dark, fg = bg_dark },
-	TelescopePromptTitle = { bg = blue, fg = bg_dark, bold = true },
-	TelescopePromptCounter = { fg = fg_dark },
+		TelescopeResultsNormal = { bg = p.bg_dark },
+		TelescopeResultsBorder = { bg = p.bg_dark, fg = p.bg_dark },
+		TelescopeResultsTitle = { fg = p.bg_dark },
 
-	TelescopeResultsNormal = { bg = bg },
-	TelescopeResultsBorder = { bg = bg, fg = bg },
-	TelescopeResultsTitle = { fg = bg },
-
-	TelescopePreviewNormal = { bg = bg_highlight },
-	TelescopePreviewBorder = { bg = bg_highlight, fg = bg_highlight },
-	TelescopePreviewTitle = { bg = green, fg = bg_dark, bold = true },
-}
-for hl, col in pairs(TelescopeColor) do
-	vim.api.nvim_set_hl(0, hl, col)
-end
+		TelescopePreviewNormal = { bg = p.bg },
+		TelescopePreviewBorder = { bg = p.bg, fg = p.bg },
+		TelescopePreviewTitle = { bg = p.green, fg = p.on_accent, bold = true },
+	}
+	for group, spec in pairs(groups) do
+		vim.api.nvim_set_hl(0, group, spec)
+	end
+end)
 
 -- image preview via image.nvim
 local previewers = require("telescope.previewers")

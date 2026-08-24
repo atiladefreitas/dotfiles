@@ -1,74 +1,94 @@
 -- ╭──────────────────────────────────────────────────────────────────╮
--- │  markdown.lua — editorial markdown, tuned for Tokyo Night        │
+-- │  markdown.lua — editorial markdown, in the scheme of the day     │
 -- │                                                                  │
--- │  1. palette      shared ink & paper tones                        │
+-- │  1. ink()        shared ink & paper tones, from the live scheme  │
 -- │  2. paint()      highlight groups (reapplied on ColorScheme)     │
 -- │  3. render-markdown.nvim                                         │
 -- │  4. obsidian.nvim                                                │
 -- ╰──────────────────────────────────────────────────────────────────╯
 
--- ── 1. Palette ──────────────────────────────────────────────────────
+-- ── 1. Ink ──────────────────────────────────────────────────────────
 -- One ink set for everything markdown, so render-markdown, treesitter
--- and obsidian.nvim all read as a single typeset page.
--- The page is pure black (see colorscheme.lua: colors.bg = "#000000"), so a
--- heading band is simply that level's own ink pulled most of the way back
--- to the paper. Move PAGE if the background ever moves.
-local PAGE = { 0x00, 0x00, 0x00 }
+-- and obsidian.nvim all read as a single typeset page — and all of it
+-- comes from whatever colorscheme is loaded, never a fixed hex.
+local theme = require("atila.plugins.theme")
 
----Blend an ink toward the page. alpha 1 = full ink, 0 = bare paper.
----@param hex string
----@param alpha number
----@return string
-local function tint(hex, alpha)
-  local out = {}
-  for i, byte in ipairs({ hex:match("^#(%x%x)(%x%x)(%x%x)$") }) do
-    out[i] = math.floor(PAGE[i] + (tonumber(byte, 16) - PAGE[i]) * alpha + 0.5)
+---Derive the page's ink from the current palette.
+---@param p table palette from atila.plugins.theme
+---@return table
+local function ink(p)
+  -- A heading band is that level's own ink pulled most of the way back to
+  -- the paper, so it works on black, on gruvbox brown, on a light page.
+  local tint = function(hex, alpha)
+    return theme.blend(hex, p.bg, alpha)
   end
-  return ("#%02x%02x%02x"):format(out[1], out[2], out[3])
+
+  local ink = {
+    -- Heading foregrounds (brightest text → descending accents)
+    h1 = p.fg,
+    h2 = p.purple,
+    h3 = p.blue,
+    h4 = p.cyan,
+    h5 = p.green,
+    h6 = p.yellow,
+
+    -- Surfaces
+    code_bg = theme.blend(p.bg_highlight, p.bg, 0.5),
+    code_inline_bg = p.bg_highlight,
+
+    -- Type
+    body = theme.blend(p.fg, p.bg, 0.85),
+    muted = p.fg_dark,
+    rule = theme.blend(p.fg_dark, p.bg, 0.4),
+
+    -- Accents
+    blue = p.blue,
+    cyan = p.cyan,
+    green = p.green,
+    amber = p.yellow,
+    magenta = p.purple,
+    red = p.red,
+    quote_text = theme.blend(p.fg, p.bg, 0.72),
+    highlight_bg = tint(p.yellow, 0.22),
+  }
+
+  -- Heading bands: each level tinted with its own hue, strong under a title
+  -- and gone by H5 — depth is legible before you've read a word.
+  ink.h1_bg = tint(ink.h1, 0.16)
+  ink.h2_bg = tint(ink.h2, 0.13)
+  ink.h3_bg = tint(ink.h3, 0.10)
+  ink.h4_bg = tint(ink.h4, 0.07)
+  ink.h5_bg = "NONE"
+  ink.h6_bg = "NONE"
+
+  return ink
 end
 
-local p = {
-  -- Heading foregrounds (bright vellum → descending accents)
-  h1 = "#c0caf5",
-  h2 = "#bb9af7",
-  h3 = "#7aa2f7",
-  h4 = "#7dcfff",
-  h5 = "#9ece6a",
-  h6 = "#e0af68",
-
-  -- Surfaces
-  code_bg = "#0c0e18",
-  code_inline_bg = "#1a1b2e",
-
-  -- Type
-  body = "#a9b1d6",
-  muted = "#565f89",
-  rule = "#1f2335",
-
-  -- Accents
-  blue = "#7aa2f7",
-  cyan = "#7dcfff",
-  green = "#9ece6a",
-  amber = "#e0af68",
-  magenta = "#bb9af7",
-  red = "#f7768e",
-  quote_text = "#9aa5ce",
-  highlight_bg = "#3d2f1f",
-}
-
--- Heading bands: each level tinted with its own hue, strong under a title
--- and gone by H5 — depth is legible before you've read a word.
-p.h1_bg = tint(p.h1, 0.16)
-p.h2_bg = tint(p.h2, 0.13)
-p.h3_bg = tint(p.h3, 0.10)
-p.h4_bg = tint(p.h4, 0.07)
-p.h5_bg = "NONE"
-p.h6_bg = "NONE"
+---Obsidian's marks, in the same ink. Shared between its setup() table
+---and paint(), so both sides can never drift.
+---@param p table result of ink()
+---@return table
+local function obsidian_groups(p)
+  return {
+    ObsidianTodo = { bold = true, fg = p.amber },
+    ObsidianDone = { bold = true, fg = p.green },
+    ObsidianRightArrow = { bold = true, fg = p.blue },
+    ObsidianTilde = { bold = true, fg = p.magenta },
+    ObsidianImportant = { bold = true, fg = p.amber },
+    ObsidianBullet = { bold = true, fg = p.cyan },
+    ObsidianRefText = { underline = true, fg = p.magenta },
+    ObsidianExtLinkIcon = { fg = p.magenta },
+    ObsidianTag = { italic = true, fg = p.cyan },
+    ObsidianBlockID = { italic = true, fg = p.cyan },
+    ObsidianHighlightText = { bg = p.highlight_bg, fg = p.amber },
+  }
+end
 
 -- ── 2. Highlights ───────────────────────────────────────────────────
 -- Everything lives in one function so a colorscheme change can't wash
 -- the page out — we simply repaint.
-local function paint()
+local function paint(palette)
+  local p = ink(palette)
   local hl = function(group, spec)
     vim.api.nvim_set_hl(0, group, spec)
   end
@@ -76,7 +96,7 @@ local function paint()
   -- Headings — one source of truth per level, painted onto all three
   -- surfaces that make up a heading: the bar icon (RenderMarkdownHN), the
   -- band (…Bg) and the heading text itself. That last one is treesitter's,
-  -- and tokyonight paints it from its own rainbow unless we say otherwise.
+  -- and the scheme paints it from its own rainbow unless we say otherwise.
   -- (Heading borders take their color from the band, not a Border group.)
   local levels = {
     { fg = p.h1, bg = p.h1_bg },
@@ -143,6 +163,12 @@ local function paint()
   hl("@markup.raw.markdown_inline", { fg = p.cyan, bg = p.code_inline_bg })
   hl("@markup.link.label.markdown_inline", { fg = p.blue, italic = true })
   hl("@markup.link.url.markdown_inline", { fg = p.muted, italic = true, underline = true })
+
+  -- obsidian.nvim's marks — same ink, set here as well as in its own
+  -- `hl_groups` so a colorscheme change repaints them too.
+  for group, spec in pairs(obsidian_groups(p)) do
+    hl(group, spec)
+  end
 
   -- The foldcolumn is reading-margin padding, keep it invisible
   hl("FoldColumn", { fg = "NONE", bg = "NONE" })
@@ -401,21 +427,17 @@ local render_markdown_opts = {
 
 require("render-markdown").setup(render_markdown_opts)
 
--- Paint now, and repaint whenever the colorscheme changes so the
--- editorial palette survives theme reloads.
-paint()
-vim.api.nvim_create_autocmd("ColorScheme", {
-  group = vim.api.nvim_create_augroup("MarkdownEditorialInk", { clear = true }),
-  callback = function()
-    paint()
-    -- render-markdown caches the icon/border colors it derives from
-    -- ours and refreshes them on ColorScheme too — but its autocmd was
-    -- registered first, so it would recompute from the old palette.
-    pcall(function()
-      require("render-markdown.core.colors").reload()
-    end)
-  end,
-})
+-- Paint now, and repaint whenever the colorscheme changes so the page is
+-- always typeset in the scheme that is actually loaded.
+theme.on_change("markdown", function(palette)
+  paint(palette)
+  -- render-markdown caches the icon/border colors it derives from ours
+  -- and refreshes them on ColorScheme too — but its autocmd was
+  -- registered first, so it would recompute from the old palette.
+  pcall(function()
+    require("render-markdown.core.colors").reload()
+  end)
+end)
 
 -- ────────────────────────────────────────────────────────────────
 --  Reading-mode ergonomics for markdown buffers
@@ -664,20 +686,9 @@ require("obsidian").setup({
     highlight_text = { hl_group = "ObsidianHighlightText" },
     tags = { hl_group = "ObsidianTag" },
     block_ids = { hl_group = "ObsidianBlockID" },
-    hl_groups = {
-      -- Same editorial ink as render-markdown
-      ObsidianTodo = { bold = true, fg = p.amber },
-      ObsidianDone = { bold = true, fg = p.green },
-      ObsidianRightArrow = { bold = true, fg = p.blue },
-      ObsidianTilde = { bold = true, fg = p.magenta },
-      ObsidianImportant = { bold = true, fg = p.amber },
-      ObsidianBullet = { bold = true, fg = p.cyan },
-      ObsidianRefText = { underline = true, fg = p.magenta },
-      ObsidianExtLinkIcon = { fg = p.magenta },
-      ObsidianTag = { italic = true, fg = p.cyan },
-      ObsidianBlockID = { italic = true, fg = p.cyan },
-      ObsidianHighlightText = { bg = p.highlight_bg, fg = p.amber },
-    },
+    -- Same editorial ink as render-markdown; paint() re-derives these
+    -- from the live palette on every colorscheme change.
+    hl_groups = obsidian_groups(ink(theme.palette)),
   },
   attachments = {
     img_folder = "assets/imgs", -- This is the default

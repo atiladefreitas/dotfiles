@@ -134,7 +134,7 @@ conform.setup({
 				local out_lines = {}
 				-- Match quoted class strings and sort prose classes within them
 				for _, line in ipairs(lines) do
-					local new_line = line:gsub('(["\'])(.-)%1', function(quote, content)
+					local new_line = line:gsub("([\"'])(.-)%1", function(quote, content)
 						-- Only process if the string contains prose- classes
 						if content:match("prose%-") then
 							return quote .. sort_prose_classes(content) .. quote

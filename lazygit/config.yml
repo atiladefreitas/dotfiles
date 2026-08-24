@@ -1,11 +1,11 @@
-## Lazygit — Tokyo Night (matches nvim tokyonight "night" style)
+## Lazygit — Gruvbox dark (matches kitty/gruvbox.conf + tmux/gruvbox.conf)
 ## Palette
-##   bg            #090a12   bg_dark   #0a0b11   bg_highlight #1a1d29
-##   fg            #c0caf5   fg_dark   #a9b1d6   comment      #565f89
-##   blue          #7aa2f7   cyan      #7dcfff   green        #9ece6a
-##   magenta       #bb9af7   orange    #ff9e64   purple       #9d7cd8
-##   red           #f7768e   yellow    #e0af68   blue1        #2ac3de
-
+##   bg0 #282828   bg1 #3c3836   bg2 #504945   bg3 #665c54   bg4 #7c6f64
+##   gray #928374  fg4 #a89984   fg2 #d5c4a1   fg1 #ebdbb2   fg0 #fbf1c7
+##   red #fb4934   green #b8bb26 yellow #fabd2f
+##   blue #83a598  purple #d3869b aqua #8ec07c orange #fe8019
+##   dim: red #cc241d green #98971a yellow #d79921 blue #458588
+##        purple #b16286 aqua #689d6a orange #d65d0e
 gui:
   nerdFontsVersion: "3"
   showIcons: true
@@ -36,125 +36,125 @@ gui:
   commitHashLength: 8
   commitAuthorShortLength: 2
   commitAuthorLongLength: 17
-  # Tokyo Night — cyan-forward, stunning
+  # Gruvbox — warm, yellow-forward focus accent
   theme:
-    # Bright cyan border on the focused panel (was purple)
+    # Bright gruvbox yellow on the focused panel — matches tmux's active pane border
     activeBorderColor:
-      - "#7dcfff"
+      - "#fabd2f"
       - bold
-    # Light grey-white border on resting panels — visible, active cyan still pops
+    # Warm light-grey border on resting panels — visible, but the yellow still wins
     inactiveBorderColor:
-      - "#a9b1d6"
+      - "#a89984"
     # Bold orange when you're searching — unmistakable
     searchingActiveBorderColor:
-      - "#ff9e64"
+      - "#fe8019"
       - bold
-    # Bottom-bar keybind hints in blue
+    # Bottom-bar keybind hints in gruvbox blue
     optionsTextColor:
-      - "#7aa2f7"
-    # Vivid royal-blue selection bg — the "background" you can actually change
+      - "#83a598"
+    # Warm bg2 selection — the classic gruvbox highlight
     selectedLineBgColor:
-      - "#3d59a1"
+      - "#504945"
     # Softer selection bg when the panel is not focused
     inactiveViewSelectedLineBgColor:
-      - "#3b4261"
-    # Cherry-picked commits glow purple — the one tasteful purple accent
+      - "#3c3836"
+    # Cherry-picked commits glow purple against bg3
     cherryPickedCommitBgColor:
-      - "#414868"
+      - "#665c54"
     cherryPickedCommitFgColor:
-      - "#bb9af7"
+      - "#d3869b"
       - bold
-    # Marked base commit (rebase) glows yellow on a deep blue
+    # Marked base commit (rebase) glows yellow on bg2
     markedBaseCommitBgColor:
-      - "#3d59a1"
+      - "#504945"
     markedBaseCommitFgColor:
-      - "#e0af68"
+      - "#fabd2f"
       - bold
     unstagedChangesColor:
-      - "#f7768e"
+      - "#fb4934"
     defaultFgColor:
-      - "#c0caf5"
+      - "#ebdbb2"
   # Let lazygit auto-color authors via hash (more visually varied than a wildcard)
 
-  # Regex-driven branch coloring — cyan/blue/green/orange palette, minimal purple
+  # Regex-driven branch coloring — warm gruvbox accents
   branchColorPatterns:
-    "^(main|master)$": "#7dcfff" # cyan — trunk
-    "^(develop|dev)$": "#7aa2f7" # blue — integration
-    "^(staging|qa|preview)$": "#e0af68" # yellow — staging
-    "^(production|prod)$": "#f7768e" # red — prod
-    "^feature/": "#9ece6a" # green — features
-    "^feat/": "#9ece6a"
-    "^fix/": "#ff9e64" # orange — fixes
-    "^bugfix/": "#ff9e64"
-    "^hotfix/": "#f7768e" # red — hotfixes
-    "^release/": "#2ac3de" # blue1 — releases
-    "^chore/": "#565f89" # comment-grey — chores
-    "^docs/": "#7dcfff" # cyan — docs
-    "^refactor/": "#0db9d7" # blue2 — refactors
-    "^test/": "#e0af68" # yellow — tests
-    "^perf/": "#9ece6a" # green — perf
-    "^style/": "#bb9af7" # magenta — style (the lone purple)
-  # File-type icons painted in Tokyo Night accents.
+    "^(main|master)$": "#fabd2f" # yellow — trunk
+    "^(develop|dev)$": "#83a598" # blue — integration
+    "^(staging|qa|preview)$": "#d79921" # dim yellow — staging
+    "^(production|prod)$": "#fb4934" # red — prod
+    "^feature/": "#b8bb26" # green — features
+    "^feat/": "#b8bb26"
+    "^fix/": "#fe8019" # orange — fixes
+    "^bugfix/": "#fe8019"
+    "^hotfix/": "#fb4934" # red — hotfixes
+    "^release/": "#8ec07c" # aqua — releases
+    "^chore/": "#928374" # gray — chores
+    "^docs/": "#8ec07c" # aqua — docs
+    "^refactor/": "#458588" # dim blue — refactors
+    "^test/": "#d79921" # dim yellow — tests
+    "^perf/": "#b8bb26" # green — perf
+    "^style/": "#d3869b" # purple — style
+  # File-type icons painted in gruvbox accents.
   # Glyphs are nerd-font v3 codepoints.
   customIcons:
     filenames:
-      "README.md": {icon: "", color: "#7dcfff"}
-      "LICENSE": {icon: "", color: "#e0af68"}
-      "Makefile": {icon: "", color: "#f7768e"}
-      "Dockerfile": {icon: "", color: "#7aa2f7"}
-      "docker-compose.yml": {icon: "", color: "#7aa2f7"}
-      ".gitignore": {icon: "", color: "#ff9e64"}
-      ".env": {icon: "", color: "#e0af68"}
-      "package.json": {icon: "", color: "#9ece6a"}
-      "package-lock.json": {icon: "", color: "#565f89"}
-      "tsconfig.json": {icon: "", color: "#7aa2f7"}
-      "Cargo.toml": {icon: "", color: "#ff9e64"}
-      "go.mod": {icon: "", color: "#7dcfff"}
-      "init.lua": {icon: "", color: "#7aa2f7"}
-      "config.yml": {icon: "", color: "#7dcfff"}
+      "README.md": {icon: "", color: "#8ec07c"}
+      "LICENSE": {icon: "", color: "#fabd2f"}
+      "Makefile": {icon: "", color: "#fb4934"}
+      "Dockerfile": {icon: "", color: "#83a598"}
+      "docker-compose.yml": {icon: "", color: "#83a598"}
+      ".gitignore": {icon: "", color: "#fe8019"}
+      ".env": {icon: "", color: "#fabd2f"}
+      "package.json": {icon: "", color: "#b8bb26"}
+      "package-lock.json": {icon: "", color: "#928374"}
+      "tsconfig.json": {icon: "", color: "#83a598"}
+      "Cargo.toml": {icon: "", color: "#fe8019"}
+      "go.mod": {icon: "", color: "#8ec07c"}
+      "init.lua": {icon: "", color: "#83a598"}
+      "config.yml": {icon: "", color: "#8ec07c"}
     extensions:
-      ".lua": {icon: "", color: "#7aa2f7"}
-      ".ts": {icon: "", color: "#7aa2f7"}
-      ".tsx": {icon: "", color: "#7dcfff"}
-      ".js": {icon: "", color: "#e0af68"}
-      ".jsx": {icon: "", color: "#7dcfff"}
-      ".py": {icon: "", color: "#e0af68"}
-      ".rs": {icon: "", color: "#ff9e64"}
-      ".go": {icon: "", color: "#7dcfff"}
-      ".rb": {icon: "", color: "#f7768e"}
-      ".java": {icon: "", color: "#ff9e64"}
-      ".kt": {icon: "", color: "#ff9e64"}
-      ".swift": {icon: "", color: "#ff9e64"}
-      ".c": {icon: "", color: "#7aa2f7"}
-      ".cpp": {icon: "", color: "#7aa2f7"}
-      ".h": {icon: "", color: "#7dcfff"}
-      ".hpp": {icon: "", color: "#7dcfff"}
-      ".sh": {icon: "", color: "#9ece6a"}
-      ".zsh": {icon: "", color: "#9ece6a"}
-      ".bash": {icon: "", color: "#9ece6a"}
-      ".md": {icon: "", color: "#7dcfff"}
-      ".html": {icon: "", color: "#ff9e64"}
-      ".css": {icon: "", color: "#7aa2f7"}
-      ".scss": {icon: "", color: "#f7768e"}
-      ".json": {icon: "", color: "#e0af68"}
-      ".jsonc": {icon: "", color: "#e0af68"}
-      ".yml": {icon: "", color: "#f7768e"}
-      ".yaml": {icon: "", color: "#f7768e"}
-      ".toml": {icon: "", color: "#ff9e64"}
-      ".conf": {icon: "", color: "#a9b1d6"}
-      ".sql": {icon: "", color: "#7aa2f7"}
-      ".vim": {icon: "", color: "#9ece6a"}
-      ".lock": {icon: "", color: "#565f89"}
-      ".log": {icon: "", color: "#565f89"}
-      ".png": {icon: "", color: "#2ac3de"}
-      ".jpg": {icon: "", color: "#2ac3de"}
-      ".svg": {icon: "", color: "#e0af68"}
-      ".gif": {icon: "", color: "#2ac3de"}
+      ".lua": {icon: "", color: "#83a598"}
+      ".ts": {icon: "", color: "#83a598"}
+      ".tsx": {icon: "", color: "#8ec07c"}
+      ".js": {icon: "", color: "#fabd2f"}
+      ".jsx": {icon: "", color: "#8ec07c"}
+      ".py": {icon: "", color: "#fabd2f"}
+      ".rs": {icon: "", color: "#fe8019"}
+      ".go": {icon: "", color: "#8ec07c"}
+      ".rb": {icon: "", color: "#fb4934"}
+      ".java": {icon: "", color: "#fe8019"}
+      ".kt": {icon: "", color: "#fe8019"}
+      ".swift": {icon: "", color: "#fe8019"}
+      ".c": {icon: "", color: "#83a598"}
+      ".cpp": {icon: "", color: "#83a598"}
+      ".h": {icon: "", color: "#8ec07c"}
+      ".hpp": {icon: "", color: "#8ec07c"}
+      ".sh": {icon: "", color: "#b8bb26"}
+      ".zsh": {icon: "", color: "#b8bb26"}
+      ".bash": {icon: "", color: "#b8bb26"}
+      ".md": {icon: "", color: "#8ec07c"}
+      ".html": {icon: "", color: "#fe8019"}
+      ".css": {icon: "", color: "#83a598"}
+      ".scss": {icon: "", color: "#fb4934"}
+      ".json": {icon: "", color: "#fabd2f"}
+      ".jsonc": {icon: "", color: "#fabd2f"}
+      ".yml": {icon: "", color: "#fb4934"}
+      ".yaml": {icon: "", color: "#fb4934"}
+      ".toml": {icon: "", color: "#fe8019"}
+      ".conf": {icon: "", color: "#a89984"}
+      ".sql": {icon: "", color: "#83a598"}
+      ".vim": {icon: "", color: "#b8bb26"}
+      ".lock": {icon: "", color: "#928374"}
+      ".log": {icon: "", color: "#928374"}
+      ".png": {icon: "", color: "#8ec07c"}
+      ".jpg": {icon: "", color: "#8ec07c"}
+      ".svg": {icon: "", color: "#fabd2f"}
+      ".gif": {icon: "", color: "#8ec07c"}
 git:
   diffRenderers:
     - colorArg: always
       # Install `delta` for syntax-highlighted diffs, then uncomment:
-      # pager: delta --dark --paging=never --line-numbers --hunk-header-style="omit" --file-style="#7aa2f7" --file-decoration-style="#1a1d29 ul" --plus-style="syntax #1f3b2a" --minus-style="syntax #3b1f2b"
+      # pager: delta --dark --paging=never --line-numbers --hunk-header-style="omit" --file-style="#83a598" --file-decoration-style="#3c3836 ul" --plus-style="syntax #32361a" --minus-style="syntax #3c1f1e"
 
       type: rawGit
   commit:

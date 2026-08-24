@@ -52,13 +52,14 @@ opt.foldlevel = 99      -- start with all folds open
 opt.foldlevelstart = 99
 opt.foldenable = true
 opt.fillchars:append({
+  eob = " ",          -- no ~ past the last line: windows read as blocks
   fold = " ",
   foldopen = "▾",     -- open fold marker
   foldclose = "▸",    -- closed fold marker
   foldsep = "│",
 })
 
--- turn on termguicolors for tokyonight colorscheme to work
+-- turn on termguicolors for the colorscheme to work
 -- (have to use iterm2 or any other true color terminal)
 opt.termguicolors = true
 opt.background = "dark" -- colorschemes that can be light or dark will be made dark

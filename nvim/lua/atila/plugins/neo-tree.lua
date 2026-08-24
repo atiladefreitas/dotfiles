@@ -66,6 +66,7 @@ local opts = {
 	},
 	window = {
 		position = "left",
+		width = 55,
 		mappings = {
 			["<Esc>"] = "close_window",
 			["h"] = "navigate_up",
@@ -80,13 +81,20 @@ local opts = {
 		follow_current_file = { enabled = true },
 		use_libuv_file_watcher = true,
 		group_empty_dirs = true,
+		-- Keep node_modules browsable in the tree, but out of "/" fuzzy search results.
+		find_args = {
+			fd = {
+				"--exclude",
+				"node_modules",
+			},
+		},
 		filtered_items = {
 			visible = true,
 			hide_dotfiles = false,
 			hide_gitignored = false,
 			never_show = {
-				"node_modules",
-				".git",
+				-- "node_modules",
+				-- ".git",
 				".DS_Store",
 				"thumbs.db",
 			},
@@ -115,45 +123,45 @@ local opts = {
 	},
 }
 
--- tokyonight-inspired highlights for neo-tree
-local bg = "#0f1019"
-local bg_dark = "#0a0b11"
-local bg_highlight = "#1a1d29"
-local blue = "#7aa2f7"
-local cyan = "#7dcfff"
-local green = "#9ece6a"
-local red = "#ff5370"
-local purple = "#bb9af7"
-local orange = "#ff9e64"
-local fg = "#c0caf5"
-local fg_dark = "#565f89"
-
-vim.api.nvim_set_hl(0, "NeoTreeNormal", { bg = bg, fg = fg })
-vim.api.nvim_set_hl(0, "NeoTreeNormalNC", { bg = bg, fg = fg })
-vim.api.nvim_set_hl(0, "NeoTreeFloatBorder", { bg = bg, fg = bg })
-vim.api.nvim_set_hl(0, "NeoTreeFloatTitle", { bg = blue, fg = bg_dark, bold = true })
-vim.api.nvim_set_hl(0, "NeoTreeTitleBar", { bg = blue, fg = bg_dark, bold = true })
-vim.api.nvim_set_hl(0, "NeoTreeCursorLine", { bg = bg_highlight })
-vim.api.nvim_set_hl(0, "NeoTreeDirectoryName", { fg = blue })
-vim.api.nvim_set_hl(0, "NeoTreeDirectoryIcon", { fg = blue })
-vim.api.nvim_set_hl(0, "NeoTreeRootName", { fg = blue, bold = true, italic = true })
-vim.api.nvim_set_hl(0, "NeoTreeFileName", { fg = fg })
-vim.api.nvim_set_hl(0, "NeoTreeFileIcon", { fg = fg_dark })
-vim.api.nvim_set_hl(0, "NeoTreeIndentMarker", { fg = "#2a2d3d" })
-vim.api.nvim_set_hl(0, "NeoTreeExpander", { fg = fg_dark })
-vim.api.nvim_set_hl(0, "NeoTreeGitAdded", { fg = green })
-vim.api.nvim_set_hl(0, "NeoTreeGitModified", { fg = orange })
-vim.api.nvim_set_hl(0, "NeoTreeGitDeleted", { fg = red })
-vim.api.nvim_set_hl(0, "NeoTreeGitConflict", { fg = red, bold = true })
-vim.api.nvim_set_hl(0, "NeoTreeGitUntracked", { fg = purple })
-vim.api.nvim_set_hl(0, "NeoTreeGitIgnored", { fg = fg_dark })
-vim.api.nvim_set_hl(0, "NeoTreeGitStaged", { fg = green })
-vim.api.nvim_set_hl(0, "NeoTreeGitUnstaged", { fg = orange })
-vim.api.nvim_set_hl(0, "NeoTreeModified", { fg = orange })
-vim.api.nvim_set_hl(0, "NeoTreeTabActive", { bg = bg, fg = blue, bold = true })
-vim.api.nvim_set_hl(0, "NeoTreeTabInactive", { bg = bg_dark, fg = fg_dark })
-vim.api.nvim_set_hl(0, "NeoTreeTabSeparatorActive", { bg = bg, fg = bg })
-vim.api.nvim_set_hl(0, "NeoTreeTabSeparatorInactive", { bg = bg_dark, fg = bg_dark })
+-- Neo-tree's own groups, derived from the active colorscheme and
+-- repainted whenever it changes (see plugins/theme.lua).
+require("atila.plugins.theme").on_change("neo-tree", function(p)
+	local groups = {
+		-- The sidebar is the deepest surface on screen, so the tree reads as
+		-- a shelf beside the page rather than another window of it.
+		NeoTreeNormal = { bg = p.bg_deep, fg = p.fg },
+		NeoTreeNormalNC = { bg = p.bg_deep, fg = p.fg },
+		NeoTreeEndOfBuffer = { bg = p.bg_deep, fg = p.bg_deep },
+		NeoTreeWinSeparator = { bg = p.bg_deep, fg = p.bg_deep },
+		NeoTreeFloatBorder = { bg = p.bg_deep, fg = p.bg_deep },
+		NeoTreeFloatTitle = { bg = p.blue, fg = p.on_accent, bold = true },
+		NeoTreeTitleBar = { bg = p.blue, fg = p.on_accent, bold = true },
+		NeoTreeCursorLine = { bg = p.bg_highlight },
+		NeoTreeDirectoryName = { fg = p.blue },
+		NeoTreeDirectoryIcon = { fg = p.blue },
+		NeoTreeRootName = { fg = p.blue, bold = true, italic = true },
+		NeoTreeFileName = { fg = p.fg },
+		NeoTreeFileIcon = { fg = p.fg_dark },
+		NeoTreeIndentMarker = { fg = require("atila.plugins.theme").blend(p.fg_dark, p.bg, 0.5) },
+		NeoTreeExpander = { fg = p.fg_dark },
+		NeoTreeGitAdded = { fg = p.git_add },
+		NeoTreeGitModified = { fg = p.git_change },
+		NeoTreeGitDeleted = { fg = p.git_delete },
+		NeoTreeGitConflict = { fg = p.red, bold = true },
+		NeoTreeGitUntracked = { fg = p.purple },
+		NeoTreeGitIgnored = { fg = p.fg_dark },
+		NeoTreeGitStaged = { fg = p.git_add },
+		NeoTreeGitUnstaged = { fg = p.git_change },
+		NeoTreeModified = { fg = p.git_change },
+		NeoTreeTabActive = { bg = p.bg_deep, fg = p.blue, bold = true },
+		NeoTreeTabInactive = { bg = p.bg_deep, fg = p.fg_dark },
+		NeoTreeTabSeparatorActive = { bg = p.bg_deep, fg = p.bg_deep },
+		NeoTreeTabSeparatorInactive = { bg = p.bg_deep, fg = p.bg_deep },
+	}
+	for group, spec in pairs(groups) do
+		vim.api.nvim_set_hl(0, group, spec)
+	end
+end)
 
 require("neo-tree").setup(opts)
 

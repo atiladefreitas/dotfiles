@@ -1,3 +1,16 @@
+/* gruvbox-dark theme for waybar
+ * Matches tmux/gruvbox.conf and kitty/gruvbox.conf.
+ *
+ *   bg0_h #1d2021  bg0 #282828  bg1 #3c3836  bg2 #504945  bg3 #665c54
+ *   gray #928374   fg4 #a89984  fg2 #d5c4a1  fg1 #ebdbb2  fg0 #fbf1c7
+ *   red #fb4934    green #b8bb26  yellow #fabd2f
+ *   blue #83a598   purple #d3869b aqua #8ec07c  orange #fe8019
+ *
+ * Same rule as the tmux bar: content sits in muted fg, and color is spent
+ * only where it means something — the active workspace, and a module that
+ * has entered a state you should look at.
+ */
+
 * {
   border: none;
   border-radius: 0;
@@ -8,32 +21,29 @@
 }
 
 window#waybar {
-  background-color: #000000;
-  color: #ffffff;
-  border-bottom: 1px solid #1a1a1a;
+  background-color: #282828;
+  color: #ebdbb2;
+  /* Bar is anchored bottom, so the edge that faces the screen is the top. */
+  border-top: 1px solid #3c3836;
 }
 
 tooltip {
-  background-color: #000000;
-  border: 1px solid #ffffff;
-  color: #ffffff;
+  background-color: #1d2021;
+  border: 1px solid #504945;
+  color: #ebdbb2;
   border-radius: 6px;
 }
 
 tooltip label {
-  color: #ffffff;
+  color: #ebdbb2;
   padding: 6px;
 }
 
 /* ---------- calendar tooltip ---------- */
-#clock {
-  /* keep clock-specific tooltip readable */
-}
-
 #clock tooltip,
 tooltip.clock {
-  background-color: #0a0a0a;
-  border: 1px solid #2a2a2a;
+  background-color: #1d2021;
+  border: 1px solid #504945;
   padding: 14px 18px;
 }
 
@@ -42,7 +52,7 @@ tooltip.clock label {
   font-family: "JetBrainsMono Nerd Font", monospace;
   font-size: 16px;
   padding: 12px 16px;
-  color: #ffffff;
+  color: #ebdbb2;
 }
 
 /* ---------- workspaces ---------- */
@@ -55,27 +65,28 @@ tooltip.clock label {
 #workspaces button {
   padding: 0 4px;
   margin: 0 2px;
-  color: #555555;
+  color: #665c54;
   background: transparent;
   border-bottom: 1px solid transparent;
   transition: color 120ms ease, border-color 120ms ease;
 }
 
 #workspaces button:hover {
-  color: #ffffff;
+  color: #ebdbb2;
   background: transparent;
   box-shadow: none;
   text-shadow: none;
 }
 
+/* The one bright accent on the bar, same as tmux's session name. */
 #workspaces button.active {
-  color: #ffffff;
-  border-bottom: 1px solid #ffffff;
+  color: #fabd2f;
+  border-bottom: 1px solid #fabd2f;
 }
 
 #workspaces button.urgent {
-  color: #000000;
-  background-color: #ffffff;
+  color: #282828;
+  background-color: #fb4934;
 }
 
 /* ---------- shared module styling ---------- */
@@ -94,7 +105,7 @@ tooltip.clock label {
 #custom-notification,
 #custom-power {
   padding: 0 8px;
-  color: #ffffff;
+  color: #ebdbb2;
   background: transparent;
 }
 
@@ -119,12 +130,12 @@ tooltip.clock label {
 
 #custom-tray-toggle {
   padding: 0 6px;
-  color: #888888;
+  color: #928374;
   transition: color 150ms ease;
 }
 
 #custom-tray-toggle:hover {
-  color: #ffffff;
+  color: #ebdbb2;
 }
 
 .tray-drawer-child {
@@ -134,60 +145,62 @@ tooltip.clock label {
 #tray > .passive { -gtk-icon-effect: dim; }
 #tray > .needs-attention { -gtk-icon-effect: highlight; }
 
-/* ---------- center separators ---------- */
+/* ---------- center cluster ---------- */
+/* Clock is the brightest thing in the middle; the metrics sit a step back
+ * so they read as context rather than as the headline. */
 #clock {
-  color: #ffffff;
+  color: #ebdbb2;
   font-weight: 600;
 }
 
 #cpu,
 #memory,
 #temperature {
-  color: #fff;
+  color: #d5c4a1;
 }
 
 #temperature.critical {
-  color: #000000;
-  background-color: #ffffff;
+  color: #282828;
+  background-color: #fb4934;
 }
 
 /* ---------- gpu ---------- */
 #custom-gpu {
-  color: #ffffff;
+  color: #d5c4a1;
 }
 
 /* dGPU parked in D3 — dim it so the bar reads as "nothing running there". */
 #custom-gpu.idle {
-  color: #666666;
+  color: #665c54;
 }
 
 #custom-gpu.high {
-  color: #ffffff;
+  color: #fabd2f;
 }
 
 #custom-gpu.critical {
-  color: #000000;
-  background-color: #ffffff;
+  color: #282828;
+  background-color: #fe8019;
 }
 
 #custom-gpu:hover {
-  color: #ffffff;
+  color: #ebdbb2;
 }
 
 /* ---------- right side ---------- */
 #battery.warning {
-  color: #ffffff;
+  color: #fabd2f;
 }
 
 #battery.critical:not(.charging) {
-  color: #000000;
-  background-color: #ffffff;
+  color: #282828;
+  background-color: #fb4934;
   animation: blink 1s linear infinite alternate;
 }
 
 #battery.charging,
 #battery.plugged {
-  color: #ffffff;
+  color: #b8bb26;
 }
 
 #custom-wifi,
@@ -196,7 +209,7 @@ tooltip.clock label {
 #power-profiles-daemon,
 #custom-notification,
 #custom-power {
-  color: #cccccc;
+  color: #a89984;
 }
 
 #custom-wifi:hover,
@@ -205,41 +218,48 @@ tooltip.clock label {
 #power-profiles-daemon:hover,
 #custom-notification:hover,
 #custom-power:hover {
-  color: #ffffff;
+  color: #ebdbb2;
+}
+
+/* No link at all — recede rather than shout, since offline is often
+ * deliberate. network.sh also emits .wifi and .ethernet, both left at the
+ * default fg so a working connection is unremarkable. */
+#custom-wifi.disconnected {
+  color: #665c54;
 }
 
 #custom-protonvpn.connected {
-  color: #6ee7b7;
+  color: #8ec07c;
 }
 
 #custom-protonvpn.disconnected {
-  color: #6b7280;
+  color: #665c54;
 }
 
 #custom-protonvpn:hover {
-  color: #ffffff;
+  color: #ebdbb2;
 }
 
 #custom-notification.dnd {
-  color: #666666;
+  color: #665c54;
 }
 
 #custom-notification.waiting {
-  color: #ffffff;
+  color: #fabd2f;
 }
 
 #custom-power {
-  color: #ff6b6b;
+  color: #cc241d;
 }
 
 #custom-power:hover {
-  color: #ffffff;
-  background-color: #ff3b3b;
+  color: #fbf1c7;
+  background-color: #fb4934;
 }
 
 @keyframes blink {
   to {
-    background-color: #000000;
-    color: #ffffff;
+    background-color: transparent;
+    color: #fb4934;
   }
 }

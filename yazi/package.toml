@@ -62,3 +62,8 @@ hash = "a04e157148549bacbb2831aab0e6e8cb"
 use = "BennyOe/tokyo-night"
 rev = "5f56364"
 hash = "c0bf69ad2c44005892d586e9693993c6"
+
+[[flavor.deps]]
+use = "bennyyip/gruvbox-dark"
+rev = "619fdc5"
+hash = "d4c7003ec6dc4efd5d3a050d5c2f2575"

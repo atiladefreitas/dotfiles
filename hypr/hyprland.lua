@@ -33,9 +33,9 @@ local brightness80 = "ddccontrol -r 0x10 -w 80 dev:/dev/i2c-2"
 local brightness90 = "ddccontrol -r 0x10 -w 90 dev:/dev/i2c-2"
 local brightness0 = "ddccontrol -r 0x10 -w 100 dev:/dev/i2c-2"
 
--- Floating tmux "system pane" (mocp/cliamp + yazi + btop), toggled via SUPER+P
+-- Floating tmux "system pane" (mocp/cliamp + btop), toggled via SUPER+P
 local systempaneScript =
-	[[bash -c 'PID=$(hyprctl clients -j | jq -r ".[] | select(.class == \"floating-systempane\") | .pid"); if [ -n "$PID" ]; then kill "$PID"; elif tmux has-session -t workspace 2>/dev/null; then kitty --class floating-systempane --override initial_window_width=1920 --override initial_window_height=1500 -e tmux attach -t workspace; else tmux new-session -d -s workspace \; split-window -h -p 80 \; select-pane -t 1 \; split-window -v -p 70 \; select-pane -t 0 \; send-keys "sleep 0.5 && clear && cliamp ~/Music" C-m \; select-pane -t 1 \; send-keys "yazi" C-m \; select-pane -t 2 \; send-keys "btop" C-m \; select-pane -t 0 && kitty --class floating-systempane --override initial_window_width=1920 --override initial_window_height=1500 -e tmux attach -t workspace; fi']]
+	[[bash -c 'PID=$(hyprctl clients -j | jq -r ".[] | select(.class == \"floating-systempane\") | .pid"); if [ -n "$PID" ]; then kill "$PID"; elif tmux has-session -t workspace 2>/dev/null; then kitty --class floating-systempane --override initial_window_width=1920 --override initial_window_height=1500 -e tmux attach -t workspace; else tmux new-session -d -s workspace \; split-window -h -p 80 \; select-pane -t 0 \; send-keys "sleep 0.5 && clear && cliamp ~/Music" C-m \; select-pane -t 1 \; send-keys "btop" C-m \; select-pane -t 0 && kitty --class floating-systempane --override initial_window_width=1920 --override initial_window_height=1500 -e tmux attach -t workspace; fi']]
 
 -- Yazi popup, toggled via SUPER+E
 local yaziToggleScript =
@@ -207,7 +207,7 @@ end)
 hl.bind(mainMod .. " + space", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("~/dotfiles/waybar/scripts/protonvpn-toggle.sh"))
 
--- System pane (floating tmux: cliamp + yazi + btop)
+-- System pane (floating tmux: cliamp + btop)
 hl.bind(mainMod .. " + P", hl.dsp.exec_cmd(systempaneScript))
 
 -- Calculator popup (tical TUI in a small floating kitty), toggled

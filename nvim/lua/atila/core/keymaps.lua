@@ -43,11 +43,13 @@ vim.keymap.set("n", "<leader>st", function()
 	vim.api.nvim_command("startinsert")
 end, { desc = "paste current time" })
 
--- highlight groups for floating inputs
-vim.api.nvim_set_hl(0, "FloatCalcBorder", { fg = "#7aa2f7" })
-vim.api.nvim_set_hl(0, "FloatCalcTitle", { fg = "#7aa2f7", bold = true })
-vim.api.nvim_set_hl(0, "FloatProseBorder", { fg = "#ff9e64" })
-vim.api.nvim_set_hl(0, "FloatProseTitle", { fg = "#ff9e64", bold = true })
+-- highlight groups for floating inputs, in the active scheme's accents
+require("atila.plugins.theme").on_change("float-inputs", function(p)
+	vim.api.nvim_set_hl(0, "FloatCalcBorder", { fg = p.blue })
+	vim.api.nvim_set_hl(0, "FloatCalcTitle", { fg = p.blue, bold = true })
+	vim.api.nvim_set_hl(0, "FloatProseBorder", { fg = p.orange })
+	vim.api.nvim_set_hl(0, "FloatProseTitle", { fg = p.orange, bold = true })
+end)
 
 -- floating input at cursor position
 local function float_input(opts, on_submit)

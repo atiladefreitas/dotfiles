@@ -5,6 +5,31 @@
 
 ---
 
+> ## ⚠️ Historical snapshot — re-audited 2026-08-21
+>
+> This is a point-in-time audit, kept for the reasoning behind changes already
+> made. **Most of it is closed.** Verified against the live config on
+> 2026-08-21, after the lazy.nvim → `vim.pack` migration:
+>
+> | Item | Status |
+> |------|--------|
+> | #3 `tohtml` in `disabled_plugins` | ✅ Resolved — `lazy.lua` is gone; `plugins/init.lua` omits it deliberately |
+> | #5 treesitter `iter_matches("all")` | ✅ Resolved — all plugins reinstalled at current versions |
+> | Obsidian macOS `open` / `qlmanage` | ✅ Resolved — now `vim.ui.open` (`markdown.lua:614`) |
+> | blink.cmp `treesitter_highlighting = false` | ✅ Resolved — re-enabled (`blink-cmp.lua:44`) |
+> | `nvim-ufo` in the plugin checklist | ✅ Gone — replaced by native treesitter folding |
+> | #4 `shelltemp = false` breaking formatters | ✅ Not an issue — a real `conform.format()` run reformats correctly; **do not** set `shelltemp = true` |
+> | #8 `buffer=` → `buf=` in keymap opts | ❌ Claim was wrong — `buffer=` emits no deprecation warning in 0.12 |
+> | #1 `vim.NIL` guard in the vtsls handler | ⚠️ Not applied, and not "CRITICAL" — a `vim.NIL` source keeps the diagnostic rather than dropping it. `vim.lsp.diagnostic.on_publish_diagnostics` is still a live, non-deprecated function |
+> | #C `gr` input delay | ✅ Resolved — `nowait = true` added (`native-lsp.lua`); 0.12 ships `grt gri grr grx gra grn`, so bare `gr` used to wait out `timeoutlen` |
+> | #A/B/D/E new 0.12 features | ⬜ Open by choice — `pumborder` and `ui2` are still untaken |
+>
+> **Anything not listed above is either closed or was never actionable.**
+> The whole "PLUGIN UPDATE CHECKLIST" section below is obsolete: it assumes
+> lazy.nvim and `:Lazy update`. The equivalent is now `:PackUpdate`.
+
+---
+
 ## Executive Summary
 
 After auditing your entire Neovim configuration against the Neovim 0.12 breaking

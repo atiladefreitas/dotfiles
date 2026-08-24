@@ -23,25 +23,23 @@ require("noice").setup({
 vim.o.timeout = true
 vim.o.timeoutlen = 100
 
-do
-	-- tokyonight-inspired which-key highlights
-	local bg = "#0f1019"
-	local bg_dark = "#0a0b11"
-	local blue = "#7aa2f7"
-	local cyan = "#7dcfff"
-	local purple = "#bb9af7"
-	local fg = "#c0caf5"
-	local fg_dark = "#565f89"
-
-	vim.api.nvim_set_hl(0, "WhichKeyNormal", { bg = bg, fg = fg })
-	vim.api.nvim_set_hl(0, "WhichKeyBorder", { bg = bg, fg = bg })
-	vim.api.nvim_set_hl(0, "WhichKeyTitle", { bg = blue, fg = bg_dark, bold = true })
-	vim.api.nvim_set_hl(0, "WhichKey", { fg = cyan, bold = true })
-	vim.api.nvim_set_hl(0, "WhichKeyGroup", { fg = purple })
-	vim.api.nvim_set_hl(0, "WhichKeyDesc", { fg = fg })
-	vim.api.nvim_set_hl(0, "WhichKeySeparator", { fg = fg_dark })
-	vim.api.nvim_set_hl(0, "WhichKeyValue", { fg = fg_dark })
-end
+-- Derived from the active colorscheme and repainted on every change
+-- (see plugins/theme.lua).
+require("atila.plugins.theme").on_change("which-key", function(p)
+	local groups = {
+		WhichKeyNormal = { bg = p.bg_raised, fg = p.fg },
+		WhichKeyBorder = { bg = p.bg_raised, fg = p.bg_raised },
+		WhichKeyTitle = { bg = p.blue, fg = p.on_accent, bold = true },
+		WhichKey = { fg = p.cyan, bold = true },
+		WhichKeyGroup = { fg = p.purple },
+		WhichKeyDesc = { fg = p.fg },
+		WhichKeySeparator = { fg = p.fg_dark },
+		WhichKeyValue = { fg = p.fg_dark },
+	}
+	for group, spec in pairs(groups) do
+		vim.api.nvim_set_hl(0, group, spec)
+	end
+end)
 
 require("which-key").setup({
 	preset = "modern",
