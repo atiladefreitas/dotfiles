@@ -85,6 +85,22 @@ require("snacks").setup({
 	},
 })
 
+-- Dashboard shortcuts that no longer have a visible entry in the sections, so
+-- snacks does not map them itself. Hooked to snacks' own "Opened" event rather
+-- than FileType: the dashboard sets its filetype under `eventignore = all`, and
+-- it maps `q` to `:bd` in init, which this has to run after to override.
+vim.api.nvim_create_autocmd("User", {
+	group = vim.api.nvim_create_augroup("atila_dashboard_keys", { clear = true }),
+	pattern = "SnacksDashboardOpened",
+	callback = function(ev)
+		local map = function(lhs, rhs, desc)
+			vim.keymap.set("n", lhs, rhs, { buffer = ev.buf, nowait = true, desc = desc })
+		end
+		map("r", "<cmd>Telescope oldfiles<cr>", "Recent Files")
+		map("q", "<cmd>qa<cr>", "Quit")
+	end,
+})
+
 -- ── Keymaps ─────────────────────────────────────────────────────────
 vim.keymap.set("n", "<leader>z", function()
 	Snacks.zen()
