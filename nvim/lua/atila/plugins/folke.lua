@@ -25,11 +25,20 @@ vim.o.timeoutlen = 100
 
 -- Derived from the active colorscheme and repainted on every change
 -- (see plugins/theme.lua).
-require("atila.plugins.theme").on_change("which-key", function(p)
+local theme = require("atila.plugins.theme")
+
+theme.on_change("which-key", function(p)
 	local groups = {
-		WhichKeyNormal = { bg = p.bg_raised, fg = p.fg },
-		WhichKeyBorder = { bg = p.bg_raised, fg = p.bg_raised },
-		WhichKeyTitle = { bg = p.blue, fg = p.on_accent, bold = true },
+		WhichKeyNormal = { bg = theme.surface(p.bg_raised), fg = p.fg },
+		WhichKeyBorder = {
+			bg = theme.surface(p.bg_raised),
+			fg = vim.g.atila_transparent and p.stroke or p.bg_raised,
+		},
+		WhichKeyTitle = {
+			bg = theme.surface(p.blue),
+			fg = vim.g.atila_transparent and p.cyan or p.on_accent,
+			bold = true,
+		},
 		WhichKey = { fg = p.cyan, bold = true },
 		WhichKeyGroup = { fg = p.purple },
 		WhichKeyDesc = { fg = p.fg },
@@ -107,7 +116,7 @@ require("sidekick").setup({
 			create = "split",
 			split = {
 				vertical = true, -- vertical split (pane on the side); set false for horizontal
-				size = 0.4, -- 40% of the window
+				size = 0.35, -- 35% of the window
 			},
 		},
 	},

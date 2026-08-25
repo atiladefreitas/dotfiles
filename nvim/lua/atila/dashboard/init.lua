@@ -2,7 +2,6 @@
 local M = {
 	dooing = require("atila.dashboard.dooing"),
 	bloocky = require("atila.dashboard.bloocky"),
-	git = require("atila.dashboard.git"),
 }
 
 -- Dooing and Bloocky write their JSON with plain io.open, so no BufWritePost

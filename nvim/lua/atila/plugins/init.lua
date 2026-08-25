@@ -241,6 +241,7 @@ util.counts.locals = vim.tbl_count(M.local_available)
 -- lspconfig, and nvim-navic before the statusline that renders it.
 local modules = {
 	"atila.plugins.colorscheme",
+	"atila.plugins.surfaces",
 	"atila.plugins.treesitter",
 	"atila.plugins.snacks",
 
@@ -289,6 +290,14 @@ for _, mod in ipairs(modules) do
 			vim.notify(("Failed to load %s:\n%s"):format(mod, err), vim.log.levels.ERROR)
 		end)
 	end
+end
+
+-- If colorscheme.lua was the module that failed, every highlight above was
+-- derived from Neovim's default scheme — the UI would come up in colors
+-- belonging to nothing. Load a built-in one so the palette has something
+-- coherent to read; setting it fires ColorScheme, which repaints the lot.
+if not vim.g.colors_name then
+	pcall(vim.cmd.colorscheme, "retrobox")
 end
 
 -- ── Management commands ─────────────────────────────────────────────

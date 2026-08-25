@@ -27,35 +27,22 @@ require("snacks").setup({
 	bigfile = { enabled = true },
 	dashboard = {
 		enabled = true,
-		pane_gap = 6,
 		sections = {
 			{ section = "header" },
-			{ section = "keys", gap = 1, padding = 1 },
-			startup_section,
-
-			-- right pane: repo, pending Dooing todos, today's Bloocky blocks, actions
-			dashboard.git.section({ pane = 2 }),
-			dooing_dash.section({ pane = 2, limit = 6 }),
-			dashboard.bloocky.section({ pane = 2, limit = 4 }),
-			dashboard.bloocky.week_section({ pane = 2 }),
+			-- pending Dooing todos, today's Bloocky blocks, actions
+			dooing_dash.section({ limit = 6 }),
+			dashboard.bloocky.section({ limit = 4 }),
+			dashboard.bloocky.week_section(),
 			{
-				pane = 2,
 				gap = 1,
 				{ icon = "󰄲 ", key = "d", desc = "Todos (Dooing)", action = ":Dooing" },
 				{ icon = "󰐕 ", key = "a", desc = "Add Todo", action = dooing_dash.add_todo },
 				{ icon = "󰃭 ", key = "b", desc = "Time Blocks (Bloocky)", action = ":BloockyToggle" },
 			},
+
+			startup_section,
 		},
 		preset = {
-			keys = {
-				{ icon = " ", key = "f", desc = "Find File", action = ":Telescope find_files" },
-				{ icon = "󱎸 ", key = "g", desc = "Find Text", action = ":Telescope live_grep" },
-				{ icon = " ", key = "r", desc = "Recent Files", action = ":Telescope oldfiles" },
-				-- Was ":Lazy"; vim.pack ships no UI, so this opens its update
-				-- review buffer instead (see :PackUpdate in plugins/init.lua).
-				{ icon = "󰏗 ", key = "L", desc = "Plugins", action = ":PackUpdate" },
-				{ icon = "󰗼 ", key = "q", desc = "Quit", action = ":qa" },
-			},
 			header = [[
 
 ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗

@@ -6,27 +6,49 @@ local actions = require("telescope.actions")
 
 -- Telescope's own groups, derived from the active colorscheme and
 -- repainted whenever it changes (see plugins/theme.lua).
-require("atila.plugins.theme").on_change("telescope", function(p)
+local theme = require("atila.plugins.theme")
+
+theme.on_change("telescope", function(p)
+	-- A border hides in its panel when there is one, and draws itself when
+	-- there isn't.
+	local border = function(surface)
+		return vim.g.atila_transparent and p.stroke or surface
+	end
+	-- A title bar with no bar behind it has to carry its color as ink — and
+	-- `cyan` rather than `blue`, for the reason lualine.lua gives: gruvbox
+	-- has no blue in its syntax groups, so theme.lua mints one, and a
+	-- minted accent is the wrong thing to put on visible chrome.
+	local title_fg = function(pal, accent)
+		return vim.g.atila_transparent and (accent or pal.cyan) or pal.on_accent
+	end
+
 	local groups = {
 		TelescopeMatching = { fg = p.cyan, bold = true },
+		-- Kept opaque on purpose: like PmenuSel, the selected row is the one
+		-- thing that has to be findable at a glance.
 		TelescopeSelection = { fg = p.fg, bg = p.bg_highlight, bold = true },
 		TelescopeSelectionCaret = { fg = p.blue, bg = p.bg_highlight },
 
-		-- Three surfaces, deepest first: the input well, the list, then the
-		-- preview at page level so previewed code looks like the editor.
-		TelescopePromptPrefix = { fg = p.blue, bg = p.bg_deep },
-		TelescopePromptNormal = { bg = p.bg_deep },
-		TelescopePromptBorder = { bg = p.bg_deep, fg = p.bg_deep },
-		TelescopePromptTitle = { bg = p.blue, fg = p.on_accent, bold = true },
+		-- Opaque, the picker is three surfaces deepest-first — the input
+		-- well, the list, then the preview at page level so previewed code
+		-- looks like the editor, each border hidden in its own surface.
+		-- Transparent, those surfaces are gone and the borders are what
+		-- separate the three panes, so they get drawn instead of hidden.
+		TelescopePromptPrefix = { fg = p.blue, bg = theme.surface(p.bg_deep) },
+		TelescopePromptNormal = { bg = theme.surface(p.bg_deep) },
+		TelescopePromptBorder = { bg = theme.surface(p.bg_deep), fg = border(p.bg_deep) },
+		TelescopePromptTitle = { bg = theme.surface(p.blue), fg = title_fg(p), bold = true },
 		TelescopePromptCounter = { fg = p.fg_dark },
 
-		TelescopeResultsNormal = { bg = p.bg_dark },
-		TelescopeResultsBorder = { bg = p.bg_dark, fg = p.bg_dark },
-		TelescopeResultsTitle = { fg = p.bg_dark },
+		TelescopeResultsNormal = { bg = theme.surface(p.bg_dark) },
+		TelescopeResultsBorder = { bg = theme.surface(p.bg_dark), fg = border(p.bg_dark) },
+		-- Hidden inside its own surface when there is one; with none, it
+		-- can't hide, so it reads as a quiet label in the border's ink.
+		TelescopeResultsTitle = { fg = border(p.bg_dark) },
 
-		TelescopePreviewNormal = { bg = p.bg },
-		TelescopePreviewBorder = { bg = p.bg, fg = p.bg },
-		TelescopePreviewTitle = { bg = p.green, fg = p.on_accent, bold = true },
+		TelescopePreviewNormal = { bg = theme.surface(p.bg) },
+		TelescopePreviewBorder = { bg = theme.surface(p.bg), fg = border(p.bg) },
+		TelescopePreviewTitle = { bg = theme.surface(p.green), fg = title_fg(p, p.green), bold = true },
 	}
 	for group, spec in pairs(groups) do
 		vim.api.nvim_set_hl(0, group, spec)
@@ -184,7 +206,14 @@ telescope.setup({
 		entry_prefix = "  ",
 		multi_icon = "  ",
 		results_title = false,
-		borderchars = { " ", " ", " ", " ", " ", " ", " ", " " },
+		-- Blanks were right while the panes were solid: the border cells
+		-- just extended each pane's background and the picker read as one
+		-- shape. Transparent, a blank border draws nothing at all and the
+		-- three panes run together. Real box characters work for both —
+		-- they're painted in TelescopeXxxBorder's fg, which is the pane's
+		-- own background when there is one (invisible, as before) and a
+		-- stroke when there isn't.
+		borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
 
 		layout_strategy = "horizontal",
 		layout_config = {

@@ -1,7 +1,7 @@
 require("stay-centered").setup({
 	-- The filetype is determined by the vim filetype, not the file extension. In order to get the filetype, open a file and run the command:
 	-- :lua print(vim.bo.filetype)
-	skip_filetypes = { "bloocky", "bloocky_dialog" },
+	skip_filetypes = { "bloocky", "bloocky_dialog", "snacks_dashboard" },
 	-- Set to false to disable by default
 	enabled = true,
 	-- allows scrolling to move the cursor without centering, default recommended

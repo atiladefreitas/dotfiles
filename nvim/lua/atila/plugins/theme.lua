@@ -122,6 +122,13 @@ end
 
 -- ── Reading the active scheme ───────────────────────────────────────
 
+---The loaded scheme's own background, kept even while the page is painted
+---transparent. Everything in the palette is measured against the page, so
+---once surfaces.lua clears Normal's bg there is nothing left to derive
+---from and the whole thing would collapse to black. Captured the moment a
+---scheme loads, before any painter has run.
+M.reference_bg = nil
+
 ---@param name string
 ---@return table
 local function hl(name)
@@ -161,7 +168,8 @@ end
 ---Derive a palette from the colorscheme that is loaded right now.
 ---@return table
 function M.build()
-	local bg = to_hex(hl("Normal").bg) or (vim.o.background == "dark" and "#000000" or "#ffffff")
+	M.reference_bg = to_hex(hl("Normal").bg) or M.reference_bg
+	local bg = M.reference_bg or (vim.o.background == "dark" and "#000000" or "#ffffff")
 	local fg = to_hex(hl("Normal").fg) or (vim.o.background == "dark" and "#c0caf5" or "#333333")
 	local dark = M.luminance(bg) < 0.5
 
@@ -286,14 +294,42 @@ function M.build()
 	p.git_change = pick({ { "GitSignsChange", "fg" }, { "diffChanged", "fg" } }, bg, p.yellow)
 	p.git_delete = pick({ { "GitSignsDelete", "fg" }, { "diffRemoved", "fg" } }, bg, p.red)
 
+	-- Folders. Every scheme defines Directory, and that is its own opinion
+	-- about the one color a file tree is mostly made of — worth more than
+	-- an accent we pick for it, and the only way the tree follows a scheme
+	-- change the way the scheme's author intended.
+	p.directory = pick({ { "Directory", "fg" }, { "@module", "fg" } }, bg, p.cyan)
+
 	-- Text that sits on an accent-colored title bar.
 	p.on_accent = dark and p.bg_dark or M.shade(bg, -0.85)
+
+	-- A line meant to be seen. Borders normally disappear into the panel
+	-- they enclose; with the panels transparent they are the only thing
+	-- left describing a float's shape, so they get their own ink — dimmed
+	-- from the foreground rather than from a grey already near the floor.
+	p.stroke = M.blend(fg, p.fg_dark, 0.35)
 
 	return p
 end
 
 ---The palette for the scheme currently loaded. Rebuilt on ColorScheme.
 M.palette = M.build()
+
+---Which scheme M.palette was read from, so a painter registering later can
+---tell whether it is about to be handed colors from a scheme that is no
+---longer loaded.
+M.palette_scheme = vim.g.colors_name
+
+---What a panel should paint as its background: the surface it asks for, or
+---nothing at all when the config is running transparent. Panels go through
+---this rather than reading the palette directly, so one flag moves every
+---float, menu and picker together — and anything that deliberately keeps a
+---surface (the sidebar) simply doesn't call it.
+---@param color string
+---@return string
+function M.surface(color)
+	return vim.g.atila_transparent and "NONE" or color
+end
 
 -- ── Repaint plumbing ────────────────────────────────────────────────
 
@@ -304,6 +340,16 @@ local painters = {}
 ---@param fn fun(palette: table)
 function M.on_change(name, fn)
 	painters[name] = fn
+	-- This module is first required from core/keymaps.lua, which runs before
+	-- colorscheme.lua — so the palette built at load time was read off
+	-- Neovim's default scheme. Any painter registering after the real scheme
+	-- landed must not paint from it: whatever it writes would still be on
+	-- screen, and groups it copies back into (Normal's fg) would make the
+	-- stale value permanent.
+	if M.palette_scheme ~= vim.g.colors_name then
+		M.palette_scheme = vim.g.colors_name
+		M.palette = M.build()
+	end
 	local ok, err = pcall(fn, M.palette)
 	if not ok then
 		vim.schedule(function()
@@ -316,6 +362,7 @@ end
 ---for when a plugin loads late and clobbers our groups.
 function M.repaint()
 	M.palette = M.build()
+	M.palette_scheme = vim.g.colors_name
 	for name, fn in pairs(painters) do
 		local ok, err = pcall(fn, M.palette)
 		if not ok then
@@ -329,6 +376,10 @@ end
 vim.api.nvim_create_autocmd("ColorScheme", {
 	group = vim.api.nvim_create_augroup("atila_theme", { clear = true }),
 	callback = function()
+		-- Read the new scheme's background synchronously, while it is still
+		-- the one the scheme set — the repaint below is what paints the page
+		-- transparent, so by the time it runs Normal has no bg to read.
+		M.reference_bg = to_hex(hl("Normal").bg) or M.reference_bg
 		-- Deferred: some schemes finish defining groups after the event
 		-- fires, and we want the last word anyway.
 		vim.schedule(M.repaint)

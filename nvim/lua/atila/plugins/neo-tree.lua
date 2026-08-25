@@ -127,8 +127,15 @@ local opts = {
 -- repainted whenever it changes (see plugins/theme.lua).
 require("atila.plugins.theme").on_change("neo-tree", function(p)
 	local groups = {
-		-- The sidebar is the deepest surface on screen, so the tree reads as
-		-- a shelf beside the page rather than another window of it.
+		-- The one panel that keeps a background when everything else goes
+		-- transparent: a file tree is a fixed shelf beside the page, and
+		-- reading it against a moving wallpaper is the part that actually
+		-- hurts. Deliberately NOT routed through theme.surface().
+		--
+		-- Terminal cells with an explicit background are drawn opaque, so
+		-- this is a solid slab by default. To get it dimmed rather than
+		-- solid, kitty can single out this exact color — see the note at
+		-- the bottom of this file.
 		NeoTreeNormal = { bg = p.bg_deep, fg = p.fg },
 		NeoTreeNormalNC = { bg = p.bg_deep, fg = p.fg },
 		NeoTreeEndOfBuffer = { bg = p.bg_deep, fg = p.bg_deep },
@@ -137,9 +144,13 @@ require("atila.plugins.theme").on_change("neo-tree", function(p)
 		NeoTreeFloatTitle = { bg = p.blue, fg = p.on_accent, bold = true },
 		NeoTreeTitleBar = { bg = p.blue, fg = p.on_accent, bold = true },
 		NeoTreeCursorLine = { bg = p.bg_highlight },
-		NeoTreeDirectoryName = { fg = p.blue },
-		NeoTreeDirectoryIcon = { fg = p.blue },
-		NeoTreeRootName = { fg = p.blue, bold = true, italic = true },
+		-- `directory`, not `blue`: gruvbox has no blue among its syntax
+		-- groups, so theme.lua mints one, and a minted accent has no
+		-- business on the thing the tree is mostly made of. This follows
+		-- the scheme's own Directory group instead.
+		NeoTreeDirectoryName = { fg = p.directory },
+		NeoTreeDirectoryIcon = { fg = p.directory },
+		NeoTreeRootName = { fg = p.directory, bold = true, italic = true },
 		NeoTreeFileName = { fg = p.fg },
 		NeoTreeFileIcon = { fg = p.fg_dark },
 		NeoTreeIndentMarker = { fg = require("atila.plugins.theme").blend(p.fg_dark, p.bg, 0.5) },
@@ -153,7 +164,7 @@ require("atila.plugins.theme").on_change("neo-tree", function(p)
 		NeoTreeGitStaged = { fg = p.git_add },
 		NeoTreeGitUnstaged = { fg = p.git_change },
 		NeoTreeModified = { fg = p.git_change },
-		NeoTreeTabActive = { bg = p.bg_deep, fg = p.blue, bold = true },
+		NeoTreeTabActive = { bg = p.bg_deep, fg = p.directory, bold = true },
 		NeoTreeTabInactive = { bg = p.bg_deep, fg = p.fg_dark },
 		NeoTreeTabSeparatorActive = { bg = p.bg_deep, fg = p.bg_deep },
 		NeoTreeTabSeparatorInactive = { bg = p.bg_deep, fg = p.bg_deep },
@@ -184,3 +195,25 @@ vim.keymap.set(
 	":Neotree toggle source=git_status<CR>",
 	{ noremap = true, silent = true, desc = "Neotree Git Status" }
 )
+
+-- ── Dimming the sidebar instead of blacking it out ──────────────────
+-- kitty renders a cell opaque as soon as its background differs from the
+-- default one, which is why the tree above comes out as a solid slab while
+-- the rest of the editor shows the wallpaper. kitty >= 0.35 can exempt
+-- specific colors (`transparent_background_colors`, up to 7, each with its
+-- own opacity), so the sidebar can be a dim panel rather than a black one.
+--
+-- In kitty.conf, alongside `background_opacity`:
+--
+--     transparent_background_colors #0b0c0d@0.75
+--
+-- That color is `bg_deep` for the current scheme and page — it moves if
+-- either changes. :ThemeSurfaces prints the line to paste.
+vim.api.nvim_create_user_command("ThemeSurfaces", function()
+	local p = require("atila.plugins.theme").palette
+	vim.notify(table.concat({
+		"kitty.conf — dim these instead of drawing them opaque:",
+		("  transparent_background_colors %s@0.75 %s@0.85"):format(p.bg_deep, p.bg_highlight),
+		("  (%s = sidebar, %s = cursorline)"):format(p.bg_deep, p.bg_highlight),
+	}, "\n"))
+end, { desc = "Print the kitty transparent_background_colors line for this palette" })
