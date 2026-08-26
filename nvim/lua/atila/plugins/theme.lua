@@ -1,32 +1,9 @@
--- ╭──────────────────────────────────────────────────────────────────╮
--- │  theme.lua — one palette, derived from whatever scheme is loaded │
--- │                                                                  │
--- │  Several plugins here are styled by hand (telescope, neo-tree,   │
--- │  which-key, render-markdown…). Hard-coding hexes for those meant │
--- │  they kept wearing the old scheme's colors after :colorscheme.   │
--- │  Instead we read the semantic highlight groups the active scheme │
--- │  already defines — Normal, Comment, Function, String, keywords,  │
--- │  diagnostics — and hand those out as a palette.                  │
--- │                                                                  │
--- │  Usage:                                                          │
--- │      local theme = require("atila.plugins.theme")                │
--- │      theme.on_change("telescope", function(p) … end)             │
--- │                                                                  │
--- │  The callback runs immediately and again on every ColorScheme.   │
--- ╰──────────────────────────────────────────────────────────────────╯
-
 local M = {}
 
--- ── Color helpers ───────────────────────────────────────────────────
-
----@param n integer|nil 24-bit color as returned by nvim_get_hl
----@return string|nil
 local function to_hex(n)
 	return n and ("#%06x"):format(n) or nil
 end
 
----@param hex string
----@return integer, integer, integer
 local function to_rgb(hex)
 	local r, g, b = hex:match("^#(%x%x)(%x%x)(%x%x)$")
 	if not r then
@@ -35,11 +12,6 @@ local function to_rgb(hex)
 	return tonumber(r, 16), tonumber(g, 16), tonumber(b, 16)
 end
 
----Mix `fg` into `bg`. alpha 1 = pure fg, 0 = pure bg.
----@param fg string
----@param bg string
----@param alpha number
----@return string
 function M.blend(fg, bg, alpha)
 	local fr, fg_, fb = to_rgb(fg)
 	local br, bg_, bb = to_rgb(bg)
@@ -49,25 +21,15 @@ function M.blend(fg, bg, alpha)
 	return ("#%02x%02x%02x"):format(mix(fr, br), mix(fg_, bg_), mix(fb, bb))
 end
 
----Push a color toward black (negative amount) or white (positive).
----@param hex string
----@param amount number -1..1
----@return string
 function M.shade(hex, amount)
 	return M.blend(amount < 0 and "#000000" or "#ffffff", hex, math.abs(amount))
 end
 
----Perceived brightness, 0..1. Used to decide which way "darker" goes.
----@param hex string
----@return number
 function M.luminance(hex)
 	local r, g, b = to_rgb(hex)
 	return (0.299 * r + 0.587 * g + 0.114 * b) / 255
 end
 
----Hue in degrees (0 = red, 120 = green, 240 = blue) and saturation 0..1.
----@param hex string
----@return number, number
 local function hue_sat(hex)
 	local r, g, b = to_rgb(hex)
 	r, g, b = r / 255, g / 255, b / 255
@@ -88,12 +50,6 @@ local function hue_sat(hex)
 	return h * 60, delta / (1 - math.abs(2 * light - 1)), light, delta
 end
 
----Rebuild a color from hue/saturation/lightness. Lets us mint an accent a
----scheme simply does not have, in that scheme's own key.
----@param h number degrees
----@param s number 0..1
----@param l number 0..1
----@return string
 local function hsl_to_hex(h, s, l)
 	local c = (1 - math.abs(2 * l - 1)) * s
 	local x = c * (1 - math.abs((h / 60) % 2 - 1))
@@ -111,51 +67,53 @@ local function hsl_to_hex(h, s, l)
 	return ("#%02x%02x%02x"):format(byte(r), byte(g), byte(b))
 end
 
----Shortest distance between two hues on the color wheel, 0..180.
----@param a number
----@param b number
----@return number
 local function hue_gap(a, b)
 	local d = math.abs(a - b) % 360
 	return d > 180 and 360 - d or d
 end
 
--- ── Reading the active scheme ───────────────────────────────────────
-
----The loaded scheme's own background, kept even while the page is painted
----transparent. Everything in the palette is measured against the page, so
----once surfaces.lua clears Normal's bg there is nothing left to derive
----from and the whole thing would collapse to black. Captured the moment a
----scheme loads, before any painter has run.
-M.reference_bg = nil
-
----@param name string
----@return table
 local function hl(name)
 	local ok, group = pcall(vim.api.nvim_get_hl, 0, { name = name, link = false })
 	return ok and group or {}
 end
 
----Enough separation from the page to be readable on it. Guards against
----schemes that paint a group in reverse video (gruvbox's ErrorMsg is
----`fg = background`), which would otherwise hand us an invisible accent.
----@param color string
----@param bg string
----@return boolean
+local SCHEME_OWNED = {
+	"Normal",
+	"NormalFloat",
+	"Pmenu",
+	"CursorLine",
+	"Visual",
+	"Comment",
+	"NonText",
+	"LineNr",
+	"FloatBorder",
+	"WinSeparator",
+}
+
+M.scheme = {}
+
+function M.capture()
+	M.scheme = {}
+	for _, group in ipairs(SCHEME_OWNED) do
+		local spec = hl(group)
+		if spec.fg or spec.bg then
+			M.scheme[group] = spec
+		end
+	end
+end
+
+local function scheme_hl(name)
+	return M.scheme[name] or hl(name)
+end
+
 local function readable(color, bg)
 	local a, b = M.luminance(color) + 0.05, M.luminance(bg) + 0.05
 	return (math.max(a, b) / math.min(a, b)) >= 1.5
 end
 
----First attribute the active scheme defines that is actually readable on
----the page.
----@param candidates table list of { "GroupName", "fg"|"bg" }
----@param bg string
----@param fallback string
----@return string
 local function pick(candidates, bg, fallback)
 	for _, candidate in ipairs(candidates) do
-		local value = to_hex(hl(candidate[1])[candidate[2]])
+		local value = to_hex(scheme_hl(candidate[1])[candidate[2]])
 		if value and (candidate[2] == "bg" or readable(value, bg)) then
 			return value
 		end
@@ -163,18 +121,15 @@ local function pick(candidates, bg, fallback)
 	return fallback
 end
 
--- ── The palette ─────────────────────────────────────────────────────
-
----Derive a palette from the colorscheme that is loaded right now.
----@return table
 function M.build()
-	M.reference_bg = to_hex(hl("Normal").bg) or M.reference_bg
-	local bg = M.reference_bg or (vim.o.background == "dark" and "#000000" or "#ffffff")
-	local fg = to_hex(hl("Normal").fg) or (vim.o.background == "dark" and "#c0caf5" or "#333333")
+	if vim.tbl_isempty(M.scheme) then
+		M.capture()
+	end
+	local normal = scheme_hl("Normal")
+	local bg = to_hex(normal.bg) or (vim.o.background == "dark" and "#000000" or "#ffffff")
+	local fg = to_hex(normal.fg) or (vim.o.background == "dark" and "#c0caf5" or "#333333")
 	local dark = M.luminance(bg) < 0.5
 
-	-- Surfaces. "dark"/"highlight" are relative to the page, so on a light
-	-- scheme they move the other way and the same configs still read right.
 	local recede = dark and -0.30 or 0.35
 	local emerge = dark and 0.10 or -0.06
 
@@ -183,9 +138,6 @@ function M.build()
 		fg = fg,
 		dark = dark,
 
-		-- Depth. Three surfaces below the page and one above it, so a split
-		-- edge is legible without a border: the window you are typing in is
-		-- `bg`, the ones you are not recede, and sidebars recede furthest.
 		bg_dark = M.shade(bg, recede),
 		bg_inactive = M.shade(bg, recede),
 		bg_deep = M.shade(bg, recede * 1.5),
@@ -199,11 +151,6 @@ function M.build()
 		border = pick({ { "FloatBorder", "fg" }, { "WinSeparator", "fg" }, { "LineNr", "fg" } }, bg, M.blend(fg, bg, 0.3)),
 	}
 
-	-- Accents, matched by hue rather than by group name. Naming a group per
-	-- role does not survive a change of scheme: tokyonight's Constant is
-	-- orange while gruvbox's is pink, and gruvbox paints Function the same
-	-- green as String. So instead we collect every accent the scheme puts on
-	-- screen and hand each role the one closest to the hue it is named for.
 	local pool = {}
 	local seen = {}
 	for _, group in ipairs({
@@ -212,12 +159,9 @@ function M.build()
 		"DiagnosticError", "DiagnosticWarn", "DiagnosticInfo", "DiagnosticHint",
 		"@constructor", "@variable.member", "@string.escape", "@keyword", "@type", "@function",
 	}) do
-		local color = to_hex(hl(group).fg)
+		local color = to_hex(scheme_hl(group).fg)
 		if color and not seen[color] and readable(color, bg) then
 			local h, s, l, chroma = hue_sat(color)
-			-- Greys carry no hue, so they would land anywhere on the wheel.
-			-- Both gates matter: saturation alone lets near-white through,
-			-- chroma alone lets warm greys like gruvbox's #928374 through.
 			if s >= 0.15 and chroma >= 0.08 then
 				seen[color] = true
 				pool[#pool + 1] = { color = color, hue = h, sat = s, light = l }
@@ -225,8 +169,6 @@ function M.build()
 		end
 	end
 
-	-- Canonical hue per role, plus the fallback if the scheme is too grey
-	-- to fill the slot at all.
 	local roles = {
 		{ "red", 0, "#f7768e" },
 		{ "orange", 20, "#ff9e64" },
@@ -237,8 +179,6 @@ function M.build()
 		{ "purple", 285, "#bb9af7" },
 	}
 
-	-- Greedy global match: closest role/color pair wins first, so a scheme's
-	-- one unmistakable red is spent on `red` and not on `orange`.
 	local pairs_by_gap = {}
 	for _, role in ipairs(roles) do
 		for _, candidate in ipairs(pool) do
@@ -253,9 +193,6 @@ function M.build()
 		return a.gap < b.gap
 	end)
 
-	-- Past a quarter-turn on the wheel the "closest" color is no longer the
-	-- named hue in any useful sense, so we stop rather than call gruvbox's
-	-- lime green a blue.
 	local MAX_GAP = 60
 
 	local taken = {}
@@ -266,10 +203,6 @@ function M.build()
 		end
 	end
 
-	-- A hue the scheme never uses (gruvbox has no blue in its syntax groups)
-	-- gets minted at the scheme's own saturation and lightness, so it still
-	-- belongs on the page. Only a scheme with no color at all falls through
-	-- to the fixed hex.
 	local sat_total, light_total = 0, 0
 	for _, candidate in ipairs(pool) do
 		sat_total = sat_total + candidate.sat
@@ -282,70 +215,37 @@ function M.build()
 		end
 	end
 
-	-- Aliases the older configs were written against.
 	p.magenta = p.purple
 	p.amber = p.yellow
 
-	-- Git. Added/Changed/Removed ship with Neovim built-in defaults that a
-	-- scheme is free to ignore, so reading them would quietly hand back a
-	-- color from no scheme at all. Ask what actually restyles them, then
-	-- fall back to the accents we just derived.
 	p.git_add = pick({ { "GitSignsAdd", "fg" }, { "diffAdded", "fg" } }, bg, p.green)
 	p.git_change = pick({ { "GitSignsChange", "fg" }, { "diffChanged", "fg" } }, bg, p.yellow)
 	p.git_delete = pick({ { "GitSignsDelete", "fg" }, { "diffRemoved", "fg" } }, bg, p.red)
 
-	-- Folders. Every scheme defines Directory, and that is its own opinion
-	-- about the one color a file tree is mostly made of — worth more than
-	-- an accent we pick for it, and the only way the tree follows a scheme
-	-- change the way the scheme's author intended.
+	p.selection = vim.g.atila_transparent and M.blend(p.cyan, bg, 0.45) or p.bg_highlight
+
 	p.directory = pick({ { "Directory", "fg" }, { "@module", "fg" } }, bg, p.cyan)
 
-	-- Text that sits on an accent-colored title bar.
 	p.on_accent = dark and p.bg_dark or M.shade(bg, -0.85)
 
-	-- A line meant to be seen. Borders normally disappear into the panel
-	-- they enclose; with the panels transparent they are the only thing
-	-- left describing a float's shape, so they get their own ink — dimmed
-	-- from the foreground rather than from a grey already near the floor.
 	p.stroke = M.blend(fg, p.fg_dark, 0.35)
 
 	return p
 end
 
----The palette for the scheme currently loaded. Rebuilt on ColorScheme.
+M.capture()
 M.palette = M.build()
 
----Which scheme M.palette was read from, so a painter registering later can
----tell whether it is about to be handed colors from a scheme that is no
----longer loaded.
 M.palette_scheme = vim.g.colors_name
 
----What a panel should paint as its background: the surface it asks for, or
----nothing at all when the config is running transparent. Panels go through
----this rather than reading the palette directly, so one flag moves every
----float, menu and picker together — and anything that deliberately keeps a
----surface (the sidebar) simply doesn't call it.
----@param color string
----@return string
 function M.surface(color)
 	return vim.g.atila_transparent and "NONE" or color
 end
 
--- ── Repaint plumbing ────────────────────────────────────────────────
-
 local painters = {}
 
----Register a repaint function. Runs now, and after every scheme change.
----@param name string unique key, so reloading a module replaces its painter
----@param fn fun(palette: table)
 function M.on_change(name, fn)
 	painters[name] = fn
-	-- This module is first required from core/keymaps.lua, which runs before
-	-- colorscheme.lua — so the palette built at load time was read off
-	-- Neovim's default scheme. Any painter registering after the real scheme
-	-- landed must not paint from it: whatever it writes would still be on
-	-- screen, and groups it copies back into (Normal's fg) would make the
-	-- stale value permanent.
 	if M.palette_scheme ~= vim.g.colors_name then
 		M.palette_scheme = vim.g.colors_name
 		M.palette = M.build()
@@ -358,8 +258,6 @@ function M.on_change(name, fn)
 	end
 end
 
----Rebuild the palette and repaint everything. Also exposed as :ThemeRepaint
----for when a plugin loads late and clobbers our groups.
 function M.repaint()
 	M.palette = M.build()
 	M.palette_scheme = vim.g.colors_name
@@ -376,12 +274,7 @@ end
 vim.api.nvim_create_autocmd("ColorScheme", {
 	group = vim.api.nvim_create_augroup("atila_theme", { clear = true }),
 	callback = function()
-		-- Read the new scheme's background synchronously, while it is still
-		-- the one the scheme set — the repaint below is what paints the page
-		-- transparent, so by the time it runs Normal has no bg to read.
-		M.reference_bg = to_hex(hl("Normal").bg) or M.reference_bg
-		-- Deferred: some schemes finish defining groups after the event
-		-- fires, and we want the last word anyway.
+		M.capture()
 		vim.schedule(M.repaint)
 	end,
 })

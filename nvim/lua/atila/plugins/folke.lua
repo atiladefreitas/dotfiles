@@ -23,8 +23,6 @@ require("noice").setup({
 vim.o.timeout = true
 vim.o.timeoutlen = 100
 
--- Derived from the active colorscheme and repainted on every change
--- (see plugins/theme.lua).
 local theme = require("atila.plugins.theme")
 
 theme.on_change("which-key", function(p)

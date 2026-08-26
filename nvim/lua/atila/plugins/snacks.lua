@@ -73,6 +73,10 @@ require("snacks").setup({
 		configure = false,
 		win = {
 			style = "lazygit",
+			border = "rounded",
+			wo = {
+				winhighlight = "Normal:LazygitNormal,NormalNC:LazygitNormal,FloatBorder:LazygitBorder,FloatTitle:LazygitTitle",
+			},
 		},
 	},
 	words = { enabled = true },
@@ -123,9 +127,16 @@ end, { desc = "Lazygit" })
 vim.keymap.set("n", "<leader>gl", function()
 	Snacks.lazygit.log()
 end, { desc = "Lazygit Log (cwd)" })
+
 vim.keymap.set("n", "<leader>tt", function()
 	Snacks.terminal()
 end, { desc = "Toggle Terminal" })
+
+require("atila.plugins.theme").on_change("lazygit", function(p)
+	vim.api.nvim_set_hl(0, "LazygitNormal", { bg = p.bg, fg = p.fg })
+	vim.api.nvim_set_hl(0, "LazygitBorder", { bg = p.bg, fg = p.stroke })
+	vim.api.nvim_set_hl(0, "LazygitTitle", { bg = p.bg, fg = p.cyan, bold = true })
+end)
 
 -- ── Toggles ─────────────────────────────────────────────────────────
 -- These ran on lazy.nvim's `User VeryLazy` event, which no longer exists.
