@@ -46,7 +46,7 @@ local opts = {
 				ignored = "/",
 				unstaged = "x",
 				staged = "✓",
-				conflict = "",
+				conflict = "!!",
 			},
 		},
 		diagnostics = {
@@ -122,48 +122,6 @@ local opts = {
 		},
 	},
 }
-
-local theme = require("atila.plugins.theme")
-
-theme.on_change("neo-tree", function(p)
-	local groups = {
-		NeoTreeNormal = { bg = theme.blend(p.bg_deep, p.bg, 0.5), fg = p.fg },
-		NeoTreeNormalNC = { bg = theme.blend(p.bg_deep, p.bg, 0.5), fg = p.fg },
-		NeoTreeEndOfBuffer = { bg = theme.blend(p.bg_deep, p.bg, 0.5), fg = theme.blend(p.bg_deep, p.bg, 0.5) },
-		NeoTreeWinSeparator = { bg = theme.blend(p.bg_deep, p.bg, 0.5), fg = p.stroke },
-		NeoTreeFloatBorder = { bg = theme.blend(p.bg_deep, p.bg, 0.5), fg = p.stroke },
-		NeoTreeFloatTitle = { bg = p.cyan, fg = p.on_accent, bold = true },
-		NeoTreeTitleBar = { bg = p.cyan, fg = p.on_accent, bold = true },
-		NeoTreeCursorLine = { bg = theme.blend(p.cyan, p.bg, 0.26) },
-		-- `directory`, not `blue`: gruvbox has no blue among its syntax
-		-- groups, so theme.lua mints one, and a minted accent has no
-		-- business on the thing the tree is mostly made of. This follows
-		-- the scheme's own Directory group instead.
-		NeoTreeDirectoryName = { fg = p.cyan },
-		NeoTreeDirectoryIcon = { fg = p.cyan },
-		NeoTreeRootName = { fg = p.cyan, bold = true, italic = true },
-		NeoTreeFileName = { fg = p.fg },
-		NeoTreeFileIcon = { fg = p.fg_dark },
-		NeoTreeIndentMarker = { fg = theme.blend(p.fg_dark, p.bg, 0.5) },
-		NeoTreeExpander = { fg = p.fg_dark },
-		NeoTreeGitAdded = { fg = p.git_add },
-		NeoTreeGitModified = { fg = p.git_change },
-		NeoTreeGitDeleted = { fg = p.git_delete },
-		NeoTreeGitConflict = { fg = p.red, bold = true },
-		NeoTreeGitUntracked = { fg = p.purple },
-		NeoTreeGitIgnored = { fg = p.fg_dark },
-		NeoTreeGitStaged = { fg = p.git_add },
-		NeoTreeGitUnstaged = { fg = p.git_change },
-		NeoTreeModified = { fg = p.git_change },
-		NeoTreeTabActive = { bg = theme.blend(p.bg_deep, p.bg, 0.5), fg = p.cyan, bold = true },
-		NeoTreeTabInactive = { bg = theme.blend(p.bg_deep, p.bg, 0.5), fg = p.fg_dark },
-		NeoTreeTabSeparatorActive = { bg = theme.blend(p.bg_deep, p.bg, 0.5), fg = theme.blend(p.bg_deep, p.bg, 0.5) },
-		NeoTreeTabSeparatorInactive = { bg = theme.blend(p.bg_deep, p.bg, 0.5), fg = theme.blend(p.bg_deep, p.bg, 0.5) },
-	}
-	for group, spec in pairs(groups) do
-		vim.api.nvim_set_hl(0, group, spec)
-	end
-end)
 
 require("neo-tree").setup(opts)
 

@@ -27,16 +27,9 @@ local theme = require("atila.plugins.theme")
 
 theme.on_change("which-key", function(p)
 	local groups = {
-		WhichKeyNormal = { bg = theme.surface(p.bg_raised), fg = p.fg },
-		WhichKeyBorder = {
-			bg = theme.surface(p.bg_raised),
-			fg = vim.g.atila_transparent and p.stroke or p.bg_raised,
-		},
-		WhichKeyTitle = {
-			bg = theme.surface(p.blue),
-			fg = vim.g.atila_transparent and p.cyan or p.on_accent,
-			bold = true,
-		},
+		WhichKeyNormal = { bg = p.bg, fg = p.fg },
+		WhichKeyBorder = { bg = p.bg, fg = p.stroke },
+		WhichKeyTitle = { bg = p.bg, fg = p.cyan, bold = true },
 		WhichKey = { fg = p.cyan, bold = true },
 		WhichKeyGroup = { fg = p.purple },
 		WhichKeyDesc = { fg = p.fg },

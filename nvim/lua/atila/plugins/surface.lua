@@ -49,23 +49,15 @@ theme.on_change("surfaces", function(p)
 	end
 	hl("VertSplit", { link = "WinSeparator" })
 
-	hl("NormalFloat", { bg = theme.surface(p.bg_raised), fg = p.fg })
-	hl("FloatBorder", {
-		bg = theme.surface(p.bg_raised),
-		fg = transparent and p.stroke or p.bg_raised,
-	})
-	hl("FloatTitle", {
-		bg = theme.surface(p.bg_raised),
-		fg = transparent and p.cyan or p.blue,
-		bold = true,
-	})
-	hl("Pmenu", { bg = theme.surface(p.bg_raised), fg = p.fg })
-	hl("PmenuSel", { bg = theme.blend(p.blue, p.bg_raised, 0.28), fg = p.fg, bold = true })
-	hl("PmenuSbar", { bg = theme.surface(p.bg_raised) })
-	hl("PmenuThumb", { bg = theme.blend(p.fg_dark, p.bg_raised, 0.5) })
+	hl("NormalFloat", { bg = p.bg, fg = p.fg })
+	hl("FloatBorder", { bg = p.bg, fg = p.stroke })
+	hl("FloatTitle", { bg = p.bg, fg = p.cyan, bold = true })
+	hl("Pmenu", { bg = p.bg, fg = p.fg })
+	hl("PmenuSel", { bg = p.selection, fg = p.fg, bold = true })
+	hl("PmenuSbar", { bg = p.bg })
+	hl("PmenuThumb", { bg = theme.blend(p.fg_dark, p.bg, 0.5) })
 
-	local bar = transparent and { fg = theme.blend(p.fg, p.fg_dark, 0.6) }
-		or { fg = p.fg_dark, bg = p.bg_deep }
+	local bar = transparent and { fg = theme.blend(p.fg, p.fg_dark, 0.6) } or { fg = p.fg_dark, bg = p.bg_deep }
 	hl("StatusLine", bar)
 	hl("StatusLineNC", bar)
 end)

@@ -41,6 +41,10 @@ local systempaneScript =
 local yaziToggleScript =
 	[[bash -c 'PID=$(hyprctl clients -j | jq -r ".[] | select(.title == \"Yazi\") | .pid"); if [ -n "$PID" ]; then kill "$PID"; else kitty -T Yazi -e tmux new-session -A -s yazi "yazi"; fi']]
 
+-- Timezones popup (world clock), toggled via SUPER+T
+local timezonesToggleScript =
+	[[bash -c 'PID=$(hyprctl clients -j | jq -r ".[] | select(.class == \"timezones-popup\") | .pid"); if [ -n "$PID" ]; then kill "$PID"; else kitty --class timezones-popup -e ~/dotfiles/hypr/scripts/timezones.sh; fi']]
+
 -- tical calculator popup, toggled via SUPER+A
 local ticalToggleScript =
 	[[bash -c 'PID=$(hyprctl clients -j | jq -r ".[] | select(.class == \"tical-popup\") | .pid"); if [ -n "$PID" ]; then kill "$PID"; else kitty --class tical-popup -e tical; fi']]
@@ -269,6 +273,9 @@ hl.bind(mainMod .. " + CTRL + R", hl.dsp.exec_cmd(brightness0))
 -- Yazi popup (toggle)
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(yaziToggleScript))
 
+-- Timezones popup (toggle)
+hl.bind(mainMod .. " + T", hl.dsp.exec_cmd(timezonesToggleScript))
+
 -- Move floating windows
 hl.bind(mainMod .. " + CTRL + H", hl.dsp.window.move({ x = -50, y = 0, relative = true }))
 hl.bind(mainMod .. " + CTRL + L", hl.dsp.window.move({ x = 50, y = 0, relative = true }))
@@ -380,6 +387,14 @@ hl.window_rule({
 	match = { class = "^(tical-popup)$" },
 	float = true,
 	size = "390 650",
+	center = true,
+})
+
+hl.window_rule({
+	name = "timezones-popup",
+	match = { class = "^(timezones-popup)$" },
+	float = true,
+	size = "460 320",
 	center = true,
 })
 

@@ -241,7 +241,7 @@ util.counts.locals = vim.tbl_count(M.local_available)
 -- lspconfig, and nvim-navic before the statusline that renders it.
 local modules = {
 	"atila.plugins.colorscheme",
-	"atila.plugins.surfaces",
+	-- "atila.plugins.surfaces",
 	"atila.plugins.treesitter",
 	"atila.plugins.snacks",
 
