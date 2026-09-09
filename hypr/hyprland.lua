@@ -6,7 +6,8 @@
 ------------------
 
 hl.monitor({ output = "HDMI-A-1", mode = "2560x1440@120", position = "0x0", scale = 1 })
-hl.monitor({ output = "eDP-2", disabled = true })
+hl.monitor({ output = "eDP-2", mode = "1920x1080@120", position = "0x0", scale = 1, disabled = true })
+-- hl.monitor({ output = "eDP-2", disabled = true })
 
 ---------------------
 ---- MY PROGRAMS ----
@@ -21,7 +22,7 @@ local obsidian = "obsidian"
 -- swayosd-client targeted at the currently-focused monitor
 local osdclient = [[swayosd-client --monitor "$(hyprctl monitors -j | jq -r '.[] | select(.focused == true).name')"]]
 
--- External-monitor brightness via ddccontrol (omarchy uses i2c-2)
+-- Eternal-monitor brightness via ddccontrol (omarchy uses i2c-2)
 local brightness10 = "ddccontrol -r 0x10 -w 00 dev:/dev/i2c-2"
 local brightness20 = "ddccontrol -r 0x10 -w 20 dev:/dev/i2c-2"
 local brightness30 = "ddccontrol -r 0x10 -w 30 dev:/dev/i2c-2"

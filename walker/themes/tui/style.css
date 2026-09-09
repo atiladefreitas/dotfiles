@@ -1,0 +1,196 @@
+/* TUI theme for walker — gruvbox-dark, same palette as kitty/waybar/tmux.
+ *
+ *   bg0_h #1d2021  bg0 #282828  bg1 #3c3836  bg2 #504945  bg3 #665c54
+ *   gray #928374   fg4 #a89984  fg1 #ebdbb2  fg0 #fbf1c7
+ *   yellow #fabd2f aqua #8ec07c red #fb4934
+ *
+ * Rules: monospace only, square corners, 1px borders, no shadows, no icons.
+ * Colour is spent only on the prompt, the selected row and key hints.
+ */
+
+@define-color bg0 #282828;
+@define-color bg0_h #1d2021;
+@define-color bg1 #3c3836;
+@define-color bg2 #504945;
+@define-color gray #928374;
+@define-color fg1 #ebdbb2;
+@define-color fg0 #fbf1c7;
+@define-color yellow #fabd2f;
+@define-color aqua #8ec07c;
+@define-color red #fb4934;
+
+* {
+  all: unset;
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-size: 13px;
+  border-radius: 0;
+}
+
+scrollbar {
+  opacity: 0;
+}
+
+popover {
+  background: @bg0_h;
+  border: 1px solid @bg2;
+  padding: 4px;
+  color: @fg1;
+}
+
+/* ---------- frame ---------- */
+.box-wrapper {
+  background: @bg0;
+  border: 1px solid @bg2;
+  color: @fg1;
+}
+
+/* ---------- prompt line ---------- */
+.search-container {
+  border-bottom: 1px solid @bg1;
+  padding: 6px 10px;
+}
+
+.prompt {
+  color: @aqua;
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+.input {
+  color: @fg0;
+  caret-color: @fg0;
+}
+
+.input placeholder {
+  color: @gray;
+}
+
+.input selection {
+  background: @fg1;
+  color: @bg0;
+}
+
+/* ---------- list ---------- */
+.placeholder,
+.elephant-hint {
+  color: @gray;
+}
+
+.list {
+  color: @fg1;
+}
+
+.item-box {
+  padding: 6px 10px;
+  border-left: 2px solid transparent;
+}
+
+child:selected .item-box,
+row:selected .item-box {
+  background: @bg1;
+  border-left: 2px solid @yellow;
+  color: @fg0;
+}
+
+.item-text {
+  color: inherit;
+}
+
+.item-subtext {
+  color: @gray;
+}
+
+child:selected .item-subtext,
+row:selected .item-subtext {
+  color: @fg1;
+  opacity: 0.6;
+}
+
+.item-quick-activation {
+  color: @gray;
+  margin-left: 10px;
+}
+
+/* providers that keep the default layouts: shrink icons to text height */
+.normal-icons,
+.large-icons,
+.item-image {
+  -gtk-icon-size: 16px;
+}
+
+.item-image-text {
+  font-size: 13px;
+}
+
+.calc .item-text {
+  font-size: 13px;
+  color: @yellow;
+}
+
+.symbols .item-image {
+  font-size: 13px;
+}
+
+.providerlist .item-subtext {
+  color: @gray;
+}
+
+/* ---------- preview pane ---------- */
+.preview {
+  border-left: 1px solid @bg1;
+  padding: 6px 10px;
+  color: @fg1;
+}
+
+.preview .large-icons {
+  -gtk-icon-size: 32px;
+}
+
+.preview-content.archlinuxpkgs,
+.preview-content.dnfpackages,
+.preview-content.aptpackages {
+  font-family: monospace;
+}
+
+/* ---------- footer (key hints) ---------- */
+.keybinds {
+  border-top: 1px solid @bg1;
+  padding: 4px 10px;
+  color: @gray;
+}
+
+.keybind-bind {
+  color: @aqua;
+  text-transform: lowercase;
+}
+
+.keybind-label {
+  color: @gray;
+}
+
+.keybind-button:hover .keybind-label {
+  color: @fg1;
+}
+
+/* ---------- state ---------- */
+.error {
+  padding: 4px 10px;
+  color: @red;
+  border-top: 1px solid @red;
+}
+
+:not(.calc).current {
+  font-style: italic;
+}
+
+.todo.done .item-text-box {
+  color: @gray;
+}
+
+.todo.active {
+  font-weight: bold;
+}
+
+.bluetooth.disconnected {
+  color: @gray;
+}

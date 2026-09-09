@@ -48,27 +48,19 @@ require("mini.pairs").setup({
 })
 
 -- ── mini.surround ───────────────────────────────────────────────────
--- Default mappings disabled; bound under <leader>s below.
+-- Plugin builds its own mappings (operator-pending in Normal, `:<C-u>` in
+-- Visual so '< '> marks are fresh). Calling MiniSurround.add("visual") from a
+-- Lua keymap runs before Visual mode exits -> stale marks -> "out of range".
 require("mini.surround").setup({
-	mappings = {
-		add = "",
-		delete = "",
-		find = "",
-		find_left = "",
-		highlight = "",
-		replace = "",
-		update_n_lines = "",
-	},
+    mappings = {
+        add = "<leader>sa",
+        delete = "<leader>sd",
+        replace = "<leader>sr",
+        find = "<leader>sf",
+        find_left = "<leader>sF",
+        highlight = "<leader>sh",
+        update_n_lines = "<leader>sn",
+        suffix_last = "l",
+        suffix_next = "n",
+    },
 })
-
-local map = function(mode, lhs, fn, desc)
-	vim.keymap.set(mode, lhs, fn, { silent = true, desc = desc })
-end
-
-map({ "n", "x" }, "<leader>sa", function() MiniSurround.add("visual") end, "Add surround")
-map("n", "<leader>sd", function() MiniSurround.delete() end, "Delete surround")
-map("n", "<leader>sr", function() MiniSurround.replace() end, "Replace surround")
-map("n", "<leader>sf", function() MiniSurround.find() end, "Find surround")
-map("n", "<leader>sF", function() MiniSurround.find_left() end, "Find surround left")
-map("n", "<leader>sh", function() MiniSurround.highlight() end, "Highlight surround")
-map("n", "<leader>sn", function() MiniSurround.update_n_lines() end, "Update n lines")
