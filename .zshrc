@@ -70,7 +70,7 @@ alias ls="eza -lha --group-directories-first --icons"
 alias lsa='ls -a'
 alias lt='eza --tree --level=2 --long --icons --git'
 alias lta='lt -a'
-alias ff="fzf --preview 'batcat --style=numbers --color=always {}'"
+alias ff="fzf --preview 'bat --style=numbers --color=always {}'"
 alias fd='fdfind'
 alias cd='z'
 
@@ -92,7 +92,8 @@ alias n='nvim'
 alias g='git'
 alias d='docker'
 alias r='rails'
-alias bat='batcat'
+# alias cat="bat --theme auto:system --theme-dark default --theme-light GitHub"
+alias cat="bat"
 alias lzg='lazygit'
 alias lzd='sudo lazydocker'
 alias brilho='xrandr --output HDMI-1-0 --brightness'
@@ -132,7 +133,6 @@ eval "$(starship init zsh)"
 
 # bun completions
 # [ -s "/home/atiladefreitas/.bun/_bun" ] && source "/home/atiladefreitas/.bun/_bun"
-ANTHROPIC_API_KEY=
 
 export GDK_BACKEND=wayland
 export GTK_USE_PORTAL=1
@@ -146,7 +146,14 @@ export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 
-export PATH="$HOME/.local/share/pnpm:$PATH"
+export PNPM_HOME="$HOME/.local/share/pnpm"
+export PATH="$PNPM_HOME/bin:$PATH"
+
 export PATH="$(npm config get prefix)/bin:$PATH"
 
-. "$HOME/.local/share/../bin/env"
+# . "$HOME/.local/share/../bin/env"
+export PATH="$HOME/.local/bin:$PATH"
+
+export SUDO_EDITOR=nvim
+export VISUAL=nvim
+export EDITOR=nvim
