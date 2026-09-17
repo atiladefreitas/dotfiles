@@ -39,8 +39,8 @@ opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("atila_fold_fallback", { clear = true }),
   callback = function(ev)
-    local ok, parser = pcall(vim.treesitter.get_parser, ev.buf, nil, { error = false })
-    if not ok or not parser then
+    -- 0.12: get_parser() returns nil instead of throwing when no parser exists.
+    if not vim.treesitter.get_parser(ev.buf, nil, { error = false }) then
       vim.opt_local.foldmethod = "indent"
     end
   end,

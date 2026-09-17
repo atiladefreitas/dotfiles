@@ -17,14 +17,19 @@ require("nvim-navic").setup({
 })
 
 -- ── nvim-lspconfig ──────────────────────────────────────────────────
-local capabilities = require("blink.cmp").get_lsp_capabilities()
+-- Shared by every server (0.11+ "*" config), instead of repeating it per server.
+vim.lsp.config("*", { capabilities = require("blink.cmp").get_lsp_capabilities() })
 
 -- Global keymaps via LspAttach autocmd
 vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function(args)
 		local client = vim.lsp.get_client_by_id(args.data.client_id)
 		local bufnr = args.buf
-		local opts = { noremap = true, silent = true, buffer = bufnr }
+
+		-- 0.12 enables LSP documentColor highlighting by default; nvim-highlight-colors
+		-- already paints the same values (and feeds blink's kind icons), so keep one owner.
+		vim.lsp.document_color.enable(false, { bufnr = bufnr })
+		local opts = { noremap = true, silent = true, buf = bufnr }
 		local keymap = vim.keymap.set
 
 		keymap("n", "gd", "<cmd>Telescope lsp_definitions<cr>", opts)
@@ -44,14 +49,13 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		if client and client.server_capabilities.inlayHintProvider then
 			keymap("n", "<leader>ih", function()
 				vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
-			end, { noremap = true, silent = true, buffer = bufnr, desc = "Toggle inlay hints" })
+			end, { noremap = true, silent = true, buf = bufnr, desc = "Toggle inlay hints" })
 		end
 	end,
 })
 
 -- JS/TS/React (lightweight and fast)
 vim.lsp.config("vtsls", {
-	capabilities = capabilities,
 	-- Fix vtsls duplicate diagnostics: it sends two identical sets with
 	-- different sources ("ts" and "typescript") in separate calls. Drop "typescript".
 	handlers = {
@@ -92,18 +96,13 @@ vim.lsp.config("vtsls", {
 })
 
 -- HTML
-vim.lsp.config("html", {
-	capabilities = capabilities,
-})
+vim.lsp.config("html", {})
 
 -- CSS
-vim.lsp.config("cssls", {
-	capabilities = capabilities,
-})
+vim.lsp.config("cssls", {})
 
 -- Tailwind CSS
 vim.lsp.config("tailwindcss", {
-	capabilities = capabilities,
 	settings = {
 		tailwindCSS = {
 			lint = {
@@ -115,7 +114,6 @@ vim.lsp.config("tailwindcss", {
 
 -- Lua
 vim.lsp.config("lua_ls", {
-	capabilities = capabilities,
 	settings = {
 		Lua = {
 			diagnostics = {
@@ -126,9 +124,7 @@ vim.lsp.config("lua_ls", {
 })
 
 -- Markdown (via marksman)
-vim.lsp.config("marksman", {
-	capabilities = capabilities,
-})
+vim.lsp.config("marksman", {})
 
 -- Jinja2 (via jinja-lsp) -- diagnostics disabled to avoid false "undefined variable" errors
 --
@@ -139,7 +135,6 @@ vim.lsp.config("marksman", {
 -- dir (indexed only when present) and disable backend (.py/.rs) scanning entirely.
 -- The walk root is the cwd, not root_dir, so this -- not root_dir -- is the only lever.
 vim.lsp.config("jinja_lsp", {
-	capabilities = capabilities,
 	filetypes = { "html", "jinja", "jinja2" },
 	init_options = {
 		templates = "templates",

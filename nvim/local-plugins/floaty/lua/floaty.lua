@@ -116,7 +116,7 @@ function M.open()
 	-- `:w` inside the float syncs back instead of touching disk.
 	vim.api.nvim_create_autocmd("BufWriteCmd", {
 		group = group,
-		buffer = float_buf,
+		buf = float_buf,
 		callback = function()
 			sync_back(state)
 		end,
@@ -125,7 +125,7 @@ function M.open()
 	-- If the source buffer goes away, the float can't sync anywhere.
 	vim.api.nvim_create_autocmd("BufWipeout", {
 		group = group,
-		buffer = float_buf,
+		buf = float_buf,
 		callback = function()
 			state.synced_on_close = false
 		end,
@@ -134,7 +134,7 @@ function M.open()
 	-- `q` in normal mode: sync (if dirty) and close.
 	vim.keymap.set("n", "q", function()
 		close(state)
-	end, { buffer = float_buf, nowait = true, silent = true, desc = "Floaty: sync and close" })
+	end, { buf = float_buf, nowait = true, silent = true, desc = "Floaty: sync and close" })
 end
 
 function M.setup(opts)

@@ -102,7 +102,7 @@ hl.config({
 	},
 
 	decoration = {
-		rounding = 8,
+		rounding = 0,
 		-- dim_around = 0.4,
 		-- dim_special = 0.4,
 

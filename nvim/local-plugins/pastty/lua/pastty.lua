@@ -79,11 +79,11 @@ local function ensure_buf()
 	-- `q` closes the panel and clears it.
 	vim.keymap.set("n", "q", function()
 		M.close()
-	end, { buffer = buf, nowait = true, silent = true, desc = "pastty: close and clear" })
+	end, { buf = buf, nowait = true, silent = true, desc = "pastty: close and clear" })
 
 	-- When content lands in the panel while it's focused, hop back to work.
 	vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
-		buffer = buf,
+		buf = buf,
 		callback = function()
 			refit()
 			if is_open() and vim.api.nvim_get_current_win() == state.win then

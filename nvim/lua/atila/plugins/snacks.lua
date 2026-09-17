@@ -98,7 +98,7 @@ vim.api.nvim_create_autocmd("User", {
 	pattern = "SnacksDashboardOpened",
 	callback = function(ev)
 		local map = function(lhs, rhs, desc)
-			vim.keymap.set("n", lhs, rhs, { buffer = ev.buf, nowait = true, desc = desc })
+			vim.keymap.set("n", lhs, rhs, { buf = ev.buf, nowait = true, desc = desc })
 		end
 		map("r", "<cmd>Telescope oldfiles<cr>", "Recent Files")
 		map("q", "<cmd>qa<cr>", "Quit")

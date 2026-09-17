@@ -1,7 +1,5 @@
 -- ── ts-comments.nvim ────────────────────────────────────────────────
-if vim.fn.has("nvim-0.10.0") == 1 then
-	require("ts-comments").setup({})
-end
+require("ts-comments").setup({})
 
 -- ── flash.nvim ──────────────────────────────────────────────────────
 require("flash").setup({})

@@ -83,8 +83,8 @@ local function float_input(opts, on_submit)
 		pcall(vim.api.nvim_win_close, win, true)
 	end
 
-	vim.keymap.set({ "i", "n" }, "<Esc>", close, { buffer = buf })
-	vim.keymap.set("n", "q", close, { buffer = buf })
+	vim.keymap.set({ "i", "n" }, "<Esc>", close, { buf = buf })
+	vim.keymap.set("n", "q", close, { buf = buf })
 
 	vim.keymap.set("i", "<CR>", function()
 		local input = vim.api.nvim_buf_get_lines(buf, 0, 1, false)[1]
@@ -92,7 +92,7 @@ local function float_input(opts, on_submit)
 		if input and input ~= "" then
 			on_submit(input, parent_buf, parent_win, cursor)
 		end
-	end, { buffer = buf })
+	end, { buf = buf })
 end
 
 vim.keymap.set("i", "<a-i>", function()
@@ -283,16 +283,16 @@ local function float_select(opts, items, on_submit)
 	end
 
 	vim.api.nvim_create_autocmd({ "TextChangedI", "TextChanged" }, {
-		buffer = input_buf,
+		buf = input_buf,
 		callback = refresh,
 	})
 	vim.api.nvim_create_autocmd("BufLeave", {
-		buffer = input_buf,
+		buf = input_buf,
 		once = true,
 		callback = close,
 	})
 
-	local map_opts = { buffer = input_buf, nowait = true }
+	local map_opts = { buf = input_buf, nowait = true }
 	vim.keymap.set({ "i", "n" }, "<Esc>", close, map_opts)
 	vim.keymap.set({ "i", "n" }, "<CR>", select_current, map_opts)
 	vim.keymap.set({ "i", "n" }, "<Tab>", select_current, map_opts)
