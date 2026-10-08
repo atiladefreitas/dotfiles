@@ -39,8 +39,8 @@ integer W=34 H=40 visible=0 focused=0 top=0 cur=1 follow=1 help=0 anim=0 finding
 integer n_srv n_work n_wait n_done n_dirty n_shown
 float next_load=0 next_scan=0 next_git=0 msg_until=0
 my_sid= my_win= cursor= confirm= msg= filter= sb= last_hdr=
-typeset -a S_id S_name S_age S_alert S_dirty R_key R_sess R_line R_bg   # R_key '' = spacer row
-typeset -A srv agt pane_win srv_port sess_port
+typeset -a S_id S_name S_path S_age S_alert S_dirty R_key R_sess R_line R_bg   # R_key '' = spacer row
+typeset -A srv agt pane_win pane_path srv_port sess_port
 
 # fit <text> <cells>: REPLY = text, cut with … if wider than cells
 fit() {
@@ -90,21 +90,21 @@ load() {
   local -a f ids sets screens tq
   local -A a_sid a_seen a_prev a_title a_cmd a_state a_time
   integer seen was=$focused wasvis=$visible k
-  S_id=() S_name=() S_age=() S_alert=() S_dirty=() srv=() agt=() pane_win=() srv_port=() sess_port=()
+  S_id=() S_name=() S_path=() S_age=() S_alert=() S_dirty=() srv=() agt=() pane_win=() pane_path=() srv_port=() sess_port=()
   n_srv=0 n_work=0 n_wait=0 n_done=0 n_dirty=0
 
   # age = since you were last in it (since creation if never attached)
-  for line in ${(f)"$(tmux list-sessions -F $'#{session_id}\t#{session_name}\t#{session_last_attached}\t#{session_created}\t#{@git_dirty}\t#{@sidebar-bg}\t#{session_alerts}' 2>/dev/null)"}; do
+  for line in ${(f)"$(tmux list-sessions -F $'#{session_id}\t#{session_name}\t#{session_last_attached}\t#{session_created}\t#{@git_dirty}\t#{@sidebar-bg}\t#{session_path}\t#{session_alerts}' 2>/dev/null)"}; do
     f=( "${(@ps:\t:)line}" )
     ago $(( EPOCHSECONDS - ${f[3]:-$f[4]} ))
-    S_id+=( $f[1] ) S_name+=( $f[2] ) S_age+=( $REPLY ) S_dirty+=( "$f[5]" ) S_alert+=( "$f[7]" )
+    S_id+=( $f[1] ) S_name+=( $f[2] ) S_age+=( $REPLY ) S_dirty+=( "$f[5]" ) S_path+=( "$f[7]" ) S_alert+=( "$f[8]" )
     sb=$f[6]
     [[ -n $f[5] ]] && (( n_dirty++ ))
   done
 
-  for line in ${(f)"$(tmux list-panes -a -F $'#{pane_id}\t#{session_id}\t#{window_id}\t#{window_active}\t#{session_attached}\t#{pane_active}\t#{@sidebar}\t#{pane_current_command}\t#{@pane_port}\t#{@agent_state}\t#{pane_width}\t#{pane_height}\t#{pane_title}' 2>/dev/null)"}; do
+  for line in ${(f)"$(tmux list-panes -a -F $'#{pane_id}\t#{session_id}\t#{window_id}\t#{window_active}\t#{session_attached}\t#{pane_active}\t#{@sidebar}\t#{pane_current_command}\t#{@pane_port}\t#{@agent_state}\t#{pane_width}\t#{pane_height}\t#{pane_current_path}\t#{pane_title}' 2>/dev/null)"}; do
     f=( "${(@ps:\t:)line}" )
-    id=$f[1] sid=$f[2] pane_win[$f[1]]=$f[3]
+    id=$f[1] sid=$f[2] pane_win[$f[1]]=$f[3] pane_path[$f[1]]=$f[13]
     (( seen = f[4] && f[5] ))
     if [[ $id == $me ]]; then
       my_sid=$sid my_win=$f[3] W=$f[11] H=$f[12] visible=$seen
@@ -121,7 +121,7 @@ load() {
     if [[ $f[8] == ${~agent_cmds} ]]; then
       ids+=( $id )
       a_sid[$id]=$sid a_seen[$id]=$seen a_prev[$id]=$f[10] a_cmd[$id]=$f[8]
-      a_title[$id]=${(pj:\t:)f[13,-1]}
+      a_title[$id]=${(pj:\t:)f[14,-1]}
     fi
   done
 
@@ -262,7 +262,8 @@ render() {
     local -a h=(
       "j k ↑ ↓" "next/prev session" "J K tab" "line by line"
       "1-9" "go to session"        "⏎ l → click" "open"
-      "/" "find session"           "a" "new agent window"
+      "/" "find session"           "g" "lazygit in a popup"
+      "a" "new agent window"
       "x" "stop dev server"        "w" "server in browser"
       "r" "rename session"         "n" "new session"
       "d" "kill session"           "R" "refresh now"
@@ -305,8 +306,8 @@ render() {
   elif (( focused )); then
     case $R_key[cur] in
       v:*) f=" $K⏎$G go  ${K}w$G browser  ${K}x$G stop  $K?$G keys" ;;
-      a:*) f=" $K⏎$G go  ${K}/$G find  ${K}a$G agent  $K?$G keys" ;;
-      *)   f=" $K⏎$G open  ${K}/$G find  ${K}a$G agent  $K?$G keys" ;;
+      a:*) f=" $K⏎$G go  ${K}g$G git  ${K}/$G find  $K?$G keys" ;;
+      *)   f=" $K⏎$G open  ${K}g$G git  ${K}/$G find  $K?$G keys" ;;
     esac
   else
     f=
@@ -347,6 +348,16 @@ new_agent() {
   [[ $sid == $my_sid ]] && tmux select-pane -t $me -l 2>/dev/null
   tmux new-window -t "$sid:" -c '#{pane_current_path}' "${cmd:-claude}" \; switch-client -t $sid
   next_load=0
+}
+
+# lazygit in a popup, in the project of the selected row (a server's or
+# agent's own folder, else the session's)
+git_popup() {
+  local dir name=${S_name[${S_id[(ie)$R_sess[cur]]}]}
+  [[ $R_key[cur] == [va]:* ]] && dir=$pane_path[${R_key[cur]#?:}] || dir=$S_path[${S_id[(ie)$R_sess[cur]]}]
+  [[ -n $dir ]] || return
+  git -C "$dir" rev-parse --git-dir >/dev/null 2>&1 || { flash "not a git repo: ${dir/#$HOME/~}"; return }
+  tmux display-popup -E -w 70% -h 70% -d "$dir" -T " lazygit · $name " lazygit &!
 }
 
 # open the selected server (or the session's first one) in the browser
@@ -448,8 +459,9 @@ key() {
     k|$'\x10'|csi:A|csi:5~) move_session -1 ;;
     J|$'\t') move 1 ;;                                 # line by line, into servers/agents
     K|csi:Z) move -1 ;;
-    g|csi:H|csi:1~) jump 1 ;;
-    G|csi:F|csi:4~) jump $#R_key ;;
+    csi:H|csi:1~) jump 1 ;;
+    csi:F|csi:4~) jump $#R_key ;;
+    g) git_popup ;;
     [1-9]) (( k <= $#S_id )) && { cursor=s:$S_id[k]; cur=${R_key[(Ie)$cursor]}; open } ;;
     $'\r'|$'\n'|l|o|csi:C) open ;;
     /) finding=1 filter= ;;
