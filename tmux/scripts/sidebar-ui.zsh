@@ -36,9 +36,9 @@ spin=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
 SPIN=⣿                          # placeholder for the spinner frame, swapped in at render
 
 integer W=34 H=40 visible=0 focused=0 top=0 cur=1 follow=1 help=0 anim=0 finding=0
-integer n_srv n_work n_wait n_done n_shown
+integer n_srv n_work n_wait n_done n_dirty n_shown
 float next_load=0 next_scan=0 next_git=0 msg_until=0
-my_sid= my_win= cursor= confirm= msg= filter=
+my_sid= my_win= cursor= confirm= msg= filter= sb= last_hdr=
 typeset -a S_id S_name S_age S_alert S_dirty R_key R_sess R_line R_bg   # R_key '' = spacer row
 typeset -A srv agt pane_win srv_port sess_port
 
@@ -89,15 +89,17 @@ load() {
   local line id sid st title g tc r e
   local -a f ids sets screens tq
   local -A a_sid a_seen a_prev a_title a_cmd a_state a_time
-  integer seen was=$focused k
+  integer seen was=$focused wasvis=$visible k
   S_id=() S_name=() S_age=() S_alert=() S_dirty=() srv=() agt=() pane_win=() srv_port=() sess_port=()
-  n_srv=0 n_work=0 n_wait=0 n_done=0
+  n_srv=0 n_work=0 n_wait=0 n_done=0 n_dirty=0
 
   # age = since you were last in it (since creation if never attached)
-  for line in ${(f)"$(tmux list-sessions -F $'#{session_id}\t#{session_name}\t#{session_last_attached}\t#{session_created}\t#{@git_dirty}\t#{session_alerts}' 2>/dev/null)"}; do
+  for line in ${(f)"$(tmux list-sessions -F $'#{session_id}\t#{session_name}\t#{session_last_attached}\t#{session_created}\t#{@git_dirty}\t#{@sidebar-bg}\t#{session_alerts}' 2>/dev/null)"}; do
     f=( "${(@ps:\t:)line}" )
     ago $(( EPOCHSECONDS - ${f[3]:-$f[4]} ))
-    S_id+=( $f[1] ) S_name+=( $f[2] ) S_age+=( $REPLY ) S_dirty+=( "$f[5]" ) S_alert+=( "$f[6]" )
+    S_id+=( $f[1] ) S_name+=( $f[2] ) S_age+=( $REPLY ) S_dirty+=( "$f[5]" ) S_alert+=( "$f[7]" )
+    sb=$f[6]
+    [[ -n $f[5] ]] && (( n_dirty++ ))
   done
 
   for line in ${(f)"$(tmux list-panes -a -F $'#{pane_id}\t#{session_id}\t#{window_id}\t#{window_active}\t#{session_attached}\t#{pane_active}\t#{@sidebar}\t#{pane_current_command}\t#{@pane_port}\t#{@agent_state}\t#{pane_width}\t#{pane_height}\t#{pane_title}' 2>/dev/null)"}; do
@@ -174,6 +176,43 @@ load() {
   (( focused && !was )) && cursor="s:$my_sid" follow=1
   (( !focused )) && confirm= help=0 follow=1 finding=0 filter=
   build
+  if (( visible )); then
+    (( wasvis )) || last_hdr=
+    header
+    if [[ $REPLY != "$last_hdr" ]]; then
+      last_hdr=$REPLY
+      tmux set -g @sidebar-header "$REPLY" \; refresh-client -S
+    fi
+  fi
+}
+
+# The sidebar's tab, shown by status-left (gruvbox.conf) right above the
+# sidebar: a flat [icon Sessions | count] tab, aqua while the sidebar is
+# focused, then live counts, padded to the sidebar's width and closed by a
+# piece of the border so the window tabs start over the main pane. tmux formats
+# can't pad to a computed width, hence written from here.
+header() {
+  local b=${sb:-default} on off stats= s e z
+  local -a st
+  integer budget used=0 pad
+  on="#[fg=$b]#[bg=#8ec07c]#[bold]  Sessions #[nobold]#[fg=#ebdbb2]#[bg=#504945] $#S_id "
+  off="#[fg=#ebdbb2]#[bg=#504945]  Sessions #[fg=#a89984]#[bg=#3c3836] $#S_id "
+  # needs you, busy, servers, finished, uncommitted: as many as fit, in that order
+  (( n_wait ))  && st+=( "#[fg=#fabd2f]◆ $n_wait" )
+  (( n_work ))  && st+=( "#[fg=#fe8019]✻ $n_work" )
+  (( n_srv ))   && st+=( "#[fg=#b8bb26] $n_srv" )
+  (( n_done ))  && st+=( "#[fg=#8ec07c]✓ $n_done" )
+  (( n_dirty )) && st+=( "#[fg=#fe8019]± $n_dirty" )
+  e=${off//\#\[[^]]#\]}
+  budget=$(( W - 2 - ${#e} ))
+  for s in $st; do
+    e=${s//\#\[[^]]#\]}
+    (( used + ${#e} + 1 <= budget )) || break
+    stats+=" $s" used+=$(( ${#e} + 1 ))
+  done
+  (( pad = budget - used, pad = pad < 0 ? 0 : pad ))
+  REPLY="#[bg=$b] #{?#{@sidebar},$on,$off}#[bg=$b]${(l:pad:)z}$stats #[bg=default]"
+  REPLY+="#{?#{||:#{@sidebar},#{&&:#{>:#{window_panes},2},#{&&:#{pane_at_top},#{==:#{pane_left},$(( W + 1 ))}}}},#[fg=#fabd2f],#[fg=#3c3836]}│"
 }
 
 build() {
