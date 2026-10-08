@@ -271,32 +271,12 @@ keymap.set(
 keymap.set("n", "<leader>fi", function()
 	require("telescope.builtin").find_files({
 		prompt_title = "Find Images",
+		-- rg, not fd: fd isn't installed (the shell's `fd` is only an alias, which jobstart can't see).
 		find_command = {
-			"fd",
-			"--type",
-			"f",
-			"-e",
-			"png",
-			"-e",
-			"jpg",
-			"-e",
-			"jpeg",
-			"-e",
-			"gif",
-			"-e",
-			"webp",
-			"-e",
-			"avif",
-			"-e",
-			"ico",
-			"-e",
-			"bmp",
-			"-e",
-			"svg",
-			"-e",
-			"tiff",
-			"-e",
-			"tif",
+			"rg",
+			"--files",
+			"--iglob",
+			"*.{png,jpg,jpeg,gif,webp,avif,ico,bmp,svg,tiff,tif}",
 		},
 		file_ignore_patterns = {},
 		previewer = image_previewer,
@@ -305,7 +285,7 @@ end, { desc = "Find images" })
 keymap.set("n", "<leader>fm", function()
 	require("telescope.builtin").find_files({
 		prompt_title = "Find Markdowns",
-		find_command = { "fd", "--type", "f", "-e", "md" },
+		find_command = { "rg", "--files", "--iglob", "*.md" },
 		file_ignore_patterns = {},
 	})
 end, { desc = "Find markdowns" })
