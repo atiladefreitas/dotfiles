@@ -3,8 +3,10 @@
 # Sets the @node_port session option to "running on <port>[, <port>...]" for
 # every session where a node (or next-server/bun/deno) process in one of its
 # panes is listening on a TCP port, and unsets it everywhere else.
-# The M-s session picker reads @node_port.
-panes=$(tmux list-panes -a -F '#{pane_tty} #{session_name}' 2>/dev/null | sed 's#^/dev/##')
+# Also sets the @pane_port pane option to "<port>[,<port>...]" on the pane
+# running the server.
+# The M-s session picker reads @node_port, the sidebar reads @pane_port.
+panes=$(tmux list-panes -a -F '#{pane_tty} #{pane_id} #{session_name}' 2>/dev/null | sed 's#^/dev/##')
 [ -z "$panes" ] && exit 0
 ttys=$(awk '{ print $1 }' <<<"$panes" | sort -u | paste -sd, -)
 
@@ -12,15 +14,15 @@ ttys=$(awk '{ print $1 }' <<<"$panes" | sort -u | paste -sd, -)
 procs=$(ps -t "$ttys" -o pid=,tty=,comm= 2>/dev/null | awk '$3 ~ /(^|\/)(node|next-server|bun|deno)$/ { print $1, $2 }')
 pids=$(awk '{ print $1 }' <<<"$procs" | paste -sd, -)
 
-# "<session> <port>" for every listening socket
+# "<session> <port> <pane>" for every listening socket
 [ -n "$pids" ] && listening=$(lsof -nP -a -iTCP -sTCP:LISTEN -Fpn -p "$pids" 2>/dev/null | PROCS="$procs" PANES="$panes" awk '
   BEGIN {
     n = split(ENVIRON["PROCS"], l, "\n"); for (i = 1; i <= n; i++) { split(l[i], f, " "); tty[f[1]] = f[2] }
-    n = split(ENVIRON["PANES"], l, "\n"); for (i = 1; i <= n; i++) { t = l[i]; sub(/ .*/, "", t); s = l[i]; sub(/^[^ ]* /, "", s); sess[t] = s }
+    n = split(ENVIRON["PANES"], l, "\n"); for (i = 1; i <= n; i++) { split(l[i], f, " "); pane[f[1]] = f[2]; s = l[i]; sub(/^[^ ]* [^ ]* /, "", s); sess[f[1]] = s }
   }
   /^p/ { pid = substr($0, 2) }
-  /^n/ { m = split($0, a, ":"); print sess[tty[pid]] "\t" a[m] }
-' | sort -u)
+  /^n/ { m = split($0, a, ":"); print sess[tty[pid]] "\t" a[m] "\t" pane[tty[pid]] }
+' | sort -t$'\t' -k1,1 -k2,2n -u)
 
 args=()
 while IFS= read -r session; do
@@ -31,5 +33,17 @@ while IFS= read -r session; do
     args+=(set -u -t "=$session:" @node_port \;)
   fi
 done < <(tmux list-sessions -F '#{session_name}')
+
+# "<pane> [<port>,...]" for every pane
+while read -r pane ports; do
+  if [ -n "$ports" ]; then
+    args+=(set -p -t "$pane" @pane_port "$ports" \;)
+  else
+    args+=(set -p -u -t "$pane" @pane_port \;)
+  fi
+done < <(PANES="$panes" awk -F'\t' '
+  $3 != "" { p[$3] = ($3 in p) ? p[$3] "," $2 : $2 }
+  END { n = split(ENVIRON["PANES"], l, "\n"); for (i = 1; i <= n; i++) { split(l[i], f, " "); print f[2], p[f[2]] } }
+' <<<"$listening")
 
 [ ${#args[@]} -gt 0 ] && tmux "${args[@]}"
